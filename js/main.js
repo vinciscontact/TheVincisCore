@@ -340,7 +340,8 @@ function buildScrollAnimations() {
           duration: 0.7,
           scrollTrigger: { trigger: card, start: "top 80%", toggleActions: "play none none none" },
         });
-        if (i < cards.length - 1) {
+        if (isDesktop && i < cards.length - 1) {
+          // desktop only: covered cards recede as the next slides over them
           gsap.to(card, {
             scale: 0.95,
             autoAlpha: 0.6,

@@ -1020,7 +1020,8 @@ h1, h2, h3 { text-wrap: balance; }
   .nav__inner { padding: 16px var(--margin); }
 
   .blade__layout, .founder__layout, .contact__layout, .manifesto__layout { grid-template-columns: 1fr; }
-  .story-card { grid-template-columns: 1fr; min-height: 0; top: calc(76px + var(--peek, 0px)); }
+  /* mobile: story cards become a fixed list — no sticky stacking */
+  .story-card { grid-template-columns: 1fr; min-height: 0; position: static; }
   .story-card__art svg { max-width: 240px; }
   .manifesto__visual { margin-top: 16px; }
   .manifesto__sketch { width: min(340px, 82vw); }
@@ -1244,6 +1245,16 @@ h1, h2, h3 { text-wrap: balance; }
   text-transform: uppercase;
   color: var(--ink-soft);
 }
+/* Small screens: the deck becomes a fixed, fully-visible card list */
+.stack--static { max-width: none; }
+.stack--static .stack__deck {
+  height: auto !important;
+  display: grid;
+  gap: 14px;
+  cursor: default;
+}
+.stack--static .stackcard { position: static; }
+.stack--static .stack__meta { display: none; }
 
 /* --- Versus battle --- */
 .versus { margin-top: 28px; }
@@ -1451,8 +1462,40 @@ h1, h2, h3 { text-wrap: balance; }
 .journey__card b { color: var(--ink); font-weight: 700; }
 
 @media (max-width: 640px) {
-  .versus__round { grid-template-columns: 1fr; gap: 8px; }
-  .versus__label { justify-self: start; order: -1; }
+  /* scoreboard layout: fighters stay pinned above side-by-side round cells */
+  .versus__head {
+    position: sticky;
+    top: 62px;
+    z-index: 5;
+    background: var(--surface);
+    border-radius: 14px;
+    padding: 8px;
+    gap: 8px;
+    box-shadow: 0 10px 18px -12px rgba(0, 0, 0, 0.22);
+  }
+  .versus__fighter {
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    padding: 10px 6px;
+  }
+  .versus__crown { top: -10px; right: 4px; font-size: 14px; }
+  .versus__badge { width: 36px; height: 36px; font-size: 0.8rem; box-shadow: 0 6px 14px rgba(197, 160, 40, 0.35); }
+  .versus__round {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: "label label" "left right";
+    gap: 8px;
+  }
+  .versus__label { grid-area: label; justify-self: start; }
+  .versus__round > .versus__cell:first-child { grid-area: left; }
+  .versus__round > .versus__cell:last-child { grid-area: right; }
+  .versus__cell {
+    font-size: 12.5px;
+    line-height: 1.45;
+    padding: 10px 12px;
+    align-items: flex-start;
+  }
+  .versus__cell.is-win { padding-left: 26px; }
+  .versus__cell.is-win::before { left: 8px; top: 12px; }
   .journey__step { grid-template-columns: 56px 1fr; }
 }
 

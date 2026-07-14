@@ -83,6 +83,10 @@ window.addEventListener("load", () => ScrollTrigger.refresh());
    The semantic lists/tables stay in the HTML for crawlers and
    reduced-motion users; here they transform into playable pieces. ---- */
 if (!prefersReduced) {
+  /* On small screens all entrances are vertical — horizontal offsets
+     transiently widen the mobile layout viewport and drag the page sideways. */
+  const isSmall = window.matchMedia("(max-width: 899px)").matches;
+
   /* --- Card-throw stack: every UL .howlist becomes a throwable deck --- */
   document.querySelectorAll("ul.howlist").forEach((ul) => {
     const items = [...ul.querySelectorAll("li")];
@@ -114,29 +118,16 @@ if (!prefersReduced) {
       autoAlpha: i < 4 ? 1 : 0,
     });
     const updateCount = (c) => (count.textContent = c + " / " + n);
-    let mode = "tap";
-    let order = [...cards];
-    let thrown = 0;
-    const layout = (instant) => {
-      order.forEach((c, i) => {
-        instant ? gsap.set(c, slotProps(i)) : gsap.to(c, { ...slotProps(i), duration: 0.45, ease: "power3.out", overwrite: true });
-      });
-      updateCount((thrown % n) + 1);
-    };
-    layout(true);
     document.fonts.ready.then(() => {
       deck.style.height = Math.max(...cards.map((c) => c.offsetHeight)) + 60 + "px";
       ScrollTrigger.refresh();
     });
 
     /* Desktop: the section pins and scrolling deals the deck (reversible).
-       Touch/small screens: keep the tap-and-flick deck. */
+       Small screens: a fixed, fully-visible card list — nothing movable. */
     const mmDeck = gsap.matchMedia();
     mmDeck.add("(min-width: 900px)", () => {
-      mode = "scroll";
       hint.textContent = "keep scrolling — the deck deals itself";
-      order = [...cards];
-      thrown = 0;
       cards.forEach((c, i) => gsap.set(c, slotProps(i)));
       updateCount(1);
       const section = stack.closest(".psection") || stack;
@@ -174,50 +165,21 @@ if (!prefersReduced) {
           }, i);
         }
       }
-      return () => {
-        mode = "tap";
-        hint.textContent = "tap or flick the card →";
-        order = [...cards];
-        thrown = 0;
-        layout(true);
-      };
+      return () => {};
     });
-
-    const throwTop = (dir) => {
-      const top = order[0];
-      order = [...order.slice(1), top];
-      thrown++;
-      gsap.to(top, {
-        x: dir * (deck.offsetWidth * 0.85 + 90),
-        rotation: dir * 26,
-        autoAlpha: 0,
-        duration: 0.45,
-        ease: "power2.in",
-        overwrite: true,
-        onComplete: () => layout(false),
+    mmDeck.add("(max-width: 899px)", () => {
+      stack.classList.add("stack--static");
+      gsap.set(cards, { clearProps: "all" });
+      cards.forEach((c) => {
+        gsap.from(c, {
+          y: 36,
+          autoAlpha: 0,
+          duration: 0.7,
+          ease: "power3.out",
+          scrollTrigger: { trigger: c, start: "top 92%" },
+        });
       });
-    };
-    let startX = null;
-    let dragging = false;
-    deck.addEventListener("pointerdown", (e) => {
-      if (mode !== "tap") return;
-      startX = e.clientX;
-      dragging = true;
-      deck.classList.add("is-grabbing");
-    });
-    window.addEventListener("pointermove", (e) => {
-      if (!dragging || mode !== "tap") return;
-      const dx = e.clientX - startX;
-      gsap.set(order[0], { x: dx, rotation: dx * 0.07 });
-    });
-    window.addEventListener("pointerup", (e) => {
-      if (!dragging || mode !== "tap") return;
-      dragging = false;
-      deck.classList.remove("is-grabbing");
-      const dx = e.clientX - startX;
-      if (Math.abs(dx) > 70) throwTop(Math.sign(dx) || 1);
-      else if (Math.abs(dx) < 6) throwTop(1); // treat a clean tap as a throw
-      else gsap.to(order[0], { x: 0, rotation: 0, duration: 0.5, ease: "elastic.out(1, 0.55)" });
+      return () => stack.classList.remove("stack--static");
     });
   });
 
@@ -267,9 +229,9 @@ if (!prefersReduced) {
     const tally = { left: 0, right: 0 };
     v.querySelectorAll(".versus__round").forEach((r) => {
       const tlr = gsap.timeline({ scrollTrigger: { trigger: r, start: "top 90%" } });
-      tlr.from(r.children[0], { x: -54, autoAlpha: 0, duration: 0.45, ease: "power2.out" })
+      tlr.from(r.children[0], { x: isSmall ? 0 : -54, y: isSmall ? 26 : 0, autoAlpha: 0, duration: 0.45, ease: "power2.out" })
         .from(r.children[1], { scale: 0.5, autoAlpha: 0, duration: 0.3, ease: "back.out(2)" }, "<0.1")
-        .from(r.children[2], { x: 54, autoAlpha: 0, duration: 0.45, ease: "power2.out" }, "<");
+        .from(r.children[2], { x: isSmall ? 0 : 54, y: isSmall ? 26 : 0, autoAlpha: 0, duration: 0.45, ease: "power2.out" }, "<");
       const side = r.dataset.win;
       const winCell = r.querySelector(".is-win");
       const scoreEl = scoreEls[side];
@@ -381,7 +343,9 @@ if (!prefersReduced) {
         scrollTrigger: { trigger: step, start: "top 82%" },
       });
       gsap.from(step.querySelector(".journey__card"), {
-        x: i % 2 ? 64 : -64, autoAlpha: 0, duration: 0.7, ease: "power3.out",
+        x: isSmall ? 0 : i % 2 ? 64 : -64,
+        y: isSmall ? 36 : 0,
+        autoAlpha: 0, duration: 0.7, ease: "power3.out",
         scrollTrigger: { trigger: step, start: "top 82%" },
       });
       if (path) {
