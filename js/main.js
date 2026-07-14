@@ -81,6 +81,78 @@ if (!prefersReduced && window.matchMedia("(hover: hover) and (min-width: 800px)"
   });
 }
 
+/* ============ Golden thread: the cursor weaves silk across the hero ============ */
+(() => {
+  if (prefersReduced) return;
+  if (!window.matchMedia("(hover: hover) and (pointer: fine) and (min-width: 900px)").matches) return;
+  const hero = document.querySelector(".hero");
+  if (!hero) return;
+
+  const canvas = document.createElement("canvas");
+  canvas.className = "hero__thread";
+  canvas.setAttribute("aria-hidden", "true");
+  hero.appendChild(canvas);
+  const ctx = canvas.getContext("2d");
+  const dpr = Math.min(devicePixelRatio, 2);
+  const size = () => {
+    const r = hero.getBoundingClientRect();
+    canvas.width = r.width * dpr;
+    canvas.height = r.height * dpr;
+    canvas.style.width = r.width + "px";
+    canvas.style.height = r.height + "px";
+  };
+  size();
+  addEventListener("resize", size);
+
+  const pts = [];
+  const mouse = { x: null, y: null };
+  const pen = { x: null, y: null }; // lags behind the cursor — that lag is the silk
+  const LIFE = 950; // ms before a woven segment fades away
+
+  hero.addEventListener("mousemove", (e) => {
+    const r = hero.getBoundingClientRect();
+    mouse.x = e.clientX - r.left;
+    mouse.y = e.clientY - r.top;
+    if (pen.x === null) {
+      pen.x = mouse.x;
+      pen.y = mouse.y;
+    }
+  });
+  hero.addEventListener("mouseleave", () => (mouse.x = null));
+
+  gsap.ticker.add(() => {
+    if (mouse.x !== null && pen.x !== null) {
+      pen.x += (mouse.x - pen.x) * 0.22;
+      pen.y += (mouse.y - pen.y) * 0.22;
+      const last = pts[pts.length - 1];
+      if (!last || Math.hypot(pen.x - last.x, pen.y - last.y) > 3) {
+        pts.push({ x: pen.x, y: pen.y, t: performance.now() });
+      }
+    }
+    const now = performance.now();
+    while (pts.length && now - pts[0].t > LIFE) pts.shift();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (pts.length < 3) return;
+    ctx.save();
+    ctx.scale(dpr, dpr);
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    for (let i = 1; i < pts.length - 1; i++) {
+      const age = (now - pts[i].t) / LIFE;
+      const alpha = (1 - age) * 0.6;
+      ctx.strokeStyle = "rgba(197,160,40," + alpha.toFixed(3) + ")";
+      ctx.lineWidth = 1.6 * (1 - age * 0.55);
+      ctx.shadowColor = "rgba(212,175,55," + (alpha * 0.8).toFixed(3) + ")";
+      ctx.shadowBlur = 6;
+      ctx.beginPath();
+      ctx.moveTo((pts[i - 1].x + pts[i].x) / 2, (pts[i - 1].y + pts[i].y) / 2);
+      ctx.quadraticCurveTo(pts[i].x, pts[i].y, (pts[i].x + pts[i + 1].x) / 2, (pts[i].y + pts[i + 1].y) / 2);
+      ctx.stroke();
+    }
+    ctx.restore();
+  });
+})();
+
 /* ============ Preloader → Hero intro ============ */
 const preloader = document.querySelector(".preloader");
 const counter = document.querySelector(".preloader__count");
@@ -149,6 +221,25 @@ function buildScrollAnimations() {
     { isDesktop: "(min-width: 900px)", isMobile: "(max-width: 899px)" },
     (ctx) => {
       const { isDesktop } = ctx.conditions;
+
+      /* --- Golden aurora: light drifts like morning sun across silk --- */
+      const auroras = gsap.utils.toArray(".hero__aurora span");
+      auroras.forEach((blob, i) => {
+        gsap.to(blob, {
+          xPercent: (i % 2 ? -1 : 1) * (10 + i * 4),
+          yPercent: (i % 2 ? 1 : -1) * (12 + i * 3),
+          scale: 1.12,
+          duration: 14 + i * 5,
+          ease: "sine.inOut",
+          yoyo: true,
+          repeat: -1,
+        });
+      });
+      gsap.to(".hero__aurora", {
+        yPercent: 18,
+        ease: "none",
+        scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: 1 },
+      });
 
       /* --- Hero ornament slow parallax drift --- */
       gsap.to(".hero__ornament", {
