@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- ============ SEO ============ -->
+  <title>Iyra Money Tracker — Automatic UPI Expense Tracker App</title>
+  <meta name="description" content="Iyra by TheVincis logs every UPI payment automatically from the payment notification — budgets, cashflow and household tracking. Launching soon on Android.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="https://thevincis.com/iyra-money-tracker/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="TheVincis">
+  <meta property="og:title" content="Iyra Money Tracker — UPI Expense Tracking on Autopilot">
+  <meta property="og:description" content="Every UPI payment, logged automatically from the notification. One household, one clear view of your money.">
+  <meta property="og:url" content="https://thevincis.com/iyra-money-tracker/">
+  <meta property="og:image" content="https://thevincis.com/images/og-thevincis.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <meta name="theme-color" content="#F9F9F9">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90' font-family='Georgia,serif' fill='%23C5A028'%3EV%3C/text%3E%3C/svg%3E">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600;1,9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+
+  <!-- ============ Structured Data : Mobile App ============ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "MobileApplication",
+    "@id": "https://thevincis.com/iyra-money-tracker/#app",
+    "name": "Iyra Money Tracker",
+    "alternateName": "Iyra by TheVincis",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Android",
+    "url": "https://thevincis.com/iyra-money-tracker/",
+    "description": "Iyra Money Tracker is an expense tracking app for India that logs UPI transactions automatically: when a UPI payment notification arrives, Iyra captures the amount and records the expense. Includes budgets, savings rate, cashflow trends, category insights and a shared household view. Launching soon on the Play Store.",
+    "publisher": { "@id": "https://thevincis.com/#organization" },
+    "featureList": ["Automatic UPI transaction logging from payment notifications", "Two-tap manual entry with categories", "Monthly budgets and savings rate", "Cashflow trends and category insights", "Shared household view for families", "Transaction search by payee, category or member"]
+  }
+  </script>
+
+  <!-- ============ Structured Data : Breadcrumbs ============ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "TheVincis", "item": "https://thevincis.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Iyra Money Tracker", "item": "https://thevincis.com/iyra-money-tracker/" }
+    ]
+  }
+  </script>
+
+  <!-- ============ Structured Data : FAQ (AEO) ============ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How does Iyra track UPI transactions automatically?",
+        "acceptedAnswer": { "@type": "Answer", "text": "When you pay with any UPI app, your phone shows a payment notification. Iyra reads that notification, captures the amount and payee, and logs the expense for you — no typing, no forgotten transactions. You can review, recategorise or edit any entry afterwards." }
+      },
+      {
+        "@type": "Question",
+        "name": "Which UPI apps does Iyra work with?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Iyra works with any UPI app that shows payment notifications — Google Pay, PhonePe, Paytm, BHIM, bank apps and others. Because it reads the notification rather than the app itself, new UPI apps work without waiting for an update." }
+      },
+      {
+        "@type": "Question",
+        "name": "Can my family use Iyra together?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. Iyra is built around the household: one shared view of the family's money, with each transaction tagged by member. You see who spent what, combined budgets and one savings rate — instead of four separate apps that never agree." }
+      },
+      {
+        "@type": "Question",
+        "name": "Is my financial data safe with Iyra?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Iyra uses notification access only to detect payment alerts and log the amount and payee — it never asks for your bank login, UPI PIN or OTPs, and it cannot move money. Built by TheVincis, a studio with a security-first engineering background." }
+      },
+      {
+        "@type": "Question",
+        "name": "When is Iyra launching and on which platforms?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Iyra Money Tracker is launching soon on the Google Play Store, with Android first because UPI notification capture works natively there. Email vincis.contact@gmail.com for early access and you'll be notified the day it goes live." }
+      }
+    ]
+  }
+  </script>
+</head>
+
+<body>
+  <div class="cursor" aria-hidden="true"></div>
+
+  <!-- ============ Navigation ============ -->
+  <header class="nav" id="top">
+    <div class="nav__inner">
+      <a href="/" class="nav__logo" aria-label="TheVincis home">The<em>Vincis</em></a>
+      <nav class="nav__links" aria-label="Primary">
+        <a href="#how" class="nav__link"><span class="nav__label"><span>How It Works</span><span aria-hidden="true">How It Works</span></span></a>
+        <a href="#screens" class="nav__link"><span class="nav__label"><span>Screens</span><span aria-hidden="true">Screens</span></span></a>
+        <a href="#faq" class="nav__link"><span class="nav__label"><span>FAQ</span><span aria-hidden="true">FAQ</span></span></a>
+        <a href="/" class="nav__link"><span class="nav__label"><span>All Products</span><span aria-hidden="true">All Products</span></span></a>
+        <a href="#early" class="nav__link nav__cta"><span class="nav__label"><span>Get Early Access</span><span aria-hidden="true">Get Early Access</span></span><span class="nav__arrow" aria-hidden="true">&#8599;</span></a>
+      </nav>
+      <button class="nav__toggle" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <div class="mobile-menu" aria-hidden="true">
+    <nav aria-label="Mobile">
+      <a href="#how">How It Works</a>
+      <a href="#screens">Screens</a>
+      <a href="#faq">FAQ</a>
+      <a href="/">All Products</a>
+      <a href="#early" class="mobile-menu__cta">Get Early Access</a>
+    </nav>
+  </div>
+
+  <main>
+    <!-- ============ Hero : answer-first ============ -->
+    <section class="phero" aria-label="Iyra Money Tracker">
+      <div class="container phero__layout">
+        <div class="phero__copy">
+          <nav class="crumbs" aria-label="Breadcrumb">
+            <a href="/">TheVincis</a><span aria-hidden="true">/</span><span>Iyra Money Tracker</span>
+          </nav>
+          <p class="launchtag"><span></span>Launching soon on Google Play</p>
+          <h1 class="phero__title">Iyra — the money tracker that<br>logs UPI <em>by itself.</em></h1>
+          <p class="phero__answer">
+            Iyra Money Tracker by TheVincis is an expense tracking app for India
+            that logs any UPI transaction automatically — the moment a payment
+            notification arrives, Iyra captures the amount and records it. One
+            household, one clear view of your money, logged in two taps or none at all.
+          </p>
+          <div class="hero__ctas">
+            <a href="#early" class="btn btn--gold">Get Early Access</a>
+            <a href="#how" class="btn btn--ghost">How It Works</a>
+          </div>
+          <p class="phero__note">Never ask "where did the money go?" again.</p>
+        </div>
+
+        <div class="phero__visual" aria-hidden="true">
+          <div class="phone">
+            <div class="phone__notch"></div>
+            <div class="phone__screen iyra-ui">
+              <div class="iyra-ui__head"><span>Overview</span><b>July 2026</b></div>
+              <div class="iyra-ui__spent">
+                <span>Spent this month</span>
+                <b>₹7,249</b>
+                <i>of ₹16,000 budget</i>
+                <div class="iyra-ui__bar"><div></div></div>
+                <em>₹8,751 remaining</em>
+              </div>
+              <div class="iyra-ui__tiles">
+                <div><span>Balance left</span><b class="t-pos">+₹12,751</b></div>
+                <div><span>Income</span><b class="t-gold">₹20,000</b></div>
+                <div><span>Savings rate</span><b class="t-pos">64%</b></div>
+                <div><span>Budget left</span><b class="t-pos">₹8,751</b></div>
+              </div>
+              <div class="iyra-ui__nav">
+                <span class="on">Home</span><span>Charts</span><span class="iyra-ui__fab">+</span><span>Assets</span><span>Profile</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ How it works (list-snippet target) ============ -->
+    <section class="psection" id="how" aria-label="How Iyra works">
+      <div class="container container--narrow">
+        <p class="label reveal">How it works</p>
+        <h2 class="section-title">How does automatic UPI<br>expense tracking <em>work?</em></h2>
+        <p class="psection__answer">
+          Every UPI payment already announces itself — as a notification on your
+          phone. Iyra listens for exactly those alerts and turns them into a
+          complete expense log, so tracking happens whether you remember to or not:
+        </p>
+        <ol class="howlist" data-art="pay,notify,log,family,chart">
+          <li><b>Pay as usual</b> — Google Pay, PhonePe, Paytm, your bank's app. Nothing about how you pay changes.</li>
+          <li><b>Iyra catches the notification</b> — the amount and payee are captured the moment the payment alert appears.</li>
+          <li><b>Logged and categorised</b> — the expense lands in your ledger; confirm or change the category in one tap.</li>
+          <li><b>The household sees one truth</b> — every family member's transactions in one shared view, tagged by person.</li>
+          <li><b>Your money explains itself</b> — budgets, savings rate, cashflow trends and category insights, updated live.</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============ Features ============ -->
+    <section class="psection psection--alt" aria-label="What's included">
+      <div class="container">
+        <div class="section-head">
+          <p class="label reveal">What's inside</p>
+          <h2 class="section-title">Everything a household needs.<br><em>Nothing that snoops.</em></h2>
+        </div>
+        <div class="featgrid">
+          <div class="card feat reveal"><h3>Automatic UPI capture</h3><p>Any UPI app that shows a payment notification gets logged — no typing, no forgotten ₹40 chai.</p></div>
+          <div class="card feat reveal"><h3>Two-tap manual entry</h3><p>Cash expense? A purpose-built keypad logs amount, category and note faster than a chat message.</p></div>
+          <div class="card feat reveal"><h3>Budgets &amp; savings rate</h3><p>Set a monthly budget, watch what remains, and see your savings rate — the one number that builds wealth.</p></div>
+          <div class="card feat reveal"><h3>Cashflow trends</h3><p>Six-month income-vs-spend charts that show the direction of your money, not just this month's damage.</p></div>
+          <div class="card feat reveal"><h3>One household view</h3><p>Every member's spending in one place, tagged by person — the family's money finally agrees with itself.</p></div>
+          <div class="card feat reveal"><h3>No bank access needed</h3><p>Iyra never asks for bank logins, UPI PINs or OTPs. It reads payment notifications — it cannot move money.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ vs manual apps (comparison table) ============ -->
+    <section class="psection" aria-label="Iyra vs manual expense apps">
+      <div class="container container--narrow">
+        <p class="label reveal">The difference</p>
+        <h2 class="section-title">Manual expense apps<br>vs <em>Iyra</em></h2>
+        <p class="psection__answer">
+          Most expense trackers fail for one reason: they depend on you typing
+          every transaction, and by Tuesday nobody does. Iyra removes the typing —
+          which removes the reason tracking dies:
+        </p>
+        <div class="tblwrap">
+          <table class="ptbl" data-versus="left">
+            <thead><tr><th></th><th>Iyra (TheVincis)</th><th>Manual expense apps</th></tr></thead>
+            <tbody>
+              <tr><td>Logging a UPI payment</td><td>Automatic, from the notification</td><td>You type it — if you remember</td></tr>
+              <tr><td>Missed expenses</td><td>Near zero — every alert is caught</td><td>The small ones vanish daily</td></tr>
+              <tr><td>Family money</td><td>One shared household view</td><td>Separate apps, separate truths</td></tr>
+              <tr><td>Bank access required</td><td>None — notifications only</td><td>Varies; some want full bank login</td></tr>
+              <tr><td>Effort per day</td><td>Seconds, mostly zero</td><td>The reason you quit by week two</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Screens ============ -->
+    <section class="psection psection--alt" id="screens" aria-label="App screens">
+      <div class="container">
+        <div class="section-head">
+          <p class="label reveal">Inside the app</p>
+          <h2 class="section-title">Gold-standard finance,<br><em>literally.</em></h2>
+        </div>
+        <!-- Drop the real screenshots into /images/iyra/ with these exact filenames and they appear here automatically -->
+        <div class="shotgrid">
+          <figure class="shot reveal">
+            <img src="/images/iyra/iyra-money-tracker-overview.png" alt="Iyra Money Tracker overview dashboard showing monthly budget, balance, savings rate and cashflow chart" loading="lazy" onerror="this.closest('figure').style.display='none'">
+            <figcaption>Budgets, savings rate &amp; cashflow</figcaption>
+          </figure>
+          <figure class="shot reveal">
+            <img src="/images/iyra/iyra-money-tracker-new-expense.png" alt="Iyra Money Tracker two-tap expense entry with categories and keypad" loading="lazy" onerror="this.closest('figure').style.display='none'">
+            <figcaption>Two-tap expense entry</figcaption>
+          </figure>
+          <figure class="shot reveal">
+            <img src="/images/iyra/iyra-money-tracker-transactions.png" alt="Iyra Money Tracker transactions list with UPI payments tagged by family member" loading="lazy" onerror="this.closest('figure').style.display='none'">
+            <figcaption>Every transaction, searchable</figcaption>
+          </figure>
+          <figure class="shot reveal">
+            <img src="/images/iyra/iyra-money-tracker-welcome.png" alt="Iyra Money Tracker welcome screen — one household, one clear view of your money" loading="lazy" onerror="this.closest('figure').style.display='none'">
+            <figcaption>One household, one view</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Why TheVincis (E-E-A-T) ============ -->
+    <section class="psection" aria-label="Who builds it">
+      <div class="container container--narrow">
+        <p class="label reveal">Who builds it</p>
+        <h2 class="section-title">Money software from a<br>security-first <em>studio.</em></h2>
+        <p class="psection__answer">
+          Iyra is built in-house by TheVincis — the studio behind
+          <a href="/qr-ordering-system/">TableServe</a> — founded by
+          <a href="/#founder">Sathyanarayana&nbsp;D</a>, a Cybersecurity &amp; IoT
+          graduate certified by Microsoft and Infosys. A money app deserves a
+          security background behind it; that's not a feature here, it's the
+          foundation.
+        </p>
+        <div class="chips"><span>Built in-house</span><span>Security-first</span><span>No bank credentials</span><span>By TheVincis</span></div>
+      </div>
+    </section>
+
+    <!-- ============ FAQ ============ -->
+    <section class="faq" id="faq" aria-label="Iyra questions">
+      <div class="container container--narrow">
+        <div class="section-head">
+          <p class="label reveal">Before you ask</p>
+          <h2 class="section-title">Iyra questions,<br><em>answered straight.</em></h2>
+        </div>
+        <div class="faq__list">
+          <details class="faq__item card">
+            <summary><h3>How does Iyra track UPI transactions automatically?</h3><span class="faq__icon"></span></summary>
+            <div class="faq__answer"><p>When you pay with any UPI app, your phone shows a payment notification. Iyra reads that notification, captures the amount and payee, and logs the expense for you — no typing, no forgotten transactions. You can review, recategorise or edit any entry afterwards.</p></div>
+          </details>
+          <details class="faq__item card">
+            <summary><h3>Which UPI apps does Iyra work with?</h3><span class="faq__icon"></span></summary>
+            <div class="faq__answer"><p>Iyra works with any UPI app that shows payment notifications — Google Pay, PhonePe, Paytm, BHIM, bank apps and others. Because it reads the notification rather than the app itself, new UPI apps work without waiting for an update.</p></div>
+          </details>
+          <details class="faq__item card">
+            <summary><h3>Can my family use Iyra together?</h3><span class="faq__icon"></span></summary>
+            <div class="faq__answer"><p>Yes. Iyra is built around the household: one shared view of the family's money, with each transaction tagged by member. You see who spent what, combined budgets and one savings rate — instead of four separate apps that never agree.</p></div>
+          </details>
+          <details class="faq__item card">
+            <summary><h3>Is my financial data safe with Iyra?</h3><span class="faq__icon"></span></summary>
+            <div class="faq__answer"><p>Iyra uses notification access only to detect payment alerts and log the amount and payee — it never asks for your bank login, UPI PIN or OTPs, and it cannot move money. Built by TheVincis, a studio with a security-first engineering background.</p></div>
+          </details>
+          <details class="faq__item card">
+            <summary><h3>When is Iyra launching and on which platforms?</h3><span class="faq__icon"></span></summary>
+            <div class="faq__answer"><p>Iyra Money Tracker is launching soon on the Google Play Store, with Android first because UPI notification capture works natively there. Email vincis.contact@gmail.com for early access and you'll be notified the day it goes live.</p></div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CTA ============ -->
+    <section class="contact" id="early" aria-label="Early access">
+      <div class="container contact__cta-narrow">
+        <p class="label label--gold reveal">Early access · Launching soon</p>
+        <h2 class="contact__title">Be first to know where<br>your money <em>goes.</em></h2>
+        <p class="contact__sub">
+          Iyra hits the Play Store soon. Join the early-access list and you'll get
+          it the day it launches — plus a say in what we build next.
+        </p>
+        <div class="hero__ctas">
+          <a class="btn btn--gold" href="mailto:vincis.contact@gmail.com?subject=Iyra%20early%20access&body=Name%3A%0APhone%20(Android)%3A%0A">Join Early Access</a>
+          <a class="btn btn--ghost btn--ghost-light" href="/#contact">Use the Contact Form</a>
+        </div>
+        <a class="contact__email" href="mailto:vincis.contact@gmail.com">vincis.contact@gmail.com</a>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ Footer ============ -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <span class="nav__logo">The<em>Vincis</em></span>
+        <p>Winning the hearts of the citizens.</p>
+      </div>
+      <nav class="footer__nav" aria-label="Footer">
+        <a href="/">Home</a>
+        <a href="/qr-ordering-system/">TableServe</a>
+        <a href="/services/web-development/">Web Development</a>
+        <a href="#faq">FAQ</a>
+        <a href="/#contact">Contact</a>
+      </nav>
+      <div class="footer__meta">
+        <a href="mailto:vincis.contact@gmail.com">vincis.contact@gmail.com</a>
+        <span>© 2026 TheVincis. All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js" defer></script>
+  <script src="/js/page.js" defer></script>
+</body>
+</html>

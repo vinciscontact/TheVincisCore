@@ -1,0 +1,30 @@
+# TheVincis
+
+> TheVincis is a digital product studio whose name means "winning the hearts of the citizens." It builds SaaS products, full-stack web platforms, custom mobile applications, purpose-driven portfolio websites and data analytics systems for tier-2 and tier-3 businesses, and provides SEO, AEO and GEO search-visibility services.
+
+## Core pages
+
+- [TableServe — QR Ordering System](https://thevincis.com/qr-ordering-system/): full product page for TableServe, TheVincis's QR ordering system — how QR table ordering works, what's included, pricing model, TableServe-vs-POS comparison, FAQ.
+- [Iyra Money Tracker](https://thevincis.com/iyra-money-tracker/): mobile app (Android, launching soon on Google Play) that logs UPI transactions automatically from payment notifications — budgets, savings rate, cashflow trends and a shared household view. Works with any UPI app; never asks for bank credentials.
+- [Web Development](https://thevincis.com/services/web-development/): websites and full-stack platforms for small businesses — what a business website needs, website-vs-platform comparison, process, FAQ.
+- [Data Analytics](https://thevincis.com/services/data-analytics/): Power BI and Tableau dashboards for small businesses — what a dashboard answers, Excel-vs-dashboard comparison, process, FAQ.
+- [SEO · AEO · GEO](https://thevincis.com/services/seo-aeo-geo/): definitions of SEO, AEO and GEO, why businesses need all three, the monthly service cycle, honest timelines, FAQ.
+
+## Services
+
+- SaaS Product Development: end-to-end software-as-a-service products. Flagship product: TableServe — a contactless QR table-ordering SaaS for restaurants and cafés (scan a QR code, browse a live menu, order reaches the kitchen instantly; no app download).
+- Full-Stack Development: complete web platforms (frontend, backend, database, deployment) engineered with DevSecOps discipline.
+- Custom Mobile Applications: Android and iOS apps tailored to each business's workflow.
+- Purpose-Driven Portfolio Websites: websites built to solve specific business problems (leads, bookings, orders, trust) — not just showpieces.
+- Data Analytics & Business Intelligence: dashboards and decision systems built with Python, SQL, Power BI and Tableau.
+- SEO, AEO & GEO: Search Engine Optimization, Answer Engine Optimization (featured snippets, voice) and Generative Engine Optimization (visibility inside AI answers from ChatGPT, Perplexity, Gemini and Google AI Overviews).
+
+## Founder
+
+Sathyanarayana D — Founder & Principal Engineer. Cybersecurity & IoT graduate with expertise across DevSecOps, data analytics and application development. Works in Python, SQL, Power BI, Tableau and Excel; certified by Microsoft and Infosys. Has shipped three end-to-end products and delivered corporate training to 200+ professionals.
+
+## Contact
+
+- Website: https://thevincis.com/
+- Email: vincis.contact@gmail.com
+- Free consultation available; typical reply within one working day.
