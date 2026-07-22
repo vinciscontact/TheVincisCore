@@ -182,7 +182,7 @@ function initPage() {
     // Reduced motion: show everything, no intro, no scroll effects
     gsap.set(preloader, { display: "none" });
     gsap.set(".split-target, .reveal", { clearProps: "all", visibility: "visible", autoAlpha: 1 });
-    document.querySelectorAll(".stat__num").forEach((el) => {
+    document.querySelectorAll("[data-count]").forEach((el) => {
       el.textContent = el.dataset.count + (el.dataset.suffix || "");
     });
     return;
@@ -191,14 +191,14 @@ function initPage() {
   const load = gsap.timeline();
   const count = { v: 0 };
   load
-    .from(".preloader__logo", { y: 40, autoAlpha: 0, duration: 0.7 })
+    .from(".preloader__logo", { y: 40, autoAlpha: 0, duration: 0.5 })
     .to(count, {
       v: 100,
-      duration: 1.1,
+      duration: 0.7,
       ease: "power2.inOut",
       onUpdate: () => (counter.textContent = Math.round(count.v)),
     }, "<")
-    .to(".preloader__inner", { y: -30, autoAlpha: 0, duration: 0.5, ease: "power2.in" }, "+=0.15")
+    .to(".preloader__inner", { y: -30, autoAlpha: 0, duration: 0.4, ease: "power2.in" }, "+=0.05")
     .to(preloader, {
       yPercent: -100,
       duration: 0.9,
@@ -352,6 +352,42 @@ function buildScrollAnimations() {
         }
       });
 
+      /* --- Collective codex: the master's notebook inks itself once it's in
+             view. Both pages draw in lock-step — the artist and the engineer
+             are equals, so their ink arrives together. --- */
+      const codexTl = gsap.timeline({
+        defaults: { ease: "power1.inOut" },
+        scrollTrigger: { trigger: ".codex", start: "top 70%", toggleActions: "play none none none" },
+        onComplete: () => document.dispatchEvent(new CustomEvent("codex:drawn")),
+      });
+      codexTl
+        // the book itself: pages, spine, stitching
+        .fromTo(".cdx-frame", { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.5, stagger: 0.05 })
+        // construction lines — both pages at once
+        .fromTo(".cdx-fine-l", { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.3, stagger: 0.06 }, "-=0.2")
+        .fromTo(".cdx-fine-r", { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.3, stagger: 0.06 }, "<")
+        // the main strokes: flourish ↔ fortress walls, together
+        .fromTo(".cdx-main-l", { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1.3, ease: "power1.in" }, "-=0.15")
+        .fromTo(".cdx-main-r", { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1.3, ease: "power1.in", stagger: 0.25 }, "<")
+        // finishing touches: quill & swatches ↔ shield & scale bar
+        .fromTo(".cdx-detail-l", { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.3, stagger: 0.08 }, "-=0.2")
+        .fromTo(".cdx-detail-r", { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.3, stagger: 0.08 }, "<")
+        // the plumb line drops from the spine — the master checks his verticals
+        .fromTo(".cdx-plumb", { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.3, stagger: 0.08 }, "<")
+        // the captions sign each page
+        .from(".codex__caption, .codex__label", { autoAlpha: 0, duration: 0.4, stagger: 0.08 }, "-=0.15");
+
+      /* --- Collective: ally card content cascades in --- */
+      gsap.utils.toArray(".ally").forEach((card) => {
+        gsap.from(card.querySelectorAll(".ally__content > *"), {
+          y: 32,
+          autoAlpha: 0,
+          stagger: 0.07,
+          duration: 0.7,
+          scrollTrigger: { trigger: card, start: "top 80%", toggleActions: "play none none none" },
+        });
+      });
+
       /* --- Portfolio Blade: pinned product story (desktop only) --- */
       if (isDesktop) {
         const bladeTl = gsap.timeline({
@@ -393,8 +429,8 @@ function buildScrollAnimations() {
         scrollTrigger: { trigger: ".blade__copy", start: "top 70%", toggleActions: "play none none reverse" },
       });
 
-      /* --- Stats: count up --- */
-      document.querySelectorAll(".stat__num").forEach((el) => {
+      /* --- Stats & ally numbers: count up --- */
+      document.querySelectorAll("[data-count]").forEach((el) => {
         const target = parseFloat(el.dataset.count);
         const suffix = el.dataset.suffix || "";
         const obj = { v: 0 };
@@ -522,5 +558,13 @@ document.getElementById("consultForm").addEventListener("submit", (e) => {
   note.textContent = "Opening your email app… We reply within one working day.";
 });
 
-/* ============ Boot: wait for fonts before splitting text ============ */
-document.fonts.ready.then(initPage);
+/* ============ Boot: wait for fonts before splitting text — but never let a
+   slow font CDN hold the whole page hostage. 2.5s and we go. ============ */
+let booted = false;
+function bootOnce() {
+  if (booted) return;
+  booted = true;
+  initPage();
+}
+document.fonts.ready.then(bootOnce);
+setTimeout(bootOnce, 2500);

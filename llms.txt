@@ -19,6 +19,11 @@
 - Data Analytics & Business Intelligence: dashboards and decision systems built with Python, SQL, Power BI and Tableau.
 - SEO, AEO & GEO: Search Engine Optimization, Answer Engine Optimization (featured snippets, voice) and Generative Engine Optimization (visibility inside AI answers from ChatGPT, Perplexity, Gemini and Google AI Overviews).
 
+## The Vincis Collective (allied studios)
+
+- CreativzEdge: a graphic design & branding studio allied with TheVincis, with studios in Chennai and Mumbai and 15+ years of design expertise. Two pillars: Design Studio (logo & identity, packaging, social creatives, print & ads, menus, stationery) and Digital Growth (SEO, GEO, AEO, social media). Clients include Padma Shri percussionist Drums Sivamani, Dhara Logistics, SIGAI, DHARANI Cosmetic & Diabetic Centre, 359 Event Planners and Triya Construction.
+- Blackfyre (https://blackfyre.tech): an open-source (Apache-2.0) multi-cloud compliance and security platform allied with TheVincis. Scans AWS, Azure and GCP against 678 controls across 9 frameworks (including SOC 2 Type II, HIPAA, ISO/IEC 42001, NIST SP 800-53 Rev 5) using 55 automated auditors, with AI-assisted gap analysis, MITRE ATT&CK mapping and a tamper-evident evidence vault (SHA-256, S3 Object Lock WORM, AES-256-GCM). Read-only cloud access only; free to self-host via Docker Compose.
+
 ## Founder
 
 Sathyanarayana D — Founder & Principal Engineer. Cybersecurity & IoT graduate with expertise across DevSecOps, data analytics and application development. Works in Python, SQL, Power BI, Tableau and Excel; certified by Microsoft and Infosys. Has shipped three end-to-end products and delivered corporate training to 200+ professionals.

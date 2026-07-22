@@ -584,6 +584,183 @@ h1, h2, h3 { text-wrap: balance; }
 }
 
 
+/* ============ The Vincis Collective (allied studios) ============ */
+.collective {
+  padding: clamp(48px, 6vw, 88px) 0;
+  overflow: hidden;
+}
+/* The codex: one master's notebook, two facing pages, drawn by scroll */
+.codex {
+  margin: 0 auto clamp(32px, 4.5vw, 64px);
+  max-width: 1400px;
+}
+.codex svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.codex [pathLength] { stroke-dasharray: 1; }
+.codex__label {
+  font-family: var(--sans);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 2.4px;
+  fill: var(--ink-soft);
+  opacity: 0.75;
+}
+.codex__caption {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 23px;
+  fill: var(--gold-deep);
+}
+/* codex physics layer (js/codex-physics.js) */
+.codex__ink circle { fill: var(--gold); pointer-events: none; }
+.codex__plumb-hit {
+  fill: transparent; /* invisible but hit-testable — the bob's grab area */
+  cursor: grab;
+  touch-action: none; /* dragging the bob never fights page scroll */
+}
+.codex__plumb-hit:active { cursor: grabbing; }
+.codex__seal-wax {
+  fill: rgba(212, 175, 55, 0.16);
+  stroke: var(--gold);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+.codex__seal-ring { fill: none; stroke: var(--gold-fine); stroke-width: 0.7; opacity: 0.7; }
+.codex__seal-v {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 27px;
+  fill: var(--gold-deep);
+}
+
+.codex__note {
+  margin-top: clamp(10px, 1.5vw, 18px);
+  text-align: center;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1rem, 1.6vw, 1.25rem);
+  color: var(--ink-soft);
+}
+.codex__note em { color: var(--gold); }
+@media (max-width: 900px) {
+  .codex__label { font-size: 16px; letter-spacing: 2px; }
+  .codex__caption { font-size: 31px; }
+}
+@media (max-width: 640px) {
+  .codex__label { font-size: 21px; letter-spacing: 1.6px; }
+  .codex__caption { font-size: 40px; }
+}
+
+.ally-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(20px, 2.5vw, 36px);
+  align-items: stretch;
+}
+.ally {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface-white);
+  border: 0.5px solid rgba(212, 175, 55, 0.35);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--lift);
+  padding: clamp(28px, 3vw, 44px);
+  overflow: hidden;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+.ally:hover { transform: translateY(-6px); box-shadow: var(--lift-hover); }
+/* metallic sheen — the "featured card" 2px gold top border from DESIGN.md */
+.ally::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold-fine), var(--gold), var(--gold-fine));
+}
+.ally__content { display: flex; flex-direction: column; align-items: flex-start; flex: 1; }
+.ally__badge {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+  margin-bottom: 14px;
+}
+.ally__name {
+  font-family: var(--serif);
+  font-size: clamp(1.8rem, 3.2vw, 2.8rem);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+}
+.ally__name em { font-style: italic; color: var(--gold); }
+.ally__hook {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
+  color: var(--gold-deep);
+  margin-top: 10px;
+}
+.ally__hook em { color: var(--gold); }
+.ally__desc {
+  color: var(--ink-soft);
+  font-size: 15.5px;
+  max-width: 560px;
+  margin: 20px 0 26px;
+}
+.ally__desc em { font-style: italic; color: var(--gold-deep); }
+.ally__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(18px, 2vw, 32px);
+  margin-bottom: 26px;
+}
+.ally-stat {
+  border-left: 0.5px solid var(--gold-fine);
+  padding-left: 14px;
+  max-width: 150px;
+}
+.ally-stat__num {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(1.7rem, 2.6vw, 2.4rem);
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--gold);
+}
+.ally-stat__label {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--ink-soft);
+}
+.ally .chips span { box-shadow: inset 0 0 0 0.5px var(--line); }
+.ally__trust {
+  margin-top: auto;
+  padding-top: 22px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  border-top: 0.5px solid var(--line);
+  width: 100%;
+}
+.ally__trust b { color: var(--ink); font-weight: 700; }
+.ally .chips { margin-bottom: 24px; }
+
+@media (max-width: 1100px) {
+  .ally-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .ally { padding: 28px 22px; }
+}
+
+
 /* ============ Portfolio Blade (dark) ============ */
 .blade {
   background: var(--charcoal);

@@ -4,18 +4,26 @@
    Desktop + motion-allowed only; the SVG ornament remains the fallback.
    ========================================================================== */
 
-import * as THREE from "three";
+/* Three.js (~650KB) is decorative — fetch it only after the page has loaded
+   and the browser is idle, so it never competes with fonts, CSS or GSAP. */
+let THREE;
 
 const host = document.querySelector(".hero__canvas");
 const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const desktop = window.matchMedia("(min-width: 900px)").matches;
 
 if (host && !reduced && desktop) {
-  try {
-    init();
-  } catch (e) {
-    /* WebGL unavailable — page stays fully usable without the canvas */
-  }
+  const boot = () =>
+    (window.requestIdleCallback || ((fn) => setTimeout(fn, 350)))(async () => {
+      try {
+        THREE = await import("three");
+        init();
+      } catch (e) {
+        /* WebGL / network unavailable — page stays fully usable without the canvas */
+      }
+    });
+  if (document.readyState === "complete") boot();
+  else window.addEventListener("load", boot, { once: true });
 }
 
 function init() {
