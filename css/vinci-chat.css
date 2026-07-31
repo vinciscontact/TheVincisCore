@@ -1,0 +1,372 @@
+/* ==========================================================================
+   Vinci — TheVincis site concierge
+   Premium Minimalism: Vinci Gold, Fraunces + Manrope, Vinci Lift shadows
+   ========================================================================== */
+
+/* author display values (grid/flex) would otherwise defeat the hidden attribute */
+.vinci [hidden] { display: none !important; }
+
+.vinci {
+  position: fixed;
+  right: clamp(16px, 2.5vw, 28px);
+  bottom: clamp(16px, 2.5vw, 28px);
+  z-index: 900; /* above content, below the preloader (if ever re-shown) */
+  font-family: var(--sans, "Manrope", sans-serif);
+}
+
+/* ============ Launcher ============ */
+.vinci__launcher {
+  position: relative;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold-fine, #d4af37), var(--gold, #c5a028));
+  color: #fff;
+  box-shadow: 0 12px 28px rgba(116, 91, 0, 0.28);
+  display: grid;
+  place-items: center;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.vinci__launcher:hover {
+  transform: scale(1.06);
+  box-shadow: 0 16px 36px rgba(116, 91, 0, 0.36);
+}
+/* BUJJI's face fills its circle — the gold gradient becomes a ring behind it */
+.vinci__face {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+.vinci__launcher { padding: 2.5px; } /* the sliver of gradient left visible = the gold ring */
+
+/* soft breathing pulse — only while nudging, never forever */
+.vinci--nudging .vinci__launcher::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 1.5px solid var(--gold-fine, #d4af37);
+  animation: vinci-pulse 2.2s ease-out infinite;
+}
+@keyframes vinci-pulse {
+  0%   { transform: scale(0.9); opacity: 0.8; }
+  70%  { transform: scale(1.25); opacity: 0; }
+  100% { transform: scale(1.25); opacity: 0; }
+}
+
+.vinci__badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 9999px;
+  background: #ba1a1a;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--surface, #f9f9f9);
+}
+
+/* ============ Nudge (message preview) ============ */
+.vinci__nudge {
+  position: absolute;
+  right: 70px;
+  bottom: 8px;
+  width: min(272px, calc(100vw - 120px));
+  background: var(--surface-white, #fff);
+  border: 1px solid var(--line, #e5e5e5);
+  border-top: 2px solid var(--gold-fine, #d4af37);
+  border-radius: var(--radius-lg, 1rem);
+  border-bottom-right-radius: 4px;
+  box-shadow: var(--lift, 0 20px 40px rgba(0, 0, 0, 0.08));
+  padding: 14px 32px 14px 16px;
+  cursor: pointer;
+  animation: vinci-in 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.vinci__nudge p {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--ink, #1a1a1a);
+}
+.vinci__nudge-close {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  font-size: 16px;
+  line-height: 1;
+  color: var(--ink-soft, #4d4635);
+  opacity: 0.6;
+  padding: 4px;
+}
+.vinci__nudge-close:hover { opacity: 1; }
+
+/* ============ Panel ============ */
+.vinci__panel {
+  position: absolute;
+  right: 0;
+  bottom: 74px;
+  width: min(384px, calc(100vw - 32px));
+  height: min(600px, calc(100dvh - 120px));
+  display: flex;
+  flex-direction: column;
+  background: var(--surface-white, #fff);
+  border: 1px solid var(--line, #e5e5e5);
+  border-radius: var(--radius-lg, 1rem);
+  box-shadow: 0 28px 64px rgba(0, 0, 0, 0.14);
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(16px) scale(0.98);
+  transform-origin: bottom right;
+  transition: opacity 0.26s ease, transform 0.26s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+.vinci--open .vinci__panel {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+@keyframes vinci-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ============ Header ============ */
+.vinci__head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--charcoal, #1a1a1a);
+  color: var(--on-dark, #f1f1f1);
+  border-bottom: 2px solid var(--gold-fine, #d4af37);
+}
+.vinci__avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold-fine, #d4af37), var(--gold, #c5a028));
+  padding: 2px; /* gold ring around the face */
+  display: grid;
+  place-items: center;
+  flex: none;
+}
+.vinci__id { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.vinci__id strong {
+  font-family: var(--serif, "Fraunces", serif);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.vinci__id span {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--on-dark-dim, rgba(241, 241, 241, 0.64));
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.vinci__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #4caf7d;
+  box-shadow: 0 0 0 2px rgba(76, 175, 125, 0.25);
+}
+.vinci__close {
+  margin-left: auto;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--on-dark-dim, rgba(241, 241, 241, 0.64));
+  padding: 6px;
+  transition: color 0.2s ease;
+}
+.vinci__close:hover { color: #fff; }
+
+/* ============ Messages ============ */
+.vinci__msgs {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 18px 16px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background:
+    radial-gradient(120% 60% at 100% 0%, rgba(212, 175, 55, 0.05), transparent 60%),
+    var(--surface, #f9f9f9);
+  scrollbar-width: thin;
+  scrollbar-color: var(--gold, #c5a028) transparent;
+}
+.vinci__msg {
+  max-width: 84%;
+  padding: 10px 14px;
+  font-size: 14px;
+  line-height: 1.55;
+  animation: vinci-in 0.3s ease;
+  overflow-wrap: break-word;
+}
+.vinci__msg b { font-weight: 700; }
+.vinci__msg i { font-style: italic; color: var(--gold-deep, #745b00); }
+.vinci__msg--bot {
+  align-self: flex-start;
+  background: var(--surface-white, #fff);
+  border: 1px solid var(--line, #e5e5e5);
+  border-radius: 14px 14px 14px 4px;
+  color: var(--ink, #1a1a1a);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+}
+.vinci__msg--user {
+  align-self: flex-end;
+  background: var(--charcoal, #1a1a1a);
+  color: var(--on-dark, #f1f1f1);
+  border-radius: 14px 14px 4px 14px;
+}
+
+/* typing dots */
+.vinci__typing {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  padding: 14px 16px;
+}
+.vinci__typing span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold, #c5a028);
+  animation: vinci-dot 1.1s ease-in-out infinite;
+}
+.vinci__typing span:nth-child(2) { animation-delay: 0.15s; }
+.vinci__typing span:nth-child(3) { animation-delay: 0.3s; }
+@keyframes vinci-dot {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.45; }
+  30% { transform: translateY(-4px); opacity: 1; }
+}
+
+/* ============ Quick-reply options ============ */
+.vinci__opts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 4px 0 8px;
+  animation: vinci-in 0.3s ease;
+}
+.vinci__opt {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gold-deep, #745b00);
+  background: var(--surface-white, #fff);
+  border: 1px solid var(--gold, #c5a028);
+  border-radius: 9999px;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+.vinci__opt:hover {
+  background: var(--gold, #c5a028);
+  color: #fff;
+  transform: translateY(-1px);
+}
+.vinci__opt--gold {
+  background: linear-gradient(135deg, var(--gold-fine, #d4af37), var(--gold, #c5a028));
+  color: #fff;
+  border-color: transparent;
+}
+.vinci__opt--gold:hover { filter: brightness(1.05); }
+
+/* ============ Input row ============ */
+.vinci__inputrow {
+  display: flex;
+  gap: 8px;
+  padding: 10px 12px;
+  background: var(--surface-white, #fff);
+  border-top: 1px solid var(--line, #e5e5e5);
+}
+.vinci__inputrow input {
+  flex: 1;
+  font: inherit;
+  font-size: 14px;
+  color: var(--ink, #1a1a1a);
+  background: var(--surface, #f9f9f9);
+  border: 1px solid transparent;
+  border-radius: 9999px;
+  padding: 10px 16px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+.vinci__inputrow input:focus { border-color: var(--gold, #c5a028); }
+.vinci__inputrow button {
+  width: 40px;
+  height: 40px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--charcoal, #1a1a1a);
+  color: var(--gold-tint, #ffe08b);
+  font-size: 18px;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.vinci__inputrow button:hover {
+  background: var(--gold, #c5a028);
+  color: #fff;
+  transform: scale(1.05);
+}
+
+/* ============ Footer ============ */
+.vinci__foot {
+  padding: 7px 12px 9px;
+  text-align: center;
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft, #4d4635);
+  background: var(--surface-white, #fff);
+}
+.vinci__foot-link {
+  font: inherit;
+  color: var(--gold-deep, #745b00);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  padding: 0;
+}
+
+/* ============ Mobile: bottom sheet ============ */
+@media (max-width: 540px) {
+  .vinci__panel {
+    position: fixed;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: min(86dvh, 640px);
+    border-radius: var(--radius-lg, 1rem) var(--radius-lg, 1rem) 0 0;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+  }
+  .vinci--open .vinci__launcher {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+/* ============ Reduced motion ============ */
+@media (prefers-reduced-motion: reduce) {
+  .vinci__panel,
+  .vinci__launcher,
+  .vinci__opt { transition: none; }
+  .vinci__nudge,
+  .vinci__msg,
+  .vinci__opts { animation: none; }
+  .vinci--nudging .vinci__launcher::after { animation: none; opacity: 0.6; }
+  .vinci__typing span { animation: none; }
+}
