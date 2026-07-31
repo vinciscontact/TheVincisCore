@@ -336,22 +336,19 @@ h1, h2, h3 { text-wrap: balance; }
   background: radial-gradient(circle, rgba(255, 224, 139, 0.42), transparent 62%);
 }
 
-.hero__canvas {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-.hero__canvas canvas { display: block; width: 100%; height: 100%; }
 .hero__ornament {
   position: absolute;
   top: 50%; right: -12%;
   width: min(56vw, 820px);
   aspect-ratio: 1;
   transform: translateY(-50%);
-  opacity: 0.5;
+  opacity: 0.9;
   pointer-events: none;
 }
 .hero__ornament svg { width: 100%; height: 100%; }
+/* the machine is the hero's one visual — ink it with more conviction */
+.hero__ornament .d-main { stroke-width: 2; }
+.hero__ornament .d-fine { opacity: 0.8; stroke-width: 0.9; }
 
 .hero__thread {
   position: absolute;
@@ -589,70 +586,52 @@ h1, h2, h3 { text-wrap: balance; }
   padding: clamp(48px, 6vw, 88px) 0;
   overflow: hidden;
 }
-/* The codex: one master's notebook, two facing pages, drawn by scroll */
-.codex {
-  margin: 0 auto clamp(32px, 4.5vw, 64px);
+/* The duet: two working machines — the artist's arm draws, the watchtower scans */
+.duet {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(20px, 2.5vw, 36px);
   max-width: 1400px;
+  margin: 0 auto;
 }
-.codex svg {
+.duet__panel {
+  margin: 0;
+  background: var(--surface-white);
+  border: 1px solid var(--line);
+  border-top: 2px solid var(--gold-fine);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--lift);
+  padding: clamp(20px, 2.5vw, 32px) clamp(16px, 2vw, 28px) clamp(16px, 2vw, 26px);
+  text-align: center;
+}
+.duet__label { display: block; margin-bottom: 6px; }
+.duet__svg {
   display: block;
   width: 100%;
   height: auto;
 }
-.codex [pathLength] { stroke-dasharray: 1; }
-.codex__label {
-  font-family: var(--sans);
-  font-size: 11.5px;
-  font-weight: 600;
-  letter-spacing: 2.4px;
-  fill: var(--ink-soft);
-  opacity: 0.75;
-}
-.codex__caption {
+/* the machines ink with the hero's conviction */
+.duet .d-main { stroke-width: 2; }
+.duet .d-fine { opacity: 0.75; stroke-width: 0.9; }
+.duet__caption {
   font-family: var(--serif);
   font-style: italic;
-  font-size: 23px;
-  fill: var(--gold-deep);
+  font-size: clamp(1.2rem, 1.9vw, 1.55rem);
+  color: var(--ink);
+  margin-top: 4px;
 }
-/* codex physics layer (js/codex-physics.js) */
-.codex__ink circle { fill: var(--gold); pointer-events: none; }
-.codex__plumb-hit {
-  fill: transparent; /* invisible but hit-testable — the bob's grab area */
-  cursor: grab;
-  touch-action: none; /* dragging the bob never fights page scroll */
-}
-.codex__plumb-hit:active { cursor: grabbing; }
-.codex__seal-wax {
-  fill: rgba(212, 175, 55, 0.16);
-  stroke: var(--gold);
-  stroke-width: 1.5;
-  stroke-linejoin: round;
-}
-.codex__seal-ring { fill: none; stroke: var(--gold-fine); stroke-width: 0.7; opacity: 0.7; }
-.codex__seal-v {
-  font-family: var(--serif);
-  font-style: italic;
-  font-weight: 600;
-  font-size: 27px;
-  fill: var(--gold-deep);
-}
-
-.codex__note {
-  margin-top: clamp(10px, 1.5vw, 18px);
+.duet__caption em { color: var(--gold); }
+.duet__note {
+  margin: clamp(14px, 2vw, 22px) auto clamp(32px, 4.5vw, 64px);
   text-align: center;
   font-family: var(--serif);
   font-style: italic;
   font-size: clamp(1rem, 1.6vw, 1.25rem);
   color: var(--ink-soft);
 }
-.codex__note em { color: var(--gold); }
+.duet__note em { color: var(--gold); }
 @media (max-width: 900px) {
-  .codex__label { font-size: 16px; letter-spacing: 2px; }
-  .codex__caption { font-size: 31px; }
-}
-@media (max-width: 640px) {
-  .codex__label { font-size: 21px; letter-spacing: 1.6px; }
-  .codex__caption { font-size: 40px; }
+  .duet { grid-template-columns: 1fr; }
 }
 
 .ally-grid {

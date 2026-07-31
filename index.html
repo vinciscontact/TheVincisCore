@@ -33,6 +33,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600;1,9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/vinci-chat.css">
 
   <!-- ============ Structured Data : Organization + Services (SEO / GEO) ============ -->
   <script type="application/ld+json">
@@ -47,7 +48,7 @@
     "email": "vincis.contact@gmail.com",
     "founder": { "@id": "https://thevincis.com/#founder" },
     "areaServed": "IN",
-    "knowsAbout": ["SaaS development", "QR ordering systems", "Full-stack development", "Mobile application development", "Data analytics", "Business intelligence", "SEO", "Answer Engine Optimization", "Generative Engine Optimization", "Cybersecurity", "DevSecOps"],
+    "knowsAbout": ["SaaS development", "QR ordering systems", "QR code menus", "Digital restaurant menus", "Full-stack development", "Mobile application development", "Data analytics", "Business intelligence", "Power BI dashboards", "SEO", "Answer Engine Optimization (AEO)", "Generative Engine Optimization (GEO)", "AI search visibility", "Cybersecurity", "DevSecOps"],
     "hasOfferCatalog": {
       "@type": "OfferCatalog",
       "name": "TheVincis Services",
@@ -142,6 +143,21 @@
         "@type": "Question",
         "name": "How do I start a project with TheVincis?",
         "acceptedAnswer": { "@type": "Answer", "text": "Start by booking a free consultation through the contact form on thevincis.com or by emailing vincis.contact@gmail.com. TheVincis reviews your business problem, proposes a scoped solution with clear timelines, and builds it end-to-end — from architecture to launch to measurable results." }
+      },
+      {
+        "@type": "Question",
+        "name": "How much does a website cost in India?",
+        "acceptedAnswer": { "@type": "Answer", "text": "In India, a professional small-business website typically costs ₹15,000–₹1,00,000+ depending on pages, custom features and who builds it; e-commerce sites and web applications cost more. TheVincis gives a fixed written quote after a free consultation, and every build includes SEO, security and full ownership of the code." }
+      },
+      {
+        "@type": "Question",
+        "name": "What is a QR code menu?",
+        "acceptedAnswer": { "@type": "Answer", "text": "A QR code menu is a digital menu that opens when a guest scans a printed code with their phone — no app download needed. TheVincis's TableServe extends the idea into full QR ordering: guests browse, order, and the kitchen receives the ticket instantly, with order analytics for the owner." }
+      },
+      {
+        "@type": "Question",
+        "name": "Can AI tools like ChatGPT recommend my business?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes — AI assistants recommend businesses whose websites they can read, understand and trust. That practice is called GEO (Generative Engine Optimization): indexable pages, clear facts, structured data and a consistent brand identity. TheVincis builds GEO into every project, so your business is citable where customers now actually ask." }
       }
     ]
   }
@@ -194,18 +210,8 @@
     <!-- ============ Hero ============ -->
     <section class="hero" aria-label="Introduction">
       <div class="hero__aurora" aria-hidden="true"><span></span><span></span><span></span></div>
-      <div class="hero__canvas" aria-hidden="true"></div>
-      <div class="hero__ornament" aria-hidden="true">
-        <svg viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="400" cy="400" r="399" stroke="#D4AF37" stroke-width="0.6"/>
-          <circle cx="400" cy="400" r="246.6" stroke="#D4AF37" stroke-width="0.6"/>
-          <circle cx="400" cy="400" r="152.4" stroke="#D4AF37" stroke-width="0.6"/>
-          <circle cx="400" cy="400" r="94.2" stroke="#D4AF37" stroke-width="0.6"/>
-          <line x1="1" y1="400" x2="799" y2="400" stroke="#D4AF37" stroke-width="0.4"/>
-          <line x1="400" y1="1" x2="400" y2="799" stroke="#D4AF37" stroke-width="0.4"/>
-          <rect x="153.4" y="153.4" width="493.2" height="493.2" stroke="#D4AF37" stroke-width="0.4"/>
-        </svg>
-      </div>
+      <!-- The working machine: a da Vinci gear train drawn and driven by hero-machine.js -->
+      <div class="hero__ornament" aria-hidden="true"></div>
 
       <div class="container hero__content">
         <p class="label hero__label split-target" data-reveal="lines">TheVincis — Digital Product Studio</p>
@@ -443,96 +449,21 @@
           <p class="hook reveal">Da Vinci painted masterpieces with one hand and drew fortress walls with the other. <em>We allied with both hands.</em></p>
         </div>
 
-        <!-- The codex: one master's notebook, two facing pages, drawn by scroll -->
-        <figure class="codex" role="img" aria-label="A Da Vinci codex spread: the artist's page for CreativzEdge and the fortress engineer's page for Blackfyre, measured by a swinging plumb line and sealed in wax with a V monogram">
-          <svg viewBox="0 0 1200 560" xmlns="http://www.w3.org/2000/svg">
-            <!-- codex frame: two pages, spine, stitching -->
-            <rect class="d-fine cdx-frame" pathLength="1" x="60" y="50" width="520" height="460" rx="6"/>
-            <rect class="d-fine cdx-frame" pathLength="1" x="620" y="50" width="520" height="460" rx="6"/>
-            <line class="d-main cdx-frame" pathLength="1" x1="600" y1="40" x2="600" y2="520"/>
-            <line class="d-fine cdx-frame" pathLength="1" x1="592" y1="100" x2="608" y2="100"/>
-            <line class="d-fine cdx-frame" pathLength="1" x1="592" y1="200" x2="608" y2="200"/>
-            <line class="d-fine cdx-frame" pathLength="1" x1="592" y1="300" x2="608" y2="300"/>
-            <line class="d-fine cdx-frame" pathLength="1" x1="592" y1="400" x2="608" y2="400"/>
-            <path class="d-fine cdx-frame" pathLength="1" d="M60 480 L90 510"/>
-            <path class="d-fine cdx-frame" pathLength="1" d="M1140 480 L1110 510"/>
+        <!-- The duet: two working machines — the artist's arm draws, the watchtower scans -->
+        <div class="duet">
+          <figure class="duet__panel" role="img" aria-label="A drafting machine drawing a heart, stroke by stroke — CreativzEdge, design at work">
+            <p class="label duet__label">CreativzEdge — the artist at work</p>
+            <svg class="duet__svg" data-duet="artist" viewBox="0 0 560 470" fill="none" xmlns="http://www.w3.org/2000/svg"></svg>
+            <figcaption class="duet__caption">Make it <em>unforgettable.</em></figcaption>
+          </figure>
+          <figure class="duet__panel" role="img" aria-label="A radar sweep circling a shield, controls lighting up as the beam passes — Blackfyre, compliance under watch">
+            <p class="label duet__label">Blackfyre — the watchtower</p>
+            <svg class="duet__svg" data-duet="engineer" viewBox="0 0 560 470" fill="none" xmlns="http://www.w3.org/2000/svg"></svg>
+            <figcaption class="duet__caption">Make it <em>impregnable.</em></figcaption>
+          </figure>
+        </div>
+        <p class="duet__note reveal">One master. Two hands. <em>Every Vinci keeps both.</em></p>
 
-            <!-- ============ LEFT PAGE — the artist (CreativzEdge) ============ -->
-            <!-- construction: circles, axes, diagonals -->
-            <circle class="d-fine cdx-fine-l" pathLength="1" cx="320" cy="265" r="148"/>
-            <circle class="d-fine cdx-fine-l" pathLength="1" cx="320" cy="265" r="91"/>
-            <line class="d-fine cdx-fine-l" pathLength="1" x1="320" y1="117" x2="320" y2="413"/>
-            <line class="d-fine cdx-fine-l" pathLength="1" x1="172" y1="265" x2="468" y2="265"/>
-            <line class="d-fine cdx-fine-l" pathLength="1" x1="216" y1="161" x2="424" y2="369"/>
-            <line class="d-fine cdx-fine-l" pathLength="1" x1="424" y1="161" x2="216" y2="369"/>
-            <!-- margin notes, ruled -->
-            <line class="d-fine cdx-fine-l" pathLength="1" x1="90" y1="92" x2="176" y2="92"/>
-            <line class="d-fine cdx-fine-l" pathLength="1" x1="90" y1="104" x2="158" y2="104"/>
-            <line class="d-fine cdx-fine-l" pathLength="1" x1="90" y1="116" x2="168" y2="116"/>
-            <!-- the flourish: one calligraphic stroke of the brush -->
-            <path class="d-main cdx-main-l" pathLength="1" d="M196 392 C 252 342 232 242 310 216 C 382 192 442 240 421 300 C 406 344 341 350 331 305 C 323 268 368 249 392 267"/>
-            <!-- the quill that drew it -->
-            <path class="d-main cdx-detail-l" pathLength="1" d="M196 392 l-15 19 M196 392 l-7 21"/>
-            <path class="d-fine cdx-detail-l" pathLength="1" d="M181 411 C 164 424 153 442 156 460"/>
-            <!-- palette swatches -->
-            <rect class="d-fine cdx-detail-l" pathLength="1" x="204" y="438" width="34" height="24" rx="3"/>
-            <rect class="d-fine cdx-detail-l" pathLength="1" x="248" y="438" width="34" height="24" rx="3"/>
-            <rect class="d-fine cdx-detail-l" pathLength="1" x="292" y="438" width="34" height="24" rx="3"/>
-            <line class="d-fine cdx-detail-l" pathLength="1" x1="210" y1="458" x2="232" y2="442"/>
-            <line class="d-fine cdx-detail-l" pathLength="1" x1="254" y1="458" x2="276" y2="442"/>
-            <text class="codex__label" x="320" y="80" text-anchor="middle">CREATIVZEDGE — THE ARTIST'S PAGE</text>
-            <text class="codex__caption" x="320" y="492" text-anchor="middle">Make it unforgettable.</text>
-
-            <!-- ============ RIGHT PAGE — the engineer (Blackfyre) ============ -->
-            <!-- construction: radiating survey lines -->
-            <line class="d-fine cdx-fine-r" pathLength="1" x1="880" y1="270" x2="1030" y2="270"/>
-            <line class="d-fine cdx-fine-r" pathLength="1" x1="880" y1="270" x2="986" y2="376"/>
-            <line class="d-fine cdx-fine-r" pathLength="1" x1="880" y1="270" x2="880" y2="420"/>
-            <line class="d-fine cdx-fine-r" pathLength="1" x1="880" y1="270" x2="774" y2="376"/>
-            <line class="d-fine cdx-fine-r" pathLength="1" x1="880" y1="270" x2="730" y2="270"/>
-            <line class="d-fine cdx-fine-r" pathLength="1" x1="880" y1="270" x2="774" y2="164"/>
-            <line class="d-fine cdx-fine-r" pathLength="1" x1="880" y1="270" x2="880" y2="120"/>
-            <line class="d-fine cdx-fine-r" pathLength="1" x1="880" y1="270" x2="986" y2="164"/>
-            <!-- margin notes, ruled -->
-            <line class="d-fine cdx-fine-r" pathLength="1" x1="1024" y1="92" x2="1110" y2="92"/>
-            <line class="d-fine cdx-fine-r" pathLength="1" x1="1042" y1="104" x2="1110" y2="104"/>
-            <line class="d-fine cdx-fine-r" pathLength="1" x1="1032" y1="116" x2="1110" y2="116"/>
-            <!-- the star fort: eight bastions, one wall -->
-            <path class="d-main cdx-main-r" pathLength="1" d="M1030 270 L968 306 L986 376 L916 358 L880 420 L844 358 L774 376 L792 306 L730 270 L792 234 L774 164 L844 182 L880 120 L916 182 L986 164 L968 234 Z"/>
-            <!-- the moat, echoing the walls -->
-            <path class="d-fine cdx-main-r" pathLength="1" d="M1052 270 L1002 392 L880 442 L758 392 L708 270 L758 148 L880 98 L1002 148 Z"/>
-            <!-- the keep: shield sealed at the heart -->
-            <path class="d-main cdx-detail-r" pathLength="1" d="M880 238 L908 250 L908 277 C 908 295 896 306 880 312 C 864 306 852 295 852 277 L852 250 Z"/>
-            <path class="d-main cdx-detail-r" pathLength="1" d="M867 273 L877 283 L894 261"/>
-            <!-- surveyor's scale bar -->
-            <line class="d-fine cdx-detail-r" pathLength="1" x1="790" y1="452" x2="970" y2="452"/>
-            <line class="d-fine cdx-detail-r" pathLength="1" x1="790" y1="446" x2="790" y2="458"/>
-            <line class="d-fine cdx-detail-r" pathLength="1" x1="880" y1="447" x2="880" y2="457"/>
-            <line class="d-fine cdx-detail-r" pathLength="1" x1="970" y1="446" x2="970" y2="458"/>
-            <text class="codex__label" x="880" y="80" text-anchor="middle">BLACKFYRE — THE ENGINEER'S PAGE</text>
-            <text class="codex__caption" x="880" y="492" text-anchor="middle">Make it impregnable.</text>
-
-            <!-- The plumb line: hangs from the spine — the master's one true
-                 vertical, shared by both pages. A real pendulum (codex-physics). -->
-            <g class="codex__plumb" aria-hidden="true">
-              <circle class="d-main cdx-plumb" pathLength="1" cx="600" cy="64" r="3.4"/>
-              <g class="codex__plumb-arm">
-                <line class="d-fine cdx-plumb" pathLength="1" x1="600" y1="64" x2="600" y2="266"/>
-                <path class="d-main cdx-plumb" pathLength="1" d="M600 266 L612 284 L600 306 L588 284 Z"/>
-                <line class="d-fine cdx-plumb" pathLength="1" x1="592" y1="280" x2="608" y2="280"/>
-                <circle class="codex__plumb-hit" cx="600" cy="286" r="26"/>
-              </g>
-            </g>
-
-            <!-- The wax seal: stamped onto the spine once both pages are inked -->
-            <g class="codex__seal" aria-hidden="true">
-              <path class="codex__seal-wax" d="M600 430 C 617 428 628 442 626 458 C 628 473 616 486 600 485 C 584 487 572 473 574 458 C 572 443 583 429 600 430 Z"/>
-              <circle class="codex__seal-ring" cx="600" cy="458" r="19"/>
-              <text class="codex__seal-v" x="600" y="467" text-anchor="middle">V</text>
-            </g>
-          </svg>
-          <figcaption class="codex__note reveal">One master. Two hands. <em>Every Vinci keeps both.</em></figcaption>
-        </figure>
 
         <div class="ally-grid">
           <article class="ally">
@@ -767,6 +698,21 @@
             <summary><h3>How do I start a project with TheVincis?</h3><span class="faq__icon"></span></summary>
             <div class="faq__answer"><p>Book a free consultation through the form below or email vincis.contact@gmail.com. TheVincis reviews your business problem, proposes a scoped solution with clear timelines, and builds it end-to-end — from architecture to launch to measurable results.</p></div>
           </details>
+
+          <details class="faq__item card">
+            <summary><h3>How much does a website cost in India?</h3><span class="faq__icon"></span></summary>
+            <div class="faq__answer"><p>In India, a professional small-business website typically costs ₹15,000–₹1,00,000+ depending on pages, custom features and who builds it; e-commerce sites and web applications cost more. TheVincis gives a fixed written quote after a free consultation, and every build includes SEO, security and full ownership of the code.</p></div>
+          </details>
+
+          <details class="faq__item card">
+            <summary><h3>What is a QR code menu?</h3><span class="faq__icon"></span></summary>
+            <div class="faq__answer"><p>A QR code menu is a digital menu that opens when a guest scans a printed code with their phone — no app download needed. TheVincis's TableServe extends the idea into full QR ordering: guests browse, order, and the kitchen receives the ticket instantly, with order analytics for the owner.</p></div>
+          </details>
+
+          <details class="faq__item card">
+            <summary><h3>Can AI tools like ChatGPT recommend my business?</h3><span class="faq__icon"></span></summary>
+            <div class="faq__answer"><p>Yes — AI assistants recommend businesses whose websites they can read, understand and trust. That practice is called GEO (Generative Engine Optimization): indexable pages, clear facts, structured data and a consistent brand identity. TheVincis builds GEO into every project, so your business is citable where customers now actually ask.</p></div>
+          </details>
         </div>
       </div>
     </section>
@@ -846,11 +792,9 @@
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js" defer></script>
-  <script type="importmap">
-  { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }
-  </script>
   <script src="js/main.js" defer></script>
-  <script src="js/codex-physics.js" defer></script>
-  <script type="module" src="js/hero-particles.js"></script>
+  <script src="js/vinci-chat.js" defer></script>
+  <script src="js/hero-machine.js" defer></script>
+  <script src="js/collective-machines.js" defer></script>
 </body>
 </html>
