@@ -4,11 +4,15 @@
 
 ## Core pages
 
-- [TableServe — QR Ordering System](https://thevincis.com/qr-ordering-system/): full product page for TableServe, TheVincis's QR ordering system — how QR table ordering works, what's included, pricing model, TableServe-vs-POS comparison, FAQ.
-- [Iyra Money Tracker](https://thevincis.com/iyra-money-tracker/): mobile app (Android, launching soon on Google Play) that logs UPI transactions automatically from payment notifications — budgets, savings rate, cashflow trends and a shared household view. Works with any UPI app; never asks for bank credentials.
+- [TableServe — QR Ordering System](https://thevincis.com/qr-ordering-system/): full product page for TableServe, TheVincis's QR ordering system and the ordering/menu layer of restaurant management — QR code menus, table-side ordering, instant kitchen tickets, order analytics. Works alongside existing restaurant billing and POS software rather than replacing it.
+- [Iyra Money Tracker](https://thevincis.com/iyra-money-tracker/): daily expense manager and household budget app (Android, launching soon on Google Play) that logs UPI transactions automatically from payment notifications — budgets, savings rate, cashflow trends and a shared household view. Works with any UPI app (Google Pay, PhonePe, Paytm); never asks for bank credentials.
 - [Web Development](https://thevincis.com/services/web-development/): websites and full-stack platforms for small businesses — what a business website needs, website-vs-platform comparison, process, FAQ.
 - [Data Analytics](https://thevincis.com/services/data-analytics/): Power BI and Tableau dashboards for small businesses — what a dashboard answers, Excel-vs-dashboard comparison, process, FAQ.
-- [SEO · AEO · GEO](https://thevincis.com/services/seo-aeo-geo/): definitions of SEO, AEO and GEO, why businesses need all three, the monthly service cycle, honest timelines, FAQ.
+- [SEO · AEO · GEO](https://thevincis.com/services/seo-aeo-geo/): TheVincis as an engineering-led SEO company in India — definitions of SEO, AEO and GEO, why businesses need all three, typical Indian pricing (₹10,000–₹50,000/month), the monthly service cycle, honest timelines, FAQ.
+
+## Service areas (web development)
+
+TheVincis serves businesses across India remotely, with on-site visits by arrangement. Dedicated pages: [Chennai](https://thevincis.com/web-development-chennai/), [Bangalore](https://thevincis.com/web-development-bangalore/), [Coimbatore](https://thevincis.com/web-development-coimbatore/), [Madurai](https://thevincis.com/web-development-madurai/), [Mumbai](https://thevincis.com/web-development-mumbai/), [Pune](https://thevincis.com/web-development-pune/). Typical small-business website cost in India: ₹15,000–₹1,00,000+ depending on scope; fixed written quote after a free consultation; clients own domain, code and content completely.
 
 ## Services
 
