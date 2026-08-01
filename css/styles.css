@@ -787,18 +787,55 @@ h1, h2, h3 { text-wrap: balance; }
 }
 @media (max-width: 899px) {
   .svc-track { display: block; padding: 0; }
-  .line-station { width: auto; padding-top: 0; margin-bottom: 48px; }
+  .line-station {
+    width: auto;
+    padding-top: 0;
+    margin-bottom: 44px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.35); /* chunking: one thought per section */
+  }
+  .line-station:last-of-type { border-bottom: none; }
+  /* reading order: kicker → headline → BUJJI's pitch → visual → detail → action
+     (JS moves the exhibit art to sit right after the hook bubble) */
   .line-station__head {
     position: static;
     transform: none;
-    width: min(250px, 60vw);
-    margin: 0 auto 18px;
+    width: min(210px, 56vw);
+    margin: 20px auto 4px;
     opacity: 1; /* no beam on mobile — exhibits arrive lit */
   }
   .line-station__head::after { display: none; }
   .line-station__content { opacity: 1; }
+  /* BUJJI still gives the tour — the hook becomes his chat bubble */
+  .line-station .svc-card__hook {
+    position: relative;
+    margin-top: 16px;
+    padding: 12px 16px 12px 56px;
+    background: var(--surface-white);
+    border: 1px solid var(--line);
+    border-radius: 14px 14px 14px 4px; /* the widget's voice */
+    box-shadow: var(--lift);
+    color: var(--ink);
+    font-size: 1rem;
+  }
+  .line-station .svc-card__hook::before {
+    content: "";
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #fff url("../images/bujji-face.jpg") center / cover;
+    border: 1.5px solid var(--gold);
+  }
+  /* action zone: one full-width gold button under the thumb */
+  .line-station .svc-card__ctas { flex-direction: column; gap: 10px; margin-top: 22px; }
+  .line-station .svc-card__ctas .btn { width: 100%; text-align: center; justify-content: center; }
   .tour-guide, .tour-path, .svc-progress { display: none; }
   .tour-end { width: auto; padding-top: 0; }
+  .tour-end__card { padding: 24px 20px; }
 }
 
 /* Blueprint stroke language */

@@ -338,6 +338,17 @@ function buildScrollAnimations() {
           return h ? h.textContent : "And this is where you come in.";
         });
 
+        // reading order differs per breakpoint: on mobile the exhibit art sits
+        // inside the content flow right after BUJJI's bubble; on desktop it must
+        // live outside the content div (which dims until visited)
+        stations.forEach((st) => {
+          const head = st.querySelector(".line-station__head");
+          const hook = st.querySelector(".svc-card__hook");
+          if (!head) return;
+          if (!isDesktop && hook && head.previousElementSibling !== hook) hook.after(head);
+          else if (isDesktop && head.parentElement !== st) st.appendChild(head);
+        });
+
         if (isDesktop && guide) {
           const dist = () => svcTrack.scrollWidth - gallery.clientWidth;
           let centers = [];
