@@ -564,6 +564,114 @@ h1, h2, h3 { text-wrap: balance; }
 .story-card__art svg { display: block; width: 100%; max-width: 400px; margin-inline: auto; }
 .story-card [pathLength] { stroke-dasharray: 1; }
 
+/* ============ Services: horizontal gallery ============ */
+.svc-gallery { position: relative; }
+.svc-track {
+  display: flex;
+  gap: clamp(20px, 2.5vw, 36px);
+  align-items: stretch;
+  padding: 8px 4px 28px;
+  will-change: transform;
+}
+.svc-card {
+  position: relative;
+  flex: 0 0 auto;
+  width: min(86vw, 1040px);
+  display: grid;
+  grid-template-columns: 1.05fr 0.85fr;
+  gap: clamp(24px, 3vw, 48px);
+  align-items: center;
+  background: var(--surface-white);
+  border: 1px solid var(--line);
+  border-top: 2px solid var(--gold-fine);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--lift);
+  padding: clamp(28px, 3.5vw, 56px);
+  overflow: hidden;
+}
+.svc-card [pathLength] { stroke-dasharray: 1; }
+.svc-card__ghost {
+  position: absolute;
+  right: 10px;
+  top: -34px;
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: clamp(130px, 15vw, 230px);
+  line-height: 1;
+  color: rgba(197, 160, 40, 0.08);
+  pointer-events: none;
+  user-select: none;
+}
+.svc-card__num {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+}
+.svc-card__content h3 {
+  font-family: var(--serif);
+  font-size: clamp(1.7rem, 2.6vw, 2.4rem);
+  font-weight: 600;
+  line-height: 1.15;
+  margin-top: 10px;
+}
+.svc-card__hook {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1.02rem, 1.5vw, 1.2rem);
+  color: var(--gold-deep);
+  margin-top: 8px;
+}
+.svc-card__desc {
+  margin-top: 14px;
+  color: var(--ink-soft);
+  max-width: 54ch;
+}
+.svc-card__content .chips { margin-top: 18px; }
+.svc-card__ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 28px;
+}
+.svc-card__art svg {
+  display: block;
+  width: 100%;
+  max-width: 420px;
+  margin-inline: auto;
+}
+.svc-progress {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  max-width: 340px;
+  margin: 4px auto 0;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: var(--gold-deep);
+}
+.svc-progress__bar {
+  flex: 1;
+  height: 2px;
+  background: var(--line);
+  overflow: hidden;
+}
+.svc-progress__bar i {
+  display: block;
+  height: 100%;
+  background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+@media (max-width: 899px) {
+  .svc-track { display: block; padding: 0; }
+  .svc-card { width: auto; grid-template-columns: 1fr; margin-bottom: 24px; }
+  .svc-card__art svg { max-width: 250px; }
+  .svc-progress { display: none; }
+}
+
 /* Blueprint stroke language */
 .d-main {
   fill: none;

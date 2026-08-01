@@ -318,39 +318,59 @@ function buildScrollAnimations() {
         gsap.set(el, { visibility: "visible" });
       });
 
-      /* --- Story cards: each chapter's doodle draws as it arrives; the covered
-             card recedes (scale + fade) while the next slides over it --- */
-      const cards = gsap.utils.toArray(".story-card");
-      cards.forEach((card, i) => {
-        gsap.fromTo(
-          card.querySelectorAll(".story-card__art [pathLength]"),
-          { strokeDashoffset: 1 },
-          {
-            strokeDashoffset: 0,
-            duration: 1.2,
-            ease: "power2.out",
-            stagger: 0.06,
-            scrollTrigger: { trigger: card, start: "top 75%", toggleActions: "play none none none" },
-          }
-        );
-        gsap.from(card.querySelectorAll(".story-card__content > *"), {
-          y: 32,
-          autoAlpha: 0,
-          stagger: 0.07,
-          duration: 0.7,
-          scrollTrigger: { trigger: card, start: "top 80%", toggleActions: "play none none none" },
-        });
-        if (isDesktop && i < cards.length - 1) {
-          // desktop only: covered cards recede as the next slides over them
-          gsap.to(card, {
-            scale: 0.95,
-            autoAlpha: 0.6,
-            transformOrigin: "center top",
+      /* --- Services: horizontal gallery — the section pins and the six cards
+             glide sideways with the scroll (desktop); vertical list on mobile --- */
+      const svcTrack = document.querySelector(".svc-track");
+      if (svcTrack) {
+        const gallery = document.querySelector(".svc-gallery");
+        const progNum = document.querySelector(".svc-progress__num");
+        const progBar = document.querySelector(".svc-progress__bar i");
+        const svcCards = gsap.utils.toArray(".svc-card");
+
+        if (isDesktop) {
+          const dist = () => svcTrack.scrollWidth - gallery.clientWidth;
+          gsap.to(svcTrack, {
+            x: () => -dist(),
             ease: "none",
-            scrollTrigger: { trigger: cards[i + 1], start: "top bottom", end: "top 160px", scrub: true },
+            scrollTrigger: {
+              trigger: gallery,
+              start: "top 15%",
+              end: () => "+=" + dist(),
+              scrub: 1,
+              pin: true,
+              anticipatePin: 1,
+              invalidateOnRefresh: true,
+              onUpdate: (self) => {
+                if (progBar) progBar.style.transform = "scaleX(" + self.progress + ")";
+                if (progNum) progNum.textContent = String(1 + Math.round(self.progress * (svcCards.length - 1))).padStart(2, "0");
+              },
+            },
           });
         }
-      });
+
+        svcCards.forEach((card) => {
+          gsap.fromTo(
+            card.querySelectorAll(".svc-card__art [pathLength]"),
+            { strokeDashoffset: 1 },
+            {
+              strokeDashoffset: 0,
+              duration: 1.2,
+              ease: "power2.out",
+              stagger: 0.06,
+              scrollTrigger: { trigger: isDesktop ? gallery : card, start: "top 75%", toggleActions: "play none none none" },
+            }
+          );
+          if (!isDesktop) {
+            gsap.from(card.querySelectorAll(".svc-card__content > *"), {
+              y: 32,
+              autoAlpha: 0,
+              stagger: 0.07,
+              duration: 0.7,
+              scrollTrigger: { trigger: card, start: "top 80%", toggleActions: "play none none none" },
+            });
+          }
+        });
+      }
 
       /* --- Collective duet: the two machines animate themselves
              (js/collective-machines.js) — only the panels cascade in here --- */
