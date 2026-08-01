@@ -318,17 +318,45 @@ function buildScrollAnimations() {
         gsap.set(el, { visibility: "visible" });
       });
 
-      /* --- Services: horizontal gallery — the section pins and the six cards
-             glide sideways with the scroll (desktop); vertical list on mobile --- */
+      /* --- Services: BUJJI gives the tour. The section pins; the museum of
+             exhibits slides past while BUJJI hovers in place, projecting a
+             hologram beam. Exhibits draw themselves as the beam finds them,
+             and BUJJI's speech bubble speaks each service's hook line.
+             Mobile: a simple vertical list, exhibits pre-lit. --- */
       const svcTrack = document.querySelector(".svc-track");
       if (svcTrack) {
         const gallery = document.querySelector(".svc-gallery");
         const progNum = document.querySelector(".svc-progress__num");
         const progBar = document.querySelector(".svc-progress__bar i");
-        const svcCards = gsap.utils.toArray(".svc-card");
+        const stations = gsap.utils.toArray(".line-station");
+        const guide = gallery.querySelector(".tour-guide");
+        const beam = gallery.querySelector(".tour-beam");
+        const bubble = gallery.querySelector(".tour-bubble");
+        const bubbleText = bubble ? bubble.querySelector("span") : null;
+        const hooks = stations.map((st) => {
+          const h = st.querySelector(".svc-card__hook");
+          return h ? h.textContent : "And this is where you come in.";
+        });
 
-        if (isDesktop) {
+        if (isDesktop && guide) {
           const dist = () => svcTrack.scrollWidth - gallery.clientWidth;
+          let centers = [];
+          const measure = () => {
+            centers = stations.map((s) => s.offsetLeft + s.offsetWidth / 2);
+          };
+          measure();
+          ScrollTrigger.addEventListener("refreshInit", measure);
+
+          // each exhibit's ink, ready to draw the moment the beam finds it
+          const drawTweens = stations.map((st) =>
+            gsap.fromTo(
+              st.querySelectorAll(".line-station__head [pathLength]"),
+              { strokeDashoffset: 1 },
+              { strokeDashoffset: 0, duration: 1.1, ease: "power2.out", stagger: 0.05, paused: true }
+            )
+          );
+
+          let activeIdx = -1;
           gsap.to(svcTrack, {
             x: () => -dist(),
             ease: "none",
@@ -342,33 +370,63 @@ function buildScrollAnimations() {
               invalidateOnRefresh: true,
               onUpdate: (self) => {
                 if (progBar) progBar.style.transform = "scaleX(" + self.progress + ")";
-                if (progNum) progNum.textContent = String(1 + Math.round(self.progress * (svcCards.length - 1))).padStart(2, "0");
+                if (progNum) progNum.textContent = String(Math.min(6, 1 + Math.round(self.progress * (stations.length - 1)))).padStart(2, "0");
+
+                // where BUJJI stands, measured in the museum's own coordinates
+                const gx = guide.offsetLeft + 38 + self.progress * dist();
+                // the beam always points at whichever exhibit is nearest
+                let nearest = 0;
+                stations.forEach((st, i) => {
+                  if (Math.abs(gx - centers[i]) < Math.abs(gx - centers[nearest])) nearest = i;
+                  if (gx > centers[i] - 320) {
+                    st.classList.add("is-visited");
+                    drawTweens[i].play();
+                  }
+                });
+                stations.forEach((st, i) => st.classList.toggle("is-lit", i === nearest));
+                if (activeIdx !== nearest && bubbleText) {
+                  activeIdx = nearest;
+                  bubbleText.textContent = hooks[nearest];
+                  bubble.classList.remove("pop");
+                  void bubble.offsetWidth; // restart the pop animation
+                  bubble.classList.add("pop");
+                }
+                if (beam) beam.classList.toggle("on", self.isActive);
               },
             },
           });
-        }
-
-        svcCards.forEach((card) => {
-          gsap.fromTo(
-            card.querySelectorAll(".svc-card__art [pathLength]"),
-            { strokeDashoffset: 1 },
-            {
-              strokeDashoffset: 0,
-              duration: 1.2,
-              ease: "power2.out",
-              stagger: 0.06,
-              scrollTrigger: { trigger: isDesktop ? gallery : card, start: "top 75%", toggleActions: "play none none none" },
-            }
-          );
-          if (!isDesktop) {
-            gsap.from(card.querySelectorAll(".svc-card__content > *"), {
+        } else {
+          // mobile: exhibits draw and content cascades as each arrives
+          stations.forEach((st) => {
+            gsap.fromTo(
+              st.querySelectorAll(".line-station__head [pathLength]"),
+              { strokeDashoffset: 1 },
+              {
+                strokeDashoffset: 0,
+                duration: 1.2,
+                ease: "power2.out",
+                stagger: 0.06,
+                scrollTrigger: { trigger: st, start: "top 75%", toggleActions: "play none none none" },
+              }
+            );
+            gsap.from(st.querySelectorAll(".svc-card__content > *, .tour-end__card > *"), {
               y: 32,
               autoAlpha: 0,
               stagger: 0.07,
               duration: 0.7,
-              scrollTrigger: { trigger: card, start: "top 80%", toggleActions: "play none none none" },
+              scrollTrigger: { trigger: st, start: "top 80%", toggleActions: "play none none none" },
             });
-          }
+          });
+        }
+      }
+
+      /* the tour's hand-off: the end-cap button opens the real BUJJI */
+      const askBujji = document.getElementById("askBujji");
+      if (askBujji && !askBujji.dataset.bound) {
+        askBujji.dataset.bound = "1"; // matchMedia re-runs this block on resize
+        askBujji.addEventListener("click", () => {
+          const launcher = document.querySelector(".vinci__launcher");
+          if (launcher) launcher.click();
         });
       }
 

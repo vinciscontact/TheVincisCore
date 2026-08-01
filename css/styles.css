@@ -567,41 +567,163 @@ h1, h2, h3 { text-wrap: balance; }
 /* ============ Services: horizontal gallery ============ */
 .svc-gallery { position: relative; }
 .svc-track {
+  position: relative; /* belt + station measurements anchor here */
   display: flex;
   gap: clamp(20px, 2.5vw, 36px);
   align-items: stretch;
   padding: 8px 4px 28px;
   will-change: transform;
 }
-.svc-card {
+/* exhibits: each service stands on a museum pedestal along BUJJI's flight path */
+.line-station {
   position: relative;
   flex: 0 0 auto;
-  width: min(86vw, 1040px);
-  display: grid;
-  grid-template-columns: 1.05fr 0.85fr;
-  gap: clamp(24px, 3vw, 48px);
-  align-items: center;
+  width: min(72vw, 820px);
+  padding-top: 344px; /* copy sits below the exhibit */
+}
+.line-station [pathLength] { stroke-dasharray: 1; }
+.line-station__head {
+  position: absolute;
+  top: 34px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(300px, 40vw);
+  opacity: 0.3; /* exhibits wait in the dark until BUJJI's beam finds them */
+  transition: opacity 0.5s ease, filter 0.5s ease;
+}
+/* the pedestal every exhibit stands on */
+.line-station__head::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 10px);
+  transform: translateX(-50%);
+  width: 64%;
+  border-top: 2px solid var(--gold-fine);
+  box-shadow: 0 8px 0 -1px rgba(212, 175, 55, 0.35);
+}
+.line-station.is-visited .line-station__head { opacity: 1; }
+.line-station.is-lit .line-station__head {
+  filter: drop-shadow(0 0 14px rgba(212, 175, 55, 0.6));
+  animation: holo-flicker 2.6s infinite;
+}
+.line-station__content { opacity: 0.35; transition: opacity 0.5s ease; }
+.line-station.is-visited .line-station__content { opacity: 1; }
+
+/* the dotted flight path BUJJI travels */
+.tour-path {
+  position: absolute;
+  left: -12vw;
+  right: -12vw;
+  top: 150px;
+  border-top: 2px dotted rgba(197, 160, 40, 0.35);
+}
+
+/* BUJJI the guide — pinned in place while the museum slides past */
+.tour-guide {
+  position: absolute;
+  left: 13%;
+  top: 96px;
+  z-index: 4;
+}
+.tour-bujji {
+  position: relative;
+  width: 76px;
+  height: 76px;
+  animation: bujji-bob 3s ease-in-out infinite;
+}
+.tour-bujji img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2.5px solid var(--gold);
+  box-shadow: 0 14px 30px rgba(116, 91, 0, 0.25);
+  background: #fff;
+}
+.tour-thrust {
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 4px);
+  transform: translateX(-50%);
+  width: 3px;
+  height: 20px;
+  border-radius: 2px;
+  background: linear-gradient(var(--gold-fine), transparent);
+  animation: thrust-flicker 0.5s steps(2) infinite;
+}
+.tour-bubble {
+  position: absolute;
+  bottom: calc(100% + 40px);
+  left: -18px;
+  width: max-content;
+  max-width: 300px;
+  background: var(--surface-white);
+  border: 1px solid var(--line);
+  border-radius: 14px 14px 14px 4px; /* same voice as the chat widget */
+  box-shadow: var(--lift);
+  padding: 11px 15px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink);
+}
+.tour-bubble.pop { animation: bubble-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+/* the hologram beam BUJJI projects onto each exhibit */
+.tour-beam {
+  position: absolute;
+  left: 62px;
+  top: 20px;
+  width: min(30vw, 420px);
+  height: 150px;
+  clip-path: polygon(0 26%, 100% 0, 100% 100%, 0 40%);
+  background: linear-gradient(90deg, rgba(212, 175, 55, 0.4), rgba(212, 175, 55, 0.03));
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+.tour-beam.on { opacity: 1; animation: holo-flicker 2.2s infinite; }
+
+@keyframes bujji-bob {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-9px) rotate(2deg); }
+}
+@keyframes thrust-flicker {
+  0%, 100% { opacity: 0.9; height: 20px; }
+  50% { opacity: 0.4; height: 14px; }
+}
+@keyframes holo-flicker {
+  0%, 100% { opacity: 1; }
+  7% { opacity: 0.82; }
+  11% { opacity: 0.96; }
+  36% { opacity: 0.88; }
+  41% { opacity: 1; }
+  74% { opacity: 0.9; }
+}
+@keyframes bubble-pop {
+  from { transform: scale(0.82); opacity: 0.4; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* the tour's end-cap */
+.tour-end { width: min(60vw, 640px); display: flex; align-items: center; padding-top: 90px; }
+.tour-end__card {
   background: var(--surface-white);
   border: 1px solid var(--line);
   border-top: 2px solid var(--gold-fine);
   border-radius: var(--radius-lg);
   box-shadow: var(--lift);
-  padding: clamp(28px, 3.5vw, 56px);
-  overflow: hidden;
+  padding: clamp(28px, 3vw, 48px);
 }
-.svc-card [pathLength] { stroke-dasharray: 1; }
-.svc-card__ghost {
-  position: absolute;
-  right: 10px;
-  top: -34px;
+.tour-end__card h3 {
   font-family: var(--serif);
-  font-weight: 700;
-  font-size: clamp(130px, 15vw, 230px);
-  line-height: 1;
-  color: rgba(197, 160, 40, 0.08);
-  pointer-events: none;
-  user-select: none;
+  font-size: clamp(1.7rem, 2.6vw, 2.3rem);
+  font-weight: 600;
+  line-height: 1.15;
+  margin-top: 10px;
 }
+.tour-end__card h3 em { font-style: italic; color: var(--gold); }
+.tour-end.is-visited .tour-end__card { opacity: 1; }
+.tour-end .line-station__content { opacity: 1; }
 .svc-card__num {
   font-size: 12px;
   font-weight: 600;
@@ -635,11 +757,9 @@ h1, h2, h3 { text-wrap: balance; }
   gap: 14px;
   margin-top: 28px;
 }
-.svc-card__art svg {
+.line-station__head svg {
   display: block;
   width: 100%;
-  max-width: 420px;
-  margin-inline: auto;
 }
 .svc-progress {
   display: flex;
@@ -667,9 +787,18 @@ h1, h2, h3 { text-wrap: balance; }
 }
 @media (max-width: 899px) {
   .svc-track { display: block; padding: 0; }
-  .svc-card { width: auto; grid-template-columns: 1fr; margin-bottom: 24px; }
-  .svc-card__art svg { max-width: 250px; }
-  .svc-progress { display: none; }
+  .line-station { width: auto; padding-top: 0; margin-bottom: 48px; }
+  .line-station__head {
+    position: static;
+    transform: none;
+    width: min(250px, 60vw);
+    margin: 0 auto 18px;
+    opacity: 1; /* no beam on mobile — exhibits arrive lit */
+  }
+  .line-station__head::after { display: none; }
+  .line-station__content { opacity: 1; }
+  .tour-guide, .tour-path, .svc-progress { display: none; }
+  .tour-end { width: auto; padding-top: 0; }
 }
 
 /* Blueprint stroke language */
