@@ -564,35 +564,15 @@ h1, h2, h3 { text-wrap: balance; }
 .story-card__art svg { display: block; width: 100%; max-width: 400px; margin-inline: auto; }
 .story-card [pathLength] { stroke-dasharray: 1; }
 
-/* ============ Services: horizontal gallery ============ */
-.svc-gallery { position: relative; }
-.svc-track {
-  position: relative; /* belt + station measurements anchor here */
-  display: flex;
-  gap: clamp(20px, 2.5vw, 36px);
-  align-items: stretch;
-  padding: 8px 4px 28px;
-  will-change: transform;
-}
-/* exhibits: each service stands on a museum pedestal along BUJJI's flight path */
-.line-station {
-  position: relative;
-  flex: 0 0 auto;
-  width: min(72vw, 820px);
-  padding-top: 344px; /* copy sits below the exhibit */
-}
-.line-station [pathLength] { stroke-dasharray: 1; }
-.line-station__head {
-  position: absolute;
-  top: 34px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(300px, 40vw);
-  opacity: 0.3; /* exhibits wait in the dark until BUJJI's beam finds them */
-  transition: opacity 0.5s ease, filter 0.5s ease;
-}
-/* the pedestal every exhibit stands on */
-.line-station__head::after {
+/* ============ Services: the picture show — one scene at a time ============ */
+.svc-cinema { position: relative; }
+.svc-stage { position: relative; }
+.svc-scene [pathLength] { stroke-dasharray: 1; }
+
+/* each scene's exhibit, standing on its pedestal */
+.svc-scene__art { position: relative; width: min(300px, 70vw); margin-inline: auto; }
+.svc-scene__art svg { display: block; width: 100%; }
+.svc-scene__art::after {
   content: "";
   position: absolute;
   left: 50%;
@@ -602,29 +582,373 @@ h1, h2, h3 { text-wrap: balance; }
   border-top: 2px solid var(--gold-fine);
   box-shadow: 0 8px 0 -1px rgba(212, 175, 55, 0.35);
 }
-.line-station.is-visited .line-station__head { opacity: 1; }
-.line-station.is-lit .line-station__head {
-  filter: drop-shadow(0 0 14px rgba(212, 175, 55, 0.6));
-  animation: holo-flicker 2.6s infinite;
-}
-.line-station__content { opacity: 0.35; transition: opacity 0.5s ease; }
-.line-station.is-visited .line-station__content { opacity: 1; }
 
-/* the dotted flight path BUJJI travels */
-.tour-path {
+/* Scene 03's exhibit is a live phone: its screen cycles through shipped apps */
+.mock-phone {
+  position: relative;
+  aspect-ratio: 9 / 18.5;
+  background: var(--surface-white);
+  border: 2px solid var(--gold);
+  border-radius: 38px;
+  box-shadow: var(--lift), 0 24px 60px rgba(116, 91, 0, 0.18);
+  padding: 12px 9px;
+  overflow: hidden;
+}
+.mock-phone__cam {
   position: absolute;
-  left: -12vw;
-  right: -12vw;
-  top: 150px;
-  border-top: 2px dotted rgba(197, 160, 40, 0.35);
+  top: 11px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ink);
+  opacity: 0.75;
+  z-index: 2;
+}
+.mock-phone__bar {
+  position: absolute;
+  bottom: 7px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 34%;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--line);
+  z-index: 2;
+}
+.mock-phone__screen {
+  position: relative;
+  height: 100%;
+  border-radius: 26px;
+  overflow: hidden;
+  background: #faf8f1;
+}
+.mock-app {
+  position: absolute;
+  inset: 0;
+  padding: 24px 11px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  font-size: 11px;
+  color: var(--ink);
+  opacity: 0; /* JS runs the reel; without it (reduced motion) the first app stays */
+}
+.mock-app:first-child { opacity: 1; }
+.mock-app header { display: flex; align-items: baseline; justify-content: space-between; }
+.mock-app header b { font-family: var(--serif); font-size: 14px; font-weight: 600; }
+.mock-app header span {
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+}
+.mock-app__balance, .mock-app__kpi {
+  background: var(--gold);
+  color: #fff;
+  border-radius: 12px;
+  padding: 9px 11px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.mock-app__balance small, .mock-app__kpi small { font-size: 8.5px; opacity: 0.85; }
+.mock-app__balance strong, .mock-app__kpi strong { font-family: var(--serif); font-size: 17px; line-height: 1.1; }
+.mock-app ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 7px; }
+.mock-app li, .mock-app__dish {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--surface-white);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 7px 9px;
+}
+.mock-app li i { width: 7px; height: 7px; border-radius: 50%; background: var(--c, var(--gold)); flex: none; }
+.mock-app li span, .mock-app__dish span { flex: 1; }
+.mock-app li b, .mock-app__dish b { font-weight: 600; }
+.mock-app li b.in { color: var(--gold-deep); }
+.mock-app__dish i {
+  font-style: normal;
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+  border: 1px solid var(--gold-fine);
+  border-radius: 999px;
+  padding: 2px 7px;
+}
+.mock-app__cart {
+  margin-top: auto;
+  background: var(--ink);
+  color: #fff;
+  text-align: center;
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-size: 10px;
+}
+.mock-app__bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 72px;
+  padding: 0 4px;
+  margin-top: 4px;
+}
+.mock-app__bars i {
+  flex: 1;
+  height: var(--h, 50%);
+  background: var(--gold);
+  border-radius: 3px 3px 0 0;
+  opacity: 0.85;
+}
+.mock-app__bars i:nth-child(odd) { background: var(--gold-fine); }
+
+/* ---- shared browser-window chrome for the other live mocks ---- */
+.mock-win {
+  display: flex;
+  flex-direction: column;
+  aspect-ratio: 10 / 7.6;
+  background: var(--surface-white);
+  border: 1.5px solid var(--gold-fine);
+  border-radius: 14px;
+  box-shadow: var(--lift), 0 24px 60px rgba(116, 91, 0, 0.14);
+  overflow: hidden;
+}
+.mock-win__bar {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--line);
+  background: #faf8f1;
+}
+.mock-win__bar i { width: 7px; height: 7px; border-radius: 50%; background: var(--line); }
+.mock-win__bar i:first-child { background: var(--gold); }
+.mock-win__bar span {
+  margin-left: 6px;
+  flex: 1;
+  background: var(--surface-white);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 2px 9px;
+  font-size: 8.5px;
+  color: var(--ink-soft);
+  letter-spacing: 0.03em;
+}
+.mock-win__body { position: relative; flex: 1; padding: 12px; font-size: 10.5px; color: var(--ink); }
+.mock-screen {
+  position: absolute;
+  inset: 0;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  opacity: 0; /* JS runs the reels; without it the first screen stays */
+}
+.mock-screen:first-child { opacity: 1; }
+.mock-head { display: flex; align-items: baseline; justify-content: space-between; }
+.mock-head b { font-family: var(--serif); font-size: 13px; font-weight: 600; }
+.mock-head span { font-size: 8px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold-deep); }
+
+/* skeleton bars used across mocks */
+.bar-sm, .bar-xs, .bar-h1 { display: block; height: 7px; width: var(--w, 60%); border-radius: 4px; background: var(--line); }
+.bar-xs { height: 5px; opacity: 0.7; }
+.bar-h1 { height: 10px; background: var(--ink); opacity: 0.85; }
+
+/* SaaS: product switcher */
+.mock-order {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: var(--surface-white);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 7px 9px;
+}
+.mock-chip {
+  font-style: normal;
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+  border: 1px solid var(--gold-fine);
+  border-radius: 999px;
+  padding: 2px 7px;
+  transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+.mock-chip.is-done, .mock-chip--ok { background: var(--gold); border-color: var(--gold); color: #fff; }
+.mock-total {
+  margin-top: auto;
+  text-align: center;
+  font-size: 9px;
+  color: var(--ink-soft);
+  border-top: 1px dashed var(--line);
+  padding-top: 7px;
 }
 
-/* BUJJI the guide — pinned in place while the museum slides past */
+/* Full-stack: code types, UI appears */
+.mock-win__body.mock-code-split { display: grid; grid-template-columns: 1.05fr 0.95fr; padding: 0; }
+.mock-code { background: var(--ink); padding: 14px 12px; display: flex; flex-direction: column; gap: 9px; }
+.code-line { display: block; height: 6px; width: var(--w, 60%); border-radius: 3px; background: rgba(255, 255, 255, 0.28); }
+.code-line--gold { background: var(--gold); opacity: 0.9; }
+.code-caret { width: 6px; height: 10px; background: var(--gold); animation: caret-blink 0.9s steps(2) infinite; }
+@keyframes caret-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+.mock-preview { padding: 14px 12px; display: flex; flex-direction: column; gap: 10px; align-items: flex-start; }
+.prev-head { display: block; height: 10px; width: 78%; border-radius: 5px; background: var(--ink); opacity: 0.85; }
+.prev-btn {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--gold);
+  color: #fff;
+  border-radius: 999px;
+  padding: 5px 12px;
+}
+.prev-bars { display: flex; align-items: flex-end; gap: 6px; height: 44px; width: 60%; }
+.prev-bars i { flex: 1; height: var(--h, 50%); background: var(--gold-fine); border-radius: 3px 3px 0 0; }
+
+/* Websites: the page assembles itself */
+.mock-site { display: flex; flex-direction: column; gap: 9px; height: 100%; }
+.site-nav { display: flex; align-items: center; gap: 6px; }
+.site-nav .dot-logo { width: 9px; height: 9px; border-radius: 50%; background: var(--gold); }
+.site-nav .bar-sm { height: 5px; }
+.site-hero { display: flex; flex-direction: column; gap: 7px; padding: 6px 0 2px; align-items: flex-start; }
+.site-secs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; flex: 1; }
+.site-secs i { border: 1px solid var(--line); border-radius: 8px; background: #faf8f1; }
+.mock-toast {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--ink);
+  color: #fff;
+  border-radius: 10px;
+  padding: 7px 10px;
+  box-shadow: var(--lift);
+}
+.mock-toast i { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); flex: none; }
+.mock-toast b { display: block; font-size: 9px; }
+.mock-toast span { font-size: 8px; opacity: 0.75; }
+
+/* Data: BI panel */
+.mock-bi { display: flex; flex-direction: column; gap: 9px; height: 100%; }
+.bi-kpis { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.bi-kpi { background: var(--gold); color: #fff; border-radius: 10px; padding: 8px 10px; display: flex; flex-direction: column; gap: 2px; }
+.bi-kpi--line { background: var(--surface-white); color: var(--ink); border: 1px solid var(--gold-fine); }
+.bi-kpi small { font-size: 8px; opacity: 0.85; letter-spacing: 0.06em; text-transform: uppercase; }
+.bi-kpi strong { font-family: var(--serif); font-size: 15px; line-height: 1.15; }
+.bi-bars { flex: 1; height: auto; }
+
+/* SEO: SERP climb + AI citation */
+.serp-bar {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 5px 11px;
+  font-size: 9px;
+  color: var(--ink-soft);
+  background: var(--surface-white);
+}
+.serp-list { display: flex; flex-direction: column; gap: 8px; margin-top: 2px; }
+.serp-res { display: flex; flex-direction: column; gap: 4px; border: 1px solid transparent; border-radius: 8px; padding: 6px 8px; }
+.serp-res--tv { border-color: var(--gold-fine); background: #faf8f1; position: relative; }
+.serp-res--tv b { font-size: 9.5px; font-weight: 600; }
+.serp-res--tv span { font-size: 8px; color: var(--gold-deep); }
+.serp-res--tv em {
+  position: absolute;
+  top: -7px;
+  right: -6px;
+  font-style: normal;
+  font-size: 8px;
+  font-weight: 700;
+  background: var(--gold);
+  color: #fff;
+  border-radius: 999px;
+  padding: 2px 6px;
+}
+.mock-ai { gap: 10px; }
+.ai-q {
+  align-self: flex-end;
+  background: var(--ink);
+  color: #fff;
+  border-radius: 12px 12px 4px 12px;
+  padding: 6px 10px;
+  font-size: 9px;
+  max-width: 85%;
+}
+.ai-a {
+  background: var(--surface-white);
+  border: 1px solid var(--line);
+  border-radius: 12px 12px 12px 4px;
+  padding: 9px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 92%;
+}
+.ai-src {
+  align-self: flex-start;
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--gold-deep);
+  border: 1px solid var(--gold-fine);
+  border-radius: 999px;
+  padding: 2px 8px;
+  margin-top: 2px;
+}
+/* bars grow from the floor when the reels animate them */
+.mock-app__bars i, .prev-bars i { transform-origin: bottom center; }
+
+.svc-card__num {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+}
+.svc-scene h3 {
+  font-family: var(--serif);
+  font-size: clamp(1.8rem, 3vw, 2.8rem);
+  font-weight: 600;
+  line-height: 1.15;
+  margin-top: 10px;
+}
+.svc-scene h3 em { font-style: italic; color: var(--gold); }
+.svc-card__hook {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1.02rem, 1.5vw, 1.2rem);
+  color: var(--gold-deep);
+  margin-top: 8px;
+}
+.svc-card__desc {
+  margin-top: 14px;
+  color: var(--ink-soft);
+  max-width: 54ch;
+}
+.svc-card__ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 28px;
+}
+
+/* BUJJI, narrating from the corner of the frame */
 .tour-guide {
   position: absolute;
-  left: 13%;
-  top: 96px;
+  left: 6px;
+  bottom: 8px;
   z-index: 4;
+  display: none;
 }
 .tour-bujji {
   position: relative;
@@ -654,8 +978,8 @@ h1, h2, h3 { text-wrap: balance; }
 }
 .tour-bubble {
   position: absolute;
-  bottom: calc(100% + 40px);
-  left: -18px;
+  bottom: calc(100% + 14px);
+  left: -10px;
   width: max-content;
   max-width: 300px;
   background: var(--surface-white);
@@ -668,20 +992,6 @@ h1, h2, h3 { text-wrap: balance; }
   color: var(--ink);
 }
 .tour-bubble.pop { animation: bubble-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
-/* the hologram beam BUJJI projects onto each exhibit */
-.tour-beam {
-  position: absolute;
-  left: 62px;
-  top: 20px;
-  width: min(30vw, 420px);
-  height: 150px;
-  clip-path: polygon(0 26%, 100% 0, 100% 100%, 0 40%);
-  background: linear-gradient(90deg, rgba(212, 175, 55, 0.4), rgba(212, 175, 55, 0.03));
-  opacity: 0;
-  transition: opacity 0.4s ease;
-  pointer-events: none;
-}
-.tour-beam.on { opacity: 1; animation: holo-flicker 2.2s infinite; }
 
 @keyframes bujji-bob {
   0%, 100% { transform: translateY(0) rotate(-2deg); }
@@ -691,82 +1001,17 @@ h1, h2, h3 { text-wrap: balance; }
   0%, 100% { opacity: 0.9; height: 20px; }
   50% { opacity: 0.4; height: 14px; }
 }
-@keyframes holo-flicker {
-  0%, 100% { opacity: 1; }
-  7% { opacity: 0.82; }
-  11% { opacity: 0.96; }
-  36% { opacity: 0.88; }
-  41% { opacity: 1; }
-  74% { opacity: 0.9; }
-}
 @keyframes bubble-pop {
   from { transform: scale(0.82); opacity: 0.4; }
   to { transform: scale(1); opacity: 1; }
 }
 
-/* the tour's end-cap */
-.tour-end { width: min(60vw, 640px); display: flex; align-items: center; padding-top: 90px; }
-.tour-end__card {
-  background: var(--surface-white);
-  border: 1px solid var(--line);
-  border-top: 2px solid var(--gold-fine);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--lift);
-  padding: clamp(28px, 3vw, 48px);
-}
-.tour-end__card h3 {
-  font-family: var(--serif);
-  font-size: clamp(1.7rem, 2.6vw, 2.3rem);
-  font-weight: 600;
-  line-height: 1.15;
-  margin-top: 10px;
-}
-.tour-end__card h3 em { font-style: italic; color: var(--gold); }
-.tour-end.is-visited .tour-end__card { opacity: 1; }
-.tour-end .line-station__content { opacity: 1; }
-.svc-card__num {
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--gold-deep);
-}
-.svc-card__content h3 {
-  font-family: var(--serif);
-  font-size: clamp(1.7rem, 2.6vw, 2.4rem);
-  font-weight: 600;
-  line-height: 1.15;
-  margin-top: 10px;
-}
-.svc-card__hook {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: clamp(1.02rem, 1.5vw, 1.2rem);
-  color: var(--gold-deep);
-  margin-top: 8px;
-}
-.svc-card__desc {
-  margin-top: 14px;
-  color: var(--ink-soft);
-  max-width: 54ch;
-}
-.svc-card__content .chips { margin-top: 18px; }
-.svc-card__ctas {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14px;
-  margin-top: 28px;
-}
-.line-station__head svg {
-  display: block;
-  width: 100%;
-}
 .svc-progress {
   display: flex;
   align-items: center;
   gap: 16px;
   max-width: 340px;
-  margin: 4px auto 0;
+  margin: 28px auto 0;
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.16em;
@@ -785,29 +1030,74 @@ h1, h2, h3 { text-wrap: balance; }
   transform: scaleX(0);
   transform-origin: left center;
 }
+
+/* Desktop: scene composition — art stage left, copy stage right,
+   the hook line leaves the card and becomes BUJJI's spoken bubble */
+@media (min-width: 900px) {
+  .tour-guide { display: block; }
+  .svc-scene {
+    display: grid;
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    grid-template-areas:
+      "art num"
+      "art title"
+      "art hook"
+      "art desc"
+      "art ctas";
+    column-gap: clamp(40px, 6vw, 96px);
+    align-content: center;
+  }
+  .svc-scene > .svc-card__num,
+  .svc-scene > .label { grid-area: num; align-self: end; }
+  .svc-scene > h3 { grid-area: title; }
+  .svc-scene > .svc-card__hook { grid-area: hook; }
+  .svc-scene > .svc-card__desc { grid-area: desc; }
+  .svc-scene > .svc-card__ctas { grid-area: ctas; align-self: start; }
+  .svc-scene__art { grid-area: art; align-self: center; width: min(340px, 30vw); }
+  .svc-scene__art--phone { width: min(220px, 22vw); } /* taller than the windows — keep it inside the stage */
+  .svc-scene__art--win { width: min(360px, 32vw); }
+  .svc-scene:not(.svc-scene--end) .svc-card__hook { display: none; } /* BUJJI speaks it */
+  .svc-scene--end {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "num" "title" "hook" "desc" "ctas";
+    max-width: 640px;
+    margin-inline: auto;
+  }
+}
+
+/* the film itself: scenes stack on one stage and swap under GSAP's control */
+@media (min-width: 900px) and (prefers-reduced-motion: no-preference) {
+  .svc-stage { height: clamp(460px, 70vh, 620px); }
+  .svc-scene { position: absolute; inset: 0; opacity: 0; visibility: hidden; }
+  .svc-scene:first-of-type { opacity: 1; visibility: visible; }
+}
+
+/* reduced motion: the reel unrolls instead — every scene visible, no narrator */
+@media (min-width: 900px) and (prefers-reduced-motion: reduce) {
+  .svc-scene + .svc-scene { margin-top: 84px; }
+  .svc-scene:not(.svc-scene--end) .svc-card__hook { display: block; } /* hooks return to the cards */
+  .tour-guide, .svc-progress { display: none; }
+}
+
+/* Mobile: the reel unrolls vertically; the hook becomes BUJJI's chat bubble */
 @media (max-width: 899px) {
-  .svc-track { display: block; padding: 0; }
-  .line-station {
-    width: auto;
-    padding-top: 0;
+  .svc-scene {
+    display: flex;
+    flex-direction: column;
     margin-bottom: 44px;
     padding-bottom: 40px;
-    border-bottom: 1px solid rgba(212, 175, 55, 0.35); /* chunking: one thought per section */
+    border-bottom: 1px solid rgba(212, 175, 55, 0.35); /* chunking: one thought per scene */
   }
-  .line-station:last-of-type { border-bottom: none; }
-  /* reading order: kicker → headline → BUJJI's pitch → visual → detail → action
-     (JS moves the exhibit art to sit right after the hook bubble) */
-  .line-station__head {
-    position: static;
-    transform: none;
-    width: min(210px, 56vw);
-    margin: 20px auto 4px;
-    opacity: 1; /* no beam on mobile — exhibits arrive lit */
-  }
-  .line-station__head::after { display: none; }
-  .line-station__content { opacity: 1; }
-  /* BUJJI still gives the tour — the hook becomes his chat bubble */
-  .line-station .svc-card__hook {
+  .svc-scene:last-of-type { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  /* reading order: kicker → headline → BUJJI's pitch → visual → detail → action */
+  .svc-scene__art { width: min(210px, 56vw); margin: 20px auto 4px; order: 3; }
+  .svc-scene__art--phone { width: min(185px, 50vw); }
+  .svc-scene__art--win { width: min(280px, 78vw); }
+  .svc-scene__art::after { display: none; }
+  .svc-card__desc { order: 4; }
+  .svc-card__ctas { order: 5; flex-direction: column; gap: 10px; margin-top: 22px; }
+  .svc-card__ctas .btn { width: 100%; text-align: center; justify-content: center; }
+  .svc-scene .svc-card__hook {
     position: relative;
     margin-top: 16px;
     padding: 12px 16px 12px 56px;
@@ -818,7 +1108,7 @@ h1, h2, h3 { text-wrap: balance; }
     color: var(--ink);
     font-size: 1rem;
   }
-  .line-station .svc-card__hook::before {
+  .svc-scene .svc-card__hook::before {
     content: "";
     position: absolute;
     left: 12px;
@@ -830,12 +1120,7 @@ h1, h2, h3 { text-wrap: balance; }
     background: #fff url("../images/bujji-face.jpg") center / cover;
     border: 1.5px solid var(--gold);
   }
-  /* action zone: one full-width gold button under the thumb */
-  .line-station .svc-card__ctas { flex-direction: column; gap: 10px; margin-top: 22px; }
-  .line-station .svc-card__ctas .btn { width: 100%; text-align: center; justify-content: center; }
-  .tour-guide, .tour-path, .svc-progress { display: none; }
-  .tour-end { width: auto; padding-top: 0; }
-  .tour-end__card { padding: 24px 20px; }
+  .tour-guide, .svc-progress { display: none; }
 }
 
 /* Blueprint stroke language */

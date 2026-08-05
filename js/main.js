@@ -318,115 +318,229 @@ function buildScrollAnimations() {
         gsap.set(el, { visibility: "visible" });
       });
 
-      /* --- Services: BUJJI gives the tour. The section pins; the museum of
-             exhibits slides past while BUJJI hovers in place, projecting a
-             hologram beam. Exhibits draw themselves as the beam finds them,
-             and BUJJI's speech bubble speaks each service's hook line.
-             Mobile: a simple vertical list, exhibits pre-lit. --- */
-      const svcTrack = document.querySelector(".svc-track");
-      if (svcTrack) {
-        const gallery = document.querySelector(".svc-gallery");
+      /* --- Services: the picture show. The stage pins while the six services
+             play like film scenes — each cuts in, holds a beat, and cuts away —
+             with BUJJI narrating every hook from the corner of the frame.
+             Mobile & reduced motion: the reel unrolls as a vertical list. --- */
+      const svcStage = document.querySelector(".svc-stage");
+      if (svcStage) {
+        const scenes = gsap.utils.toArray(".svc-scene");
         const progNum = document.querySelector(".svc-progress__num");
         const progBar = document.querySelector(".svc-progress__bar i");
-        const stations = gsap.utils.toArray(".line-station");
-        const guide = gallery.querySelector(".tour-guide");
-        const beam = gallery.querySelector(".tour-beam");
-        const bubble = gallery.querySelector(".tour-bubble");
+        const bubble = svcStage.querySelector(".tour-bubble");
         const bubbleText = bubble ? bubble.querySelector("span") : null;
-        const hooks = stations.map((st) => {
-          const h = st.querySelector(".svc-card__hook");
-          return h ? h.textContent : "And this is where you come in.";
+        const hooks = scenes.map((sc) => {
+          const h = sc.querySelector(".svc-card__hook");
+          return sc.dataset.hook || (h ? h.textContent : "");
         });
 
-        // reading order differs per breakpoint: on mobile the exhibit art sits
-        // inside the content flow right after BUJJI's bubble; on desktop it must
-        // live outside the content div (which dims until visited)
-        stations.forEach((st) => {
-          const head = st.querySelector(".line-station__head");
-          const hook = st.querySelector(".svc-card__hook");
-          if (!head) return;
-          if (!isDesktop && hook && head.previousElementSibling !== hook) hook.after(head);
-          else if (isDesktop && head.parentElement !== st) st.appendChild(head);
-        });
-
-        if (isDesktop && guide) {
-          const dist = () => svcTrack.scrollWidth - gallery.clientWidth;
-          let centers = [];
-          const measure = () => {
-            centers = stations.map((s) => s.offsetLeft + s.offsetWidth / 2);
-          };
-          measure();
-          ScrollTrigger.addEventListener("refreshInit", measure);
-
-          // each exhibit's ink, ready to draw the moment the beam finds it
-          const drawTweens = stations.map((st) =>
-            gsap.fromTo(
-              st.querySelectorAll(".line-station__head [pathLength]"),
-              { strokeDashoffset: 1 },
-              { strokeDashoffset: 0, duration: 1.1, ease: "power2.out", stagger: 0.05, paused: true }
-            )
-          );
-
+        if (isDesktop) {
           let activeIdx = -1;
-          gsap.to(svcTrack, {
-            x: () => -dist(),
-            ease: "none",
+          const speak = (i) => {
+            if (i === activeIdx || !bubbleText) return;
+            activeIdx = i;
+            bubbleText.textContent = hooks[i];
+            bubble.classList.remove("pop");
+            void bubble.offsetWidth; // restart the pop animation
+            bubble.classList.add("pop");
+          };
+
+          const cuts = gsap.timeline({
             scrollTrigger: {
-              trigger: gallery,
+              trigger: ".svc-cinema",
               start: "top 15%",
-              end: () => "+=" + dist(),
+              end: () => "+=" + Math.round(scenes.length * window.innerHeight * 0.55),
               scrub: 1,
               pin: true,
               anticipatePin: 1,
               invalidateOnRefresh: true,
+              snap: { snapTo: "labelsDirectional", duration: { min: 0.15, max: 0.5 }, ease: "power1.inOut", delay: 0.1 },
               onUpdate: (self) => {
                 if (progBar) progBar.style.transform = "scaleX(" + self.progress + ")";
-                if (progNum) progNum.textContent = String(Math.min(6, 1 + Math.round(self.progress * (stations.length - 1)))).padStart(2, "0");
-
-                // where BUJJI stands, measured in the museum's own coordinates
-                const gx = guide.offsetLeft + 38 + self.progress * dist();
-                // the beam always points at whichever exhibit is nearest
-                let nearest = 0;
-                stations.forEach((st, i) => {
-                  if (Math.abs(gx - centers[i]) < Math.abs(gx - centers[nearest])) nearest = i;
-                  if (gx > centers[i] - 320) {
-                    st.classList.add("is-visited");
-                    drawTweens[i].play();
-                  }
+                // which scene is on screen: the last label the playhead passed
+                let i = 0;
+                scenes.forEach((_, n) => {
+                  if (cuts.labels["scene" + n] <= cuts.time() + 0.001) i = n;
                 });
-                stations.forEach((st, i) => st.classList.toggle("is-lit", i === nearest));
-                if (activeIdx !== nearest && bubbleText) {
-                  activeIdx = nearest;
-                  bubbleText.textContent = hooks[nearest];
-                  bubble.classList.remove("pop");
-                  void bubble.offsetWidth; // restart the pop animation
-                  bubble.classList.add("pop");
-                }
-                if (beam) beam.classList.toggle("on", self.isActive);
+                if (progNum) progNum.textContent = String(Math.min(6, i + 1)).padStart(2, "0");
+                speak(i);
               },
             },
           });
-        } else {
-          // mobile: exhibits draw and content cascades as each arrives
-          stations.forEach((st) => {
-            gsap.fromTo(
-              st.querySelectorAll(".line-station__head [pathLength]"),
-              { strokeDashoffset: 1 },
-              {
-                strokeDashoffset: 0,
-                duration: 1.2,
-                ease: "power2.out",
-                stagger: 0.06,
-                scrollTrigger: { trigger: st, start: "top 75%", toggleActions: "play none none none" },
-              }
+
+          scenes.forEach((sc, i) => {
+            const copy = sc.querySelectorAll(".svc-card__num, .label, h3, .svc-card__hook, .svc-card__desc, .svc-card__ctas");
+            const strokes = sc.querySelectorAll("[pathLength]");
+            if (i) cuts.fromTo(sc, { autoAlpha: 0, yPercent: 5 }, { autoAlpha: 1, yPercent: 0, duration: 0.3, ease: "power2.out" });
+            else gsap.set(sc, { autoAlpha: 1 });
+            if (strokes.length) {
+              cuts.fromTo(
+                strokes,
+                { strokeDashoffset: 1 },
+                { strokeDashoffset: 0, duration: 0.45, stagger: 0.04, ease: "none" },
+                i ? "<0.08" : 0
+              );
+            }
+            cuts.fromTo(
+              copy,
+              { y: 30, autoAlpha: 0 },
+              { y: 0, autoAlpha: 1, duration: 0.3, stagger: 0.05, ease: "power2.out" },
+              i ? "<" : 0.05
             );
-            gsap.from(st.querySelectorAll(".svc-card__content > *, .tour-end__card > *"), {
+            cuts.addLabel("scene" + i); // the frame is fully lit — snap settles here
+            cuts.to({}, { duration: 0.5 }); // hold: let the scene play
+            if (i < scenes.length - 1) cuts.to(sc, { autoAlpha: 0, yPercent: -5, duration: 0.28, ease: "power2.in" });
+          });
+        } else {
+          // the reel unrolls: each scene draws and cascades as it arrives
+          scenes.forEach((sc) => {
+            const strokes = sc.querySelectorAll("[pathLength]");
+            if (strokes.length) {
+              gsap.fromTo(
+                strokes,
+                { strokeDashoffset: 1 },
+                {
+                  strokeDashoffset: 0,
+                  duration: 1.2,
+                  ease: "power2.out",
+                  stagger: 0.06,
+                  scrollTrigger: { trigger: sc, start: "top 75%", toggleActions: "play none none none" },
+                }
+              );
+            }
+            gsap.from(sc.querySelectorAll(":scope > *:not(.svc-scene__art)"), {
               y: 32,
               autoAlpha: 0,
               stagger: 0.07,
               duration: 0.7,
-              scrollTrigger: { trigger: st, start: "top 80%", toggleActions: "play none none none" },
+              scrollTrigger: { trigger: sc, start: "top 80%", toggleActions: "play none none none" },
             });
+          });
+        }
+
+        /* every exhibit is a live mock now. Each builds its own looping reel,
+           and all of them play only while the cinema is anywhere on screen. */
+        const newReel = () => gsap.timeline({ repeat: -1, paused: true, defaults: { ease: "power3.out" } });
+        const reelBuilders = {
+          // scene 03: the phone cycles Iyra → TableServe → dashboard
+          phone(root) {
+            const tl = newReel();
+            root.querySelectorAll(".mock-app").forEach((app) => {
+              const bits = app.querySelectorAll("header, .mock-app__balance, .mock-app__kpi, li, .mock-app__dish, .mock-app__cart, .mock-app__bars i");
+              tl.fromTo(app, { xPercent: 100, autoAlpha: 0 }, { xPercent: 0, autoAlpha: 1, duration: 0.55 })
+                .from(bits, { y: 16, autoAlpha: 0, stagger: 0.07, duration: 0.35 }, "-=0.25")
+                .to(app, { xPercent: -100, autoAlpha: 0, duration: 0.5, ease: "power3.in" }, "+=2.2");
+            });
+            return tl;
+          },
+
+          // scene 01: orders arrive and get served, then the bookings platform takes over
+          saas(root) {
+            const tl = newReel();
+            root.querySelectorAll(".mock-screen").forEach((screen) => {
+              const rows = screen.querySelectorAll(".mock-head, .mock-order, .mock-total");
+              const chips = screen.querySelectorAll(".mock-chip:not(.mock-chip--ok)");
+              tl.call(() => chips.forEach((c) => { c.classList.remove("is-done"); c.textContent = "Preparing"; }))
+                .fromTo(screen, { xPercent: 100, autoAlpha: 0 }, { xPercent: 0, autoAlpha: 1, duration: 0.55 })
+                .from(rows, { y: 16, autoAlpha: 0, stagger: 0.08, duration: 0.35 }, "-=0.25");
+              chips.forEach((c, k) =>
+                tl.call(() => { c.classList.add("is-done"); c.textContent = "Served"; }, null, "+=" + (k ? 0.45 : 0.6))
+              );
+              tl.to(screen, { xPercent: -100, autoAlpha: 0, duration: 0.5, ease: "power3.in" }, "+=1.6");
+            });
+            return tl;
+          },
+
+          // scene 02: code lines type themselves; each pair births a UI piece
+          code(root) {
+            const body = root.querySelector(".mock-win__body");
+            const lines = root.querySelectorAll(".code-line");
+            const pieces = [root.querySelector(".prev-head"), root.querySelector(".prev-btn"), root.querySelector(".prev-bars")];
+            const tl = newReel();
+            tl.set(lines, { scaleX: 0, transformOrigin: "left center" }).set(pieces, { autoAlpha: 0 });
+            pieces.forEach((piece, k) => {
+              tl.to([lines[k * 2], lines[k * 2 + 1]], { scaleX: 1, duration: 0.45, stagger: 0.3, ease: "power1.inOut" })
+                .fromTo(piece, { scale: 0.7, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.4 }, "-=0.1");
+            });
+            tl.to(body, { autoAlpha: 0, duration: 0.4, ease: "power2.in" }, "+=2")
+              .set(lines, { scaleX: 0 })
+              .set(pieces, { autoAlpha: 0 })
+              .set(body, { autoAlpha: 1 });
+            return tl;
+          },
+
+          // scene 04: the site assembles, then the enquiry lands
+          web(root) {
+            const site = root.querySelector(".mock-site");
+            const tl = newReel();
+            tl.from(site.querySelector(".site-nav"), { y: -18, autoAlpha: 0, duration: 0.4 })
+              .from(site.querySelectorAll(".site-hero > *"), { y: 14, autoAlpha: 0, stagger: 0.12, duration: 0.4 })
+              .from(site.querySelectorAll(".site-secs i"), { y: 20, autoAlpha: 0, stagger: 0.15, duration: 0.45 })
+              .fromTo(site.querySelector(".mock-toast"), { x: 40, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: 0.45, ease: "back.out(1.6)" }, "+=0.4")
+              .to(site, { autoAlpha: 0, duration: 0.4, ease: "power2.in" }, "+=2")
+              .set(site, { autoAlpha: 1 });
+            return tl;
+          },
+
+          // scene 05: KPIs count up, the bars stand
+          data(root) {
+            const tl = newReel();
+            tl.from(root.querySelector(".mock-head"), { y: 12, autoAlpha: 0, duration: 0.35 })
+              .from(root.querySelectorAll(".bi-kpi"), { y: 16, autoAlpha: 0, stagger: 0.12, duration: 0.4 }, "-=0.1");
+            root.querySelectorAll(".bi-kpi strong").forEach((el) => {
+              const v = { n: 0 };
+              tl.to(v, {
+                n: parseFloat(el.dataset.to),
+                duration: 0.9,
+                ease: "power2.out",
+                onUpdate: () => {
+                  el.textContent = el.dataset.fmt === "lakh" ? "₹" + v.n.toFixed(1) + "L" : String(Math.round(v.n));
+                },
+              }, "<0.15");
+            });
+            tl.fromTo(root.querySelectorAll(".bi-bars i"), { scaleY: 0 }, { scaleY: 1, duration: 0.5, stagger: 0.06 }, "-=0.5")
+              .to(root.querySelector(".mock-bi"), { autoAlpha: 0, duration: 0.4, ease: "power2.in" }, "+=2.2")
+              .set(root.querySelector(".mock-bi"), { autoAlpha: 1 });
+            return tl;
+          },
+
+          // scene 06: the result climbs to #1, then the AI cites the brand
+          seo(root) {
+            const serp = root.querySelector(".mock-serp");
+            const ai = root.querySelector(".mock-ai");
+            const results = serp.querySelectorAll(".serp-res");
+            const tv = serp.querySelector(".serp-res--tv");
+            const others = [...results].filter((r) => r !== tv);
+            const badge = tv.querySelector("em");
+            const rowShift = () => results[1].offsetTop - results[0].offsetTop;
+            const tl = newReel();
+            tl.set([tv, ...others], { y: 0 })
+              .set(badge, { scale: 0, autoAlpha: 0 })
+              .fromTo(serp, { xPercent: 100, autoAlpha: 0 }, { xPercent: 0, autoAlpha: 1, duration: 0.55 })
+              .from([serp.querySelector(".serp-bar"), ...results], { y: 14, autoAlpha: 0, stagger: 0.09, duration: 0.35 }, "-=0.25")
+              .to(tv, { y: () => -2 * rowShift(), duration: 0.55, ease: "power2.inOut" }, "+=0.7")
+              .to(others, { y: () => rowShift(), duration: 0.55, ease: "power2.inOut" }, "<")
+              .to(badge, { scale: 1, autoAlpha: 1, duration: 0.35, ease: "back.out(1.6)" }, "-=0.1")
+              .to(serp, { xPercent: -100, autoAlpha: 0, duration: 0.5, ease: "power3.in" }, "+=1.6")
+              .fromTo(ai, { xPercent: 100, autoAlpha: 0 }, { xPercent: 0, autoAlpha: 1, duration: 0.55 })
+              .from(ai.querySelector(".ai-q"), { y: 12, autoAlpha: 0, duration: 0.35 }, "-=0.2")
+              .from(ai.querySelectorAll(".ai-a > *"), { y: 12, autoAlpha: 0, stagger: 0.14, duration: 0.35 }, "+=0.15")
+              .to(ai, { xPercent: -100, autoAlpha: 0, duration: 0.5, ease: "power3.in" }, "+=1.8");
+            return tl;
+          },
+        };
+
+        const reels = [];
+        document.querySelectorAll(".svc-scene [data-reel]").forEach((root) => {
+          const build = reelBuilders[root.dataset.reel];
+          if (build) reels.push(build(root));
+        });
+        if (reels.length) {
+          ScrollTrigger.create({
+            trigger: ".svc-cinema",
+            start: "top bottom",
+            end: "bottom top",
+            onToggle: (self) => reels.forEach((r) => r.paused(!self.isActive)),
           });
         }
       }
