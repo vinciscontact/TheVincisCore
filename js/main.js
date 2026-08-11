@@ -158,23 +158,8 @@ const preloader = document.querySelector(".preloader");
 const counter = document.querySelector(".preloader__count");
 
 function heroIntro() {
-  // Hero title: char cascade (short display headline)
-  const split = SplitText.create("#heroTitle", { type: "chars,words" });
+  // The hero arrives whole — no cascade, the preloader lift is the reveal
   gsap.set("#heroTitle", { visibility: "visible" });
-
-  const tl = gsap.timeline();
-  tl.from(split.chars, {
-    yPercent: 110,
-    autoAlpha: 0,
-    duration: 1,
-    ease: "power4.out",
-    stagger: { each: 0.022, from: "start" },
-    onComplete: () => split.revert(), // restore clean markup — keeps kerning intact
-  })
-    .from(".hero__ctas .btn", { y: 24, autoAlpha: 0, stagger: 0.1, duration: 0.7 }, "-=0.5")
-    .from(".hero__ornament", { scale: 0.85, autoAlpha: 0, duration: 1.6, ease: "power2.out" }, 0)
-    .from(".nav__inner", { y: -24, autoAlpha: 0, duration: 0.7 }, "-=1.1")
-    .from(".hero__scrollhint", { autoAlpha: 0, duration: 0.6 }, "-=0.4");
 }
 
 function initPage() {
@@ -287,36 +272,9 @@ function buildScrollAnimations() {
         scrollTrigger: { trigger: ".manifesto", start: "top 72%", end: "bottom 45%", scrub: true },
       });
 
-      /* --- Generic label/paragraph reveals --- */
-      gsap.utils.toArray(".reveal").forEach((el) => {
-        gsap.from(el, {
-          y: 40,
-          autoAlpha: 0,
-          duration: 0.9,
-          scrollTrigger: { trigger: el, start: "top 85%", toggleActions: "play none none reverse" },
-        });
-      });
-
-      /* --- Masked line reveals for section titles.
-             Play once, then revert the split — masks clip descenders (g, y, p)
-             if left in the DOM, so we hand the clean text back to the browser. --- */
-      document.querySelectorAll("[data-reveal='lines']").forEach((el) => {
-        SplitText.create(el, {
-          type: "lines",
-          mask: "lines",
-          autoSplit: true,
-          onSplit: (self) =>
-            gsap.from(self.lines, {
-              yPercent: 110,
-              duration: 0.9,
-              ease: "power4.out",
-              stagger: 0.1,
-              scrollTrigger: { trigger: el, start: "top 85%", toggleActions: "play none none none" },
-              onComplete: () => self.revert(),
-            }),
-        });
-        gsap.set(el, { visibility: "visible" });
-      });
+      /* --- Labels, paragraphs and section titles land already visible;
+             the set pieces carry the motion --- */
+      gsap.set("[data-reveal='lines']", { visibility: "visible" });
 
       /* --- Services: the picture show. The stage pins while the six services
              play like film scenes — each cuts in, holds a beat, and cuts away —
@@ -357,10 +315,10 @@ function buildScrollAnimations() {
               snap: { snapTo: "labelsDirectional", duration: { min: 0.15, max: 0.5 }, ease: "power1.inOut", delay: 0.1 },
               onUpdate: (self) => {
                 if (progBar) progBar.style.transform = "scaleX(" + self.progress + ")";
-                // which scene is on screen: the last label the playhead passed
+                // which scene is on screen: the last cut whose entrance has begun
                 let i = 0;
-                scenes.forEach((_, n) => {
-                  if (cuts.labels["scene" + n] <= cuts.time() + 0.001) i = n;
+                sceneStarts.forEach((t, n) => {
+                  if (t <= cuts.time() + 0.001) i = n;
                 });
                 if (progNum) progNum.textContent = String(Math.min(6, i + 1)).padStart(2, "0");
                 speak(i);
@@ -368,9 +326,11 @@ function buildScrollAnimations() {
             },
           });
 
+          const sceneStarts = []; // where each cut's entrance begins on the timeline
           scenes.forEach((sc, i) => {
             const copy = sc.querySelectorAll(".svc-card__num, .label, h3, .svc-card__hook, .svc-card__desc, .svc-card__ctas");
             const strokes = sc.querySelectorAll("[pathLength]");
+            sceneStarts.push(cuts.duration());
             if (i) cuts.fromTo(sc, { autoAlpha: 0, yPercent: 5 }, { autoAlpha: 1, yPercent: 0, duration: 0.3, ease: "power2.out" });
             else gsap.set(sc, { autoAlpha: 1 });
             if (strokes.length) {

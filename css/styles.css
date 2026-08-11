@@ -2613,3 +2613,133 @@ h1, h2, h3 { text-wrap: balance; }
   .cl { width: auto; } /* show finished code panel instead of typing it */
   .serpbox__caret { animation: none; }
 }
+
+/* ============ Flappy BUJJI — the hidden arcade ============ */
+.flap {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: none;
+  background: rgba(26, 26, 26, 0.45);
+  backdrop-filter: blur(3px);
+  padding: clamp(8px, 3vw, 40px);
+}
+.flap.is-open { display: grid; place-items: center; }
+.flap__frame {
+  position: relative;
+  width: min(860px, 100%);
+  height: min(560px, 100%);
+  background: #f9f9f9;
+  border: 2px solid var(--gold-fine);
+  border-radius: var(--radius-lg, 18px);
+  box-shadow: 0 40px 90px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+}
+.flap__canvas { display: block; width: 100%; height: 100%; }
+.flap__hint {
+  position: absolute;
+  left: 50%;
+  bottom: 46px;
+  transform: translateX(-50%);
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  color: var(--gold-deep);
+  pointer-events: none;
+}
+.flap__close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--surface-white);
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+.flap__close:hover { border-color: var(--gold); color: var(--gold-deep); }
+.flap__card {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(400px, calc(100% - 40px));
+  background: var(--surface-white);
+  border: 1px solid var(--line);
+  border-top: 2px solid var(--gold-fine);
+  border-radius: var(--radius-lg, 18px);
+  box-shadow: var(--lift);
+  padding: 26px 26px 24px;
+  text-align: left;
+}
+.flap__card h3 {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-weight: 600;
+  line-height: 1.15;
+  margin-top: 8px;
+}
+.flap__quip { margin-top: 10px; color: var(--ink-soft); }
+.flap__ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
+.tour-guide { cursor: pointer; } /* the narrator knows a game */
+
+/* ============ The arcade strip: play in the open, win a code ============ */
+.game-strip {
+  background: #faf8f1;
+  border-block: 1px solid var(--line);
+  padding: 30px 0;
+}
+.game-strip__inner { display: flex; align-items: center; gap: 22px; }
+.game-strip__face {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2.5px solid var(--gold);
+  box-shadow: 0 10px 24px rgba(116, 91, 0, 0.22);
+  background: #fff;
+  animation: bujji-bob 3s ease-in-out infinite;
+  flex: none;
+}
+.game-strip__copy { flex: 1; }
+.game-strip__copy h2 {
+  font-family: var(--serif);
+  font-size: clamp(1.25rem, 2vw, 1.6rem);
+  font-weight: 600;
+  line-height: 1.2;
+}
+.game-strip__copy p { margin-top: 4px; color: var(--ink-soft); font-size: 0.95rem; }
+.game-strip__copy p em { font-style: italic; color: var(--gold-deep); font-weight: 600; }
+@media (max-width: 899px) {
+  .game-strip__inner { flex-direction: column; text-align: center; }
+  .game-strip .btn { width: 100%; justify-content: center; text-align: center; }
+}
+
+/* the reward, revealed on the flight report */
+.flap__offer {
+  margin-top: 16px;
+  border: 1.5px dashed var(--gold-fine);
+  border-radius: 12px;
+  padding: 12px 16px;
+  background: #faf8f1;
+}
+.flap__offer span {
+  display: block;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+}
+.flap__offer b {
+  display: block;
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  letter-spacing: 0.08em;
+  color: var(--gold-deep);
+  margin-top: 2px;
+}
+.flap__offer p { margin-top: 4px; font-size: 0.85rem; color: var(--ink-soft); }
