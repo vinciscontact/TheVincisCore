@@ -266,7 +266,7 @@
 
     // score
     ctx.fillStyle = C.ink;
-    ctx.font = "600 44px Fraunces, Georgia, serif";
+    ctx.font = "700 44px \"Inter Tight\", Helvetica, Arial, sans-serif";
     ctx.textAlign = "center";
     ctx.fillText(String(G.score), G.w / 2, 64);
 
@@ -277,7 +277,7 @@
       ctx.fillStyle = C.goldDeep;
       ctx.font = "600 13px system-ui, sans-serif";
       ctx.fillText("R E W A R D   U N L O C K E D", G.w / 2, G.h * 0.3);
-      ctx.font = "600 34px Fraunces, Georgia, serif";
+      ctx.font = "700 34px \"Inter Tight\", Helvetica, Arial, sans-serif";
       ctx.fillStyle = C.gold;
       ctx.fillText("BUJJI10 — 10% off", G.w / 2, G.h * 0.3 + 38);
       ctx.restore();

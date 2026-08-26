@@ -3,3 +3,8 @@ node_modules/
 *.log
 Thumbs.db
 .DS_Store
+
+# Hero source footage — the site ships the generated frames in images/hero-seq/,
+# not the master file. Keeping a ~10MB binary out of history on purpose;
+# regeneration commands live in the header of js/hero-sequence.js.
+Hero section/*.mp4

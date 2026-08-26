@@ -20,8 +20,8 @@
   --on-dark: #f1f1f1;
   --on-dark-dim: rgba(241, 241, 241, 0.64);
 
-  /* Type — Fraunces: warm curves with real weight; Manrope: clean, neutral, modern */
-  --serif: "Fraunces", Georgia, serif;
+  /* Type — Inter Tight: tight neutral grotesk for display; Manrope: body copy */
+  --display: "Inter Tight", "Helvetica Neue", Arial, sans-serif;
   --sans: "Manrope", "Segoe UI", sans-serif;
 
   /* Layout — fluid margins so the design fills the screen at every width */
@@ -88,7 +88,7 @@ h1, h2, h3 { text-wrap: balance; }
 .label--gold { color: var(--gold-fine); }
 
 .section-title {
-  font-family: var(--serif);
+  font-family: var(--display);
   font-size: clamp(2rem, 4.6vw, 3.5rem);
   font-weight: 600;
   line-height: 1.15;
@@ -108,7 +108,7 @@ h1, h2, h3 { text-wrap: balance; }
 
 /* Marketing hook lines */
 .hook {
-  font-family: var(--serif);
+  font-family: var(--display);
   font-style: italic;
   font-size: clamp(1.05rem, 1.8vw, 1.4rem);
   line-height: 1.5;
@@ -174,7 +174,7 @@ h1, h2, h3 { text-wrap: balance; }
 }
 .preloader__inner { text-align: center; }
 .preloader__logo {
-  font-family: var(--serif);
+  font-family: var(--display);
   font-size: clamp(2.4rem, 6vw, 4rem);
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -205,44 +205,95 @@ h1, h2, h3 { text-wrap: balance; }
 @media (hover: none), (max-width: 799px) { .cursor { display: none; } }
 
 /* ============ Navigation ============ */
+/* A floating pill: the bar itself carries no background, so the pill reads as an
+   object over whatever is behind it. The monogram and the region tag sit in the
+   corners, clear of the pill. */
 .nav {
   position: fixed;
   top: 0; left: 0; right: 0;
   z-index: 800;
-  transition: transform 0.4s ease, background 0.4s ease, box-shadow 0.4s ease;
-}
-/* legibility strip — appears only once the page scrolls */
-.nav--scrolled {
-  background: rgba(249, 249, 249, 0.78);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  box-shadow: 0 0.5px 0 var(--line);
+  padding: 14px var(--margin);
+  transition: transform 0.4s ease;
 }
 .nav--hidden { transform: translateY(-100%); }
+
+/* Corner monogram — the favicon's gold V, decorative; the wordmark is the link */
+.nav__mark {
+  position: absolute;
+  left: var(--margin);
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--gold);
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* Region tag, opposite corner */
+.nav__tag {
+  position: absolute;
+  right: var(--margin);
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  pointer-events: none;
+  color: var(--gold);
+}
+
+/* The pill */
 .nav__inner {
-  max-width: var(--container);
+  width: max-content;
+  max-width: calc(100% - 260px);
   margin-inline: auto;
-  padding: 22px var(--margin);
+  padding: 9px 9px 9px 22px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 24px;
+  gap: 26px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.74);
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.09);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
 }
 .nav__logo {
-  font-family: var(--serif);
-  font-size: 1.45rem;
+  font-family: var(--display);
+  font-size: 1.15rem;
   font-weight: 700;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
 }
-.nav__logo em { font-style: italic; color: var(--gold); }
+.nav__logo em { font-style: normal; color: var(--gold); }
 
-.nav__links { display: flex; gap: 36px; align-items: center; }
+/* Over the dark hero the pill inverts to smoked glass.
+   Toggled by js/hero-sequence.js for as long as the hero holds the screen. */
+.nav--over-hero { color: var(--on-dark); }
+.nav--over-hero .nav__inner {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.4);
+}
+.nav--over-hero .nav__logo em,
+.nav--over-hero .nav__label span:last-child { color: var(--gold-fine); }
+.nav--over-hero .nav__tag { color: var(--gold-fine); }
+.nav--over-hero .nav__toggle span { background: var(--on-dark); }
+
+.nav__links { display: flex; gap: 26px; align-items: center; }
 .nav__link {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   padding: 4px 0;
+  white-space: nowrap;
 }
 /* Rolling label: duplicate slides up on hover, gold copy takes its place */
 .nav__label {
@@ -258,22 +309,43 @@ h1, h2, h3 { text-wrap: balance; }
 .nav__label span:last-child { color: var(--gold-deep); }
 .nav__link:hover .nav__label span { transform: translateY(-100%); }
 
-/* CTA as a gold text link with arrow */
+/* The CTA is the dark pill that closes the bar */
 .nav__cta {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
+  margin-left: 2px;
+  padding: 12px 20px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: #fff;
   font-weight: 700;
-  color: var(--gold-deep);
-  margin-left: 12px;
+  transition: background 0.3s ease, transform 0.3s ease, color 0.3s ease;
 }
+.nav__cta .nav__label span:last-child { color: var(--gold-tint); }
+.nav__cta:hover { background: var(--gold-deep); transform: translateY(-1px); }
+.nav--over-hero .nav__cta { background: var(--on-dark); color: #111; }
+.nav--over-hero .nav__cta .nav__label span:last-child { color: var(--gold-deep); }
+.nav--over-hero .nav__cta:hover { background: var(--gold-fine); color: #111; }
 .nav__arrow { transition: transform 0.3s ease; }
 .nav__cta:hover .nav__arrow { transform: translate(3px, -3px); }
 
-.nav__toggle { display: none; flex-direction: column; gap: 6px; padding: 8px; }
-.nav__toggle span { width: 26px; height: 2px; background: var(--ink); transition: transform 0.3s ease, opacity 0.3s ease; }
-.nav__toggle[aria-expanded="true"] span:first-child { transform: translateY(4px) rotate(45deg); }
-.nav__toggle[aria-expanded="true"] span:last-child { transform: translateY(-4px) rotate(-45deg); }
+.nav__toggle {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.06);
+  transition: background 0.3s ease;
+}
+.nav__toggle span { width: 16px; height: 1.5px; background: var(--ink); transition: transform 0.3s ease, opacity 0.3s ease; }
+.nav__toggle[aria-expanded="true"] span:first-child { transform: translateY(3px) rotate(45deg); }
+.nav__toggle[aria-expanded="true"] span:last-child { transform: translateY(-3px) rotate(-45deg); }
+.nav--over-hero .nav__toggle { background: rgba(255, 255, 255, 0.14); }
 
 .mobile-menu {
   position: fixed;
@@ -288,13 +360,17 @@ h1, h2, h3 { text-wrap: balance; }
 .mobile-menu.is-open { display: flex; }
 .mobile-menu nav { display: flex; flex-direction: column; gap: 28px; }
 .mobile-menu a {
-  font-family: var(--serif);
+  font-family: var(--display);
   font-size: 2rem;
   font-weight: 600;
 }
 .mobile-menu__cta { color: var(--gold); font-style: italic; }
 
 /* ============ Hero ============ */
+/* The page's one dark room. The film's own background colour (#0d0d0d, measured
+   at its frame edges) is also the section's background — the sequence needs no
+   blending and the letterbox never shows at any aspect ratio. Kept in step with
+   FILM_BG in js/hero-sequence.js. */
 .hero {
   min-height: 100svh;
   display: flex;
@@ -302,109 +378,96 @@ h1, h2, h3 { text-wrap: balance; }
   position: relative;
   overflow: hidden;
   padding-top: 96px;
-}
-/* Golden aurora — soft champagne light drifting behind the headline */
-.hero__aurora {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-.hero__aurora span {
-  position: absolute;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  filter: blur(80px);
-  will-change: transform;
-}
-.hero__aurora span:nth-child(1) {
-  width: 56vw;
-  top: -18%;
-  left: -12%;
-  background: radial-gradient(circle, rgba(212, 175, 55, 0.34), transparent 65%);
-}
-.hero__aurora span:nth-child(2) {
-  width: 46vw;
-  bottom: -24%;
-  right: 2%;
-  background: radial-gradient(circle, rgba(197, 160, 40, 0.28), transparent 65%);
-}
-.hero__aurora span:nth-child(3) {
-  width: 38vw;
-  top: 26%;
-  left: 42%;
-  background: radial-gradient(circle, rgba(255, 224, 139, 0.42), transparent 62%);
+  background: #0d0d0d;
+  color: var(--on-dark);
 }
 
-.hero__ornament {
+/* The scrubbed frame sequence — painted by js/hero-sequence.js */
+.hero__media {
   position: absolute;
-  top: 50%; right: -12%;
-  width: min(56vw, 820px);
-  aspect-ratio: 1;
-  transform: translateY(-50%);
-  opacity: 0.9;
+  inset: 0;
+  z-index: 0;
   pointer-events: none;
 }
-.hero__ornament svg { width: 100%; height: 100%; }
-/* the machine is the hero's one visual — ink it with more conviction */
-.hero__ornament .d-main { stroke-width: 2; }
-.hero__ornament .d-fine { opacity: 0.8; stroke-width: 0.9; }
+.hero__frames {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+/* Legibility, not decoration. The copy is centred, so the core of the frame is
+   deepened and the falloff is tuned to end before the helix's outer arms — they
+   stay bright and flank the headline instead of fighting it. */
+.hero__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(46% 54% at 50% 50%, rgba(0, 0, 0, 0.93) 0%, rgba(0, 0, 0, 0.88) 52%, rgba(0, 0, 0, 0.52) 78%, transparent 100%),
+    radial-gradient(140% 96% at 50% 50%, transparent 52%, rgba(0, 0, 0, 0.5) 100%);
+}
 
 .hero__thread {
   position: absolute;
   inset: 0;
-  z-index: 2; /* over the aurora/particles/ornament, under the content */
+  z-index: 2; /* the cursor's gold silk rides over the film, under the copy */
   pointer-events: none;
 }
-.hero__content { position: relative; z-index: 3; width: 100%; }
-.hero__label { margin-bottom: 28px; }
+.hero__content { position: relative; z-index: 3; width: 100%; text-align: center; }
+.hero__label { margin-bottom: 22px; }
 .hero__title {
-  font-family: var(--serif);
-  font-size: clamp(2.6rem, 8vw, 7.2rem);
+  font-family: var(--display);
+  font-size: clamp(2.6rem, 7.4vw, 6.6rem);
   font-weight: 700;
-  line-height: 1.05;
-  letter-spacing: -0.02em;
+  line-height: 1.03;
+  letter-spacing: -0.035em; /* the grotesk wants tight tracking at display size */
+  /* the headline stays inside the scrim's dark core, so the helix's outer arms
+     are never asked to sit behind type */
+  max-width: min(1000px, 74vw);
+  margin-inline: auto;
 }
 .hero__sub {
-  max-width: 560px;
-  margin-top: 32px;
+  max-width: 620px;
+  margin: 26px auto 0;
   font-size: 18px;
   line-height: 1.6;
   color: var(--ink-soft);
 }
-.hero__ctas { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 44px; }
+.hero__ctas { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 36px; justify-content: center; }
+
+/* On black the palette's dark-surface tokens take over inside the hero */
+.hero__title { color: var(--on-dark); }
+.hero__title em { color: var(--gold-fine); }
+.hero .label { color: var(--gold-fine); }
+.hero__sub { color: var(--on-dark-dim); }
+.hero .btn--ghost { border-color: rgba(212, 175, 55, 0.62); color: var(--gold-fine); }
+.hero .btn--ghost:hover { background: rgba(212, 175, 55, 0.12); }
 
 .hero__scrollhint {
   position: absolute;
-  bottom: 40px;
-  left: var(--margin);
+  bottom: 34px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
 }
-.hero__scrollhint span {
-  font-size: 11px;
+.hero__scrollhint span:last-child {
+  font-size: 13px;
   font-weight: 600;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
+  letter-spacing: 0.01em;
+  color: var(--on-dark-dim);
 }
-.hero__scrollline {
-  width: 72px; height: 1px;
-  background: var(--line);
-  position: relative;
-  overflow: hidden;
+.hero__scrolldot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--gold-fine);
+  animation: scrolldot 2.2s ease-in-out infinite;
 }
-.hero__scrollline::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: var(--gold);
-  animation: scrollline 2.2s ease-in-out infinite;
-}
-@keyframes scrollline {
-  0% { transform: translateX(-100%); }
-  55%, 100% { transform: translateX(100%); }
+@keyframes scrolldot {
+  0%, 100% { opacity: 0.35; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1); }
 }
 
 /* ============ Marquee ============ */
@@ -416,7 +479,7 @@ h1, h2, h3 { text-wrap: balance; }
 }
 .marquee__inner { display: flex; width: max-content; will-change: transform; }
 .marquee__inner span {
-  font-family: var(--serif);
+  font-family: var(--display);
   font-size: clamp(1.1rem, 2vw, 1.5rem);
   font-style: italic;
   white-space: nowrap;
@@ -429,7 +492,10 @@ h1, h2, h3 { text-wrap: balance; }
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
   gap: clamp(40px, 6vw, 96px);
-  align-items: center;
+  /* the golden rectangle shares a top edge with the copy rather than floating
+     centred against it — the sketch's viewBox is cropped to the rectangle so the
+     line you see is the line that aligns */
+  align-items: start;
 }
 .manifesto__visual { display: flex; justify-content: center; }
 .manifesto__sketchwrap {
@@ -470,13 +536,13 @@ h1, h2, h3 { text-wrap: balance; }
   stroke-dasharray: 1;
 }
 .manifesto__sketch-note {
-  font-family: var(--serif);
+  font-family: var(--display);
   font-style: italic;
   font-size: 0.95rem;
   color: var(--ink-soft);
 }
 .manifesto {
-  font-family: var(--serif);
+  font-family: var(--display);
   font-size: clamp(1.5rem, 3.2vw, 2.6rem);
   font-weight: 400;
   line-height: 1.45;
@@ -520,7 +586,7 @@ h1, h2, h3 { text-wrap: balance; }
 .story-card:nth-child(6) { --peek: 70px; }
 
 .story-card__num {
-  font-family: var(--serif);
+  font-family: var(--display);
   font-style: italic;
   font-size: 1.05rem;
   color: var(--gold);
@@ -528,14 +594,14 @@ h1, h2, h3 { text-wrap: balance; }
   margin-bottom: 14px;
 }
 .story-card__content h3 {
-  font-family: var(--serif);
+  font-family: var(--display);
   font-size: clamp(1.7rem, 3.4vw, 2.9rem);
   font-weight: 600;
   line-height: 1.12;
   letter-spacing: -0.01em;
 }
 .story-card__hook {
-  font-family: var(--serif);
+  font-family: var(--display);
   font-style: italic;
   font-size: clamp(1rem, 1.5vw, 1.2rem);
   color: var(--gold-deep);
@@ -637,7 +703,7 @@ h1, h2, h3 { text-wrap: balance; }
 }
 .mock-app:first-child { opacity: 1; }
 .mock-app header { display: flex; align-items: baseline; justify-content: space-between; }
-.mock-app header b { font-family: var(--serif); font-size: 14px; font-weight: 600; }
+.mock-app header b { font-family: var(--display); font-size: 14px; font-weight: 600; }
 .mock-app header span {
   font-size: 8px;
   font-weight: 600;
@@ -655,7 +721,7 @@ h1, h2, h3 { text-wrap: balance; }
   gap: 2px;
 }
 .mock-app__balance small, .mock-app__kpi small { font-size: 8.5px; opacity: 0.85; }
-.mock-app__balance strong, .mock-app__kpi strong { font-family: var(--serif); font-size: 17px; line-height: 1.1; }
+.mock-app__balance strong, .mock-app__kpi strong { font-family: var(--display); font-size: 17px; line-height: 1.1; }
 .mock-app ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 7px; }
 .mock-app li, .mock-app__dish {
   display: flex;
@@ -751,7 +817,7 @@ h1, h2, h3 { text-wrap: balance; }
 }
 .mock-screen:first-child { opacity: 1; }
 .mock-head { display: flex; align-items: baseline; justify-content: space-between; }
-.mock-head b { font-family: var(--serif); font-size: 13px; font-weight: 600; }
+.mock-head b { font-family: var(--display); font-size: 13px; font-weight: 600; }
 .mock-head span { font-size: 8px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold-deep); }
 
 /* skeleton bars used across mocks */
@@ -845,7 +911,7 @@ h1, h2, h3 { text-wrap: balance; }
 .bi-kpi { background: var(--gold); color: #fff; border-radius: 10px; padding: 8px 10px; display: flex; flex-direction: column; gap: 2px; }
 .bi-kpi--line { background: var(--surface-white); color: var(--ink); border: 1px solid var(--gold-fine); }
 .bi-kpi small { font-size: 8px; opacity: 0.85; letter-spacing: 0.06em; text-transform: uppercase; }
-.bi-kpi strong { font-family: var(--serif); font-size: 15px; line-height: 1.15; }
+.bi-kpi strong { font-family: var(--display); font-size: 15px; line-height: 1.15; }
 .bi-bars { flex: 1; height: auto; }
 
 /* SEO: SERP climb + AI citation */
@@ -916,7 +982,7 @@ h1, h2, h3 { text-wrap: balance; }
   color: var(--gold-deep);
 }
 .svc-scene h3 {
-  font-family: var(--serif);
+  font-family: var(--display);
   font-size: clamp(1.8rem, 3vw, 2.8rem);
   font-weight: 600;
   line-height: 1.15;
@@ -924,7 +990,7 @@ h1, h2, h3 { text-wrap: balance; }
 }
 .svc-scene h3 em { font-style: italic; color: var(--gold); }
 .svc-card__hook {
-  font-family: var(--serif);
+  font-family: var(--display);
   font-style: italic;
   font-size: clamp(1.02rem, 1.5vw, 1.2rem);
   color: var(--gold-deep);
@@ -1173,7 +1239,7 @@ h1, h2, h3 { text-wrap: balance; }
 .duet .d-main { stroke-width: 2; }
 .duet .d-fine { opacity: 0.75; stroke-width: 0.9; }
 .duet__caption {
-  font-family: var(--serif);
+  font-family: var(--display);
   font-style: italic;
   font-size: clamp(1.2rem, 1.9vw, 1.55rem);
   color: var(--ink);
@@ -1183,7 +1249,7 @@ h1, h2, h3 { text-wrap: balance; }
 .duet__note {
   margin: clamp(14px, 2vw, 22px) auto clamp(32px, 4.5vw, 64px);
   text-align: center;
-  font-family: var(--serif);
+  font-family: var(--display);
   font-style: italic;
   font-size: clamp(1rem, 1.6vw, 1.25rem);
   color: var(--ink-soft);
@@ -1230,7 +1296,7 @@ h1, h2, h3 { text-wrap: balance; }
   margin-bottom: 14px;
 }
 .ally__name {
-  font-family: var(--serif);
+  font-family: var(--display);
   font-size: clamp(1.8rem, 3.2vw, 2.8rem);
   font-weight: 600;
   line-height: 1.12;
@@ -1238,7 +1304,7 @@ h1, h2, h3 { text-wrap: balance; }
 }
 .ally__name em { font-style: italic; color: var(--gold); }
 .ally__hook {
-  font-family: var(--serif);
+  font-family: var(--display);
   font-style: italic;
   font-size: clamp(1rem, 1.5vw, 1.2rem);
   color: var(--gold-deep);
@@ -1265,7 +1331,7 @@ h1, h2, h3 { text-wrap: balance; }
 }
 .ally-stat__num {
   display: block;
-  font-family: var(--serif);
+  font-family: var(--display);
   font-size: clamp(1.7rem, 2.6vw, 2.4rem);
   font-weight: 700;
   line-height: 1.1;
@@ -1320,7 +1386,7 @@ h1, h2, h3 { text-wrap: balance; }
   width: 100%;
 }
 .blade__title {
-  font-family: var(--serif);
+  font-family: var(--display);
   font-size: clamp(2.6rem, 6vw, 5.2rem);
   font-weight: 700;
   line-height: 1.05;
@@ -1392,7 +1458,7 @@ h1, h2, h3 { text-wrap: balance; }
   padding: 0 4px 8px;
   border-bottom: 0.5px solid var(--line);
 }
-.phone__brand { font-family: var(--serif); font-weight: 700; font-size: 1.05rem; line-height: 1.1; }
+.phone__brand { font-family: var(--display); font-weight: 700; font-size: 1.05rem; line-height: 1.1; }
 .phone__brand em {
   display: block;
   font-family: var(--sans);
@@ -1493,7 +1559,7 @@ h1, h2, h3 { text-wrap: balance; }
 .stat { text-align: left; padding-right: 24px; border-right: 0.5px solid var(--line); }
 .stat:last-child { border-right: none; }
 .stat__num {
-  font-family: var(--serif);
+  font-family: var(--display);
   font-size: clamp(2.6rem, 5vw, 4.2rem);
   font-weight: 700;
   color: var(--gold);
@@ -1548,7 +1614,7 @@ h1, h2, h3 { text-wrap: balance; }
   background: linear-gradient(90deg, var(--gold-fine), var(--gold));
 }
 .founder__plate strong {
-  font-family: var(--serif);
+  font-family: var(--display);
   font-size: 1.35rem;
   font-weight: 700;
 }
@@ -1631,7 +1697,7 @@ h1, h2, h3 { text-wrap: balance; }
   z-index: 2;
 }
 .contact__title {
-  font-family: var(--serif);
+  font-family: var(--display);
   font-size: clamp(2.4rem, 5.4vw, 4.6rem);
   font-weight: 700;
   line-height: 1.08;
@@ -1643,7 +1709,7 @@ h1, h2, h3 { text-wrap: balance; }
 .contact__email {
   display: inline-block;
   margin-top: 36px;
-  font-family: var(--serif);
+  font-family: var(--display);
   font-style: italic;
   font-size: 1.3rem;
   color: var(--gold-fine);
@@ -1696,7 +1762,7 @@ h1, h2, h3 { text-wrap: balance; }
 }
 .footer__brand p {
   margin-top: 10px;
-  font-family: var(--serif);
+  font-family: var(--display);
   font-style: italic;
   color: var(--ink-soft);
   font-size: 0.95rem;
@@ -1731,6 +1797,20 @@ h1, h2, h3 { text-wrap: balance; }
 .footer__cities a:hover { color: var(--gold); }
 
 /* ============ Responsive ============ */
+/* Below this the five links no longer fit inside the pill beside the wordmark,
+   so they fold into the overlay menu and the pill keeps the reference's
+   wordmark-plus-hamburger shape. */
+@media (max-width: 1199px) {
+  .nav__links { display: none; }
+  .nav__toggle { display: flex; }
+  .nav__tag { display: none; }
+  .nav__inner {
+    padding: 8px 8px 8px 20px;
+    gap: 14px;
+    max-width: calc(100% - 96px);
+  }
+}
+
 @media (max-width: 1100px) {
   .stats__grid { grid-template-columns: repeat(2, 1fr); row-gap: 48px; }
   .stat:nth-child(2) { border-right: none; }
@@ -1740,15 +1820,17 @@ h1, h2, h3 { text-wrap: balance; }
   :root { --margin: 18px; }
   .phero { padding-top: calc(72px + 20px); }
 
-  .nav__links { display: none; }
-  .nav__toggle { display: flex; }
-  .nav__inner { padding: 16px var(--margin); }
+  .nav { padding: 10px var(--margin); }
+  .nav__mark { font-size: 1.25rem; }
 
   .blade__layout, .founder__layout, .contact__layout, .manifesto__layout { grid-template-columns: 1fr; }
   /* mobile: story cards become a fixed list — no sticky stacking */
   .story-card { grid-template-columns: 1fr; min-height: 0; position: static; }
   .story-card__art svg { max-width: 240px; }
-  .manifesto__visual { margin-top: 16px; }
+  /* stacked under the copy, the rectangle shares the section's left edge
+     instead of floating centred in its own column */
+  .manifesto__visual { margin-top: 16px; justify-content: start; }
+  .manifesto__sketchwrap { justify-items: start; }
   .manifesto__sketch { width: min(340px, 82vw); }
   .blade__pin { min-height: 0; }
   .blade__visual { margin-top: 24px; }
@@ -1761,6 +1843,32 @@ h1, h2, h3 { text-wrap: balance; }
   .footer__meta { justify-items: start; }
 
   .hero__scrollhint { display: none; }
+
+  /* Phone: the helix keeps the upper half and the copy owns the lower half over
+     near-solid black, so no headline ever sits on top of the linework. The
+     sequence is anchored high to match — see anchorY in js/hero-sequence.js. */
+  .hero {
+    align-items: flex-end;
+    padding-top: 104px;
+    padding-bottom: clamp(72px, 14vh, 132px);
+  }
+  .hero__scrim {
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.58) 0%,
+      rgba(0, 0, 0, 0.1) 14%,
+      rgba(0, 0, 0, 0.1) 26%,
+      rgba(0, 0, 0, 0.88) 36%,
+      #000 46%
+    );
+  }
+  /* the desktop cap exists to dodge the helix's bright right side; on a phone
+     the helix is above the copy instead, so the headline gets the full width */
+  .hero__title { max-width: none; }
+  .hero__label { margin-bottom: 16px; }
+  .hero__sub { margin-top: 20px; font-size: 16px; }
+  .hero__ctas { margin-top: 28px; gap: 12px; }
+  .hero__ctas .btn { padding: 15px 24px; font-size: 12px; }
 }
 
 @media (max-width: 640px) {
@@ -1795,7 +1903,7 @@ h1, h2, h3 { text-wrap: balance; }
   align-items: center;
 }
 .phero__title {
-  font-family: var(--serif);
+  font-family: var(--display);
   font-size: clamp(2.4rem, 5.6vw, 4.8rem);
   font-weight: 700;
   line-height: 1.06;
@@ -1811,7 +1919,7 @@ h1, h2, h3 { text-wrap: balance; }
 }
 .phero__note {
   margin-top: 22px;
-  font-family: var(--serif);
+  font-family: var(--display);
   font-style: italic;
   font-size: 0.95rem;
   color: var(--ink-soft);
@@ -1831,7 +1939,7 @@ h1, h2, h3 { text-wrap: balance; }
 }
 .psection__answer a { color: var(--gold-deep); border-bottom: 1px solid var(--gold-fine); }
 .deft {
-  font-family: var(--serif);
+  font-family: var(--display);
   font-size: clamp(1.25rem, 2vw, 1.6rem);
   font-weight: 600;
   margin-top: 40px;
@@ -1841,7 +1949,7 @@ h1, h2, h3 { text-wrap: balance; }
 .deft + .psection__answer { margin-top: 12px; }
 .psection__footnote {
   margin-top: 16px;
-  font-family: var(--serif);
+  font-family: var(--display);
   font-style: italic;
   font-size: 0.98rem;
   color: var(--ink-soft);
@@ -1874,7 +1982,7 @@ h1, h2, h3 { text-wrap: balance; }
   position: absolute;
   left: 0;
   top: 24px;
-  font-family: var(--serif);
+  font-family: var(--display);
   font-style: italic;
   font-size: 1.3rem;
   color: var(--gold);
@@ -1911,7 +2019,7 @@ h1, h2, h3 { text-wrap: balance; }
   border-bottom: 1.5px solid var(--gold-fine);
   background: var(--surface);
 }
-.ptbl th span { display: block; font-family: var(--serif); font-style: italic; text-transform: none; letter-spacing: 0; font-weight: 400; color: var(--gold-deep); margin-top: 4px; }
+.ptbl th span { display: block; font-family: var(--display); font-style: italic; text-transform: none; letter-spacing: 0; font-weight: 400; color: var(--gold-deep); margin-top: 4px; }
 .ptbl td { padding: 15px 20px; border-bottom: 0.5px solid var(--line); color: var(--ink-soft); vertical-align: top; }
 .ptbl td:first-child { color: var(--ink); font-weight: 500; }
 .ptbl tr:last-child td { border-bottom: none; }
@@ -1943,7 +2051,7 @@ h1, h2, h3 { text-wrap: balance; }
   will-change: transform;
 }
 .stackcard__num {
-  font-family: var(--serif);
+  font-family: var(--display);
   font-style: italic;
   font-size: 1.5rem;
   color: var(--gold);
@@ -1958,7 +2066,7 @@ h1, h2, h3 { text-wrap: balance; }
   margin-top: 18px;
 }
 .stack__count {
-  font-family: var(--serif);
+  font-family: var(--display);
   font-style: italic;
   font-size: 1rem;
   color: var(--gold-deep);
@@ -2015,7 +2123,7 @@ h1, h2, h3 { text-wrap: balance; }
   border-radius: 50%;
   background: linear-gradient(135deg, var(--gold-fine), var(--gold));
   color: #fff;
-  font-family: var(--serif);
+  font-family: var(--display);
   font-style: italic;
   font-weight: 700;
   font-size: 1.05rem;
@@ -2074,13 +2182,13 @@ h1, h2, h3 { text-wrap: balance; }
   margin-top: 26px;
 }
 .versus__num {
-  font-family: var(--serif);
+  font-family: var(--display);
   font-size: 2.2rem;
   font-weight: 700;
   color: var(--gold-deep);
 }
 .versus__score i {
-  font-family: var(--serif);
+  font-family: var(--display);
   font-style: italic;
   font-size: 0.95rem;
   color: var(--ink-soft);
@@ -2122,7 +2230,7 @@ h1, h2, h3 { text-wrap: balance; }
   position: absolute;
   right: 18px;
   bottom: 6px;
-  font-family: var(--serif);
+  font-family: var(--display);
   font-style: italic;
   font-weight: 700;
   font-size: 4.4rem;
@@ -2149,7 +2257,7 @@ h1, h2, h3 { text-wrap: balance; }
   border-radius: 50%;
   background: linear-gradient(135deg, var(--gold-fine), var(--gold));
   color: #fff;
-  font-family: var(--serif);
+  font-family: var(--display);
   font-style: italic;
   font-weight: 700;
   display: grid;
@@ -2296,10 +2404,10 @@ h1, h2, h3 { text-wrap: balance; }
   padding-bottom: 12px;
   border-bottom: 0.5px solid var(--line);
 }
-.mini__nav b { font-family: var(--serif); font-size: clamp(0.9rem, 1.2vw, 1.1rem); margin-right: auto; }
+.mini__nav b { font-family: var(--display); font-size: clamp(0.9rem, 1.2vw, 1.1rem); margin-right: auto; }
 .mini__nav span { width: 26px; height: 4px; border-radius: 4px; background: var(--line); }
 .mini__title {
-  font-family: var(--serif);
+  font-family: var(--display);
   font-size: clamp(1.4rem, 2.4vw, 2.2rem);
   font-weight: 700;
   line-height: 1.1;
@@ -2352,7 +2460,7 @@ h1, h2, h3 { text-wrap: balance; }
   gap: 6px;
 }
 .dash__kpi span { font-size: 11.5px; font-weight: 600; color: var(--ink-soft); }
-.dash__kpi b { font-family: var(--serif); font-size: clamp(1.3rem, 2.2vw, 2rem); font-weight: 700; color: var(--gold-deep); }
+.dash__kpi b { font-family: var(--display); font-size: clamp(1.3rem, 2.2vw, 2rem); font-weight: 700; color: var(--gold-deep); }
 .dash__panel {
   grid-area: panel;
   background: var(--surface);
@@ -2361,7 +2469,7 @@ h1, h2, h3 { text-wrap: balance; }
   box-shadow: var(--lift);
 }
 .dash__paneltitle { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px; display: flex; justify-content: space-between; }
-.dash__paneltitle i { font-family: var(--serif); font-style: italic; text-transform: none; letter-spacing: 0; font-weight: 400; color: var(--ink-soft); }
+.dash__paneltitle i { font-family: var(--display); font-style: italic; text-transform: none; letter-spacing: 0; font-weight: 400; color: var(--ink-soft); }
 .dash__panel svg { width: 100%; display: block; }
 .dash__grid { stroke: var(--line); stroke-width: 0.6; }
 .dash__area { fill: rgba(197, 160, 40, 0.14); }
@@ -2414,7 +2522,7 @@ h1, h2, h3 { text-wrap: balance; }
   height: 24px;
   border-radius: 7px;
   background: var(--surface);
-  font-family: var(--serif);
+  font-family: var(--display);
   font-style: italic;
   font-size: 12px;
   color: var(--ink-soft);
@@ -2583,7 +2691,7 @@ h1, h2, h3 { text-wrap: balance; }
   box-shadow: var(--lift-hover);
 }
 .shot figcaption {
-  font-family: var(--serif);
+  font-family: var(--display);
   font-style: italic;
   font-size: 0.95rem;
   color: var(--ink-soft);
@@ -2608,7 +2716,7 @@ h1, h2, h3 { text-wrap: balance; }
 
 /* ============ Reduced motion ============ */
 @media (prefers-reduced-motion: reduce) {
-  .hero__scrollline::after { animation: none; }
+  .hero__scrolldot { animation: none; opacity: 0.7; }
   *, *::before, *::after { transition-duration: 0.01ms !important; }
   .cl { width: auto; } /* show finished code panel instead of typing it */
   .serpbox__caret { animation: none; }
@@ -2676,7 +2784,7 @@ h1, h2, h3 { text-wrap: balance; }
   text-align: left;
 }
 .flap__card h3 {
-  font-family: var(--serif);
+  font-family: var(--display);
   font-size: 1.6rem;
   font-weight: 600;
   line-height: 1.15;
@@ -2706,7 +2814,7 @@ h1, h2, h3 { text-wrap: balance; }
 }
 .game-strip__copy { flex: 1; }
 .game-strip__copy h2 {
-  font-family: var(--serif);
+  font-family: var(--display);
   font-size: clamp(1.25rem, 2vw, 1.6rem);
   font-weight: 600;
   line-height: 1.2;
@@ -2736,7 +2844,7 @@ h1, h2, h3 { text-wrap: balance; }
 }
 .flap__offer b {
   display: block;
-  font-family: var(--serif);
+  font-family: var(--display);
   font-size: 1.5rem;
   letter-spacing: 0.08em;
   color: var(--gold-deep);
