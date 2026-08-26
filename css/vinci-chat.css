@@ -1,6 +1,6 @@
 /* ==========================================================================
    Vinci — TheVincis site concierge
-   Premium Minimalism: Vinci Gold, Fraunces + Manrope, Vinci Lift shadows
+   Premium Minimalism: Vinci Gold, Inter Tight + Manrope, Vinci Lift shadows
    ========================================================================== */
 
 /* author display values (grid/flex) would otherwise defeat the hidden attribute */
@@ -159,7 +159,7 @@
 }
 .vinci__id { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .vinci__id strong {
-  font-family: var(--serif, "Fraunces", serif);
+  font-family: var(--display, "Inter Tight", sans-serif);
   font-size: 17px;
   font-weight: 600;
   letter-spacing: 0.01em;

@@ -207,32 +207,7 @@ function buildScrollAnimations() {
     (ctx) => {
       const { isDesktop } = ctx.conditions;
 
-      /* --- Golden aurora: light drifts like morning sun across silk --- */
-      const auroras = gsap.utils.toArray(".hero__aurora span");
-      auroras.forEach((blob, i) => {
-        gsap.to(blob, {
-          xPercent: (i % 2 ? -1 : 1) * (10 + i * 4),
-          yPercent: (i % 2 ? 1 : -1) * (12 + i * 3),
-          scale: 1.12,
-          duration: 14 + i * 5,
-          ease: "sine.inOut",
-          yoyo: true,
-          repeat: -1,
-        });
-      });
-      gsap.to(".hero__aurora", {
-        yPercent: 18,
-        ease: "none",
-        scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: 1 },
-      });
-
-      /* --- Hero ornament slow parallax drift --- */
-      gsap.to(".hero__ornament", {
-        yPercent: 24,
-        rotation: 12,
-        ease: "none",
-        scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: 1 },
-      });
+      /* The hero backdrop is the scrubbed helix sequence — see js/hero-sequence.js */
 
       /* --- Marquee: infinite + scroll-velocity nudge --- */
       const marqueeTween = gsap.to(".marquee__inner", { xPercent: -50, ease: "none", duration: 22, repeat: -1 });
