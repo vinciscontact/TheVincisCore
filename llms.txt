@@ -2,17 +2,23 @@
 
 > TheVincis is a digital product studio whose name means "winning the hearts of the citizens." It builds SaaS products, full-stack web platforms, custom mobile applications, purpose-driven portfolio websites and data analytics systems for tier-2 and tier-3 businesses, and provides SEO, AEO and GEO search-visibility services.
 
+## Selected work
+
+- [Toss Sports](https://tossports.vercel.app/): direct-to-customer e-commerce store for handmade tennis-ball cricket bats, Chennai — product configurator, WhatsApp ordering, gamified rewards. Designed and built by TheVincis.
+- [RUSIYAA](https://rusiyaa.com/): brand site for RUSIYAA spices and masalas (a brand of Arul's Foods) — product range, FSSAI quality story and a batch-code checker that lets any customer trace a pack back to its source. Designed and built by TheVincis.
+- [CreativzEdge](https://creativedge.vercel.app/): studio site for the graphic design and branding studio with studios in Chennai and Mumbai. Designed and built by TheVincis.
+
 ## Core pages
 
-- [TableServe — QR Ordering System](https://thevincis.com/qr-ordering-system/): full product page for TableServe, TheVincis's QR ordering system and the ordering/menu layer of restaurant management — QR code menus, table-side ordering, instant kitchen tickets, order analytics. Works alongside existing restaurant billing and POS software rather than replacing it.
-- [Iyra Money Tracker](https://thevincis.com/iyra-money-tracker/): daily expense manager and household budget app (Android, launching soon on Google Play) that logs UPI transactions automatically from payment notifications — budgets, savings rate, cashflow trends and a shared household view. Works with any UPI app (Google Pay, PhonePe, Paytm); never asks for bank credentials.
-- [Web Development](https://thevincis.com/services/web-development/): websites and full-stack platforms for small businesses — what a business website needs, website-vs-platform comparison, process, FAQ.
-- [Data Analytics](https://thevincis.com/services/data-analytics/): Power BI and Tableau dashboards for small businesses — what a dashboard answers, Excel-vs-dashboard comparison, process, FAQ.
-- [SEO · AEO · GEO](https://thevincis.com/services/seo-aeo-geo/): TheVincis as an engineering-led SEO company in India — definitions of SEO, AEO and GEO, why businesses need all three, typical Indian pricing (₹10,000–₹50,000/month), the monthly service cycle, honest timelines, FAQ.
+- [TableServe — QR Ordering System](https://vincisglobal.com/qr-ordering-system/): full product page for TableServe, TheVincis's QR ordering system and the ordering/menu layer of restaurant management — QR code menus, table-side ordering, instant kitchen tickets, order analytics. Works alongside existing restaurant billing and POS software rather than replacing it.
+- [Iyra Money Tracker](https://vincisglobal.com/iyra-money-tracker/): daily expense manager and household budget app (Android, launching soon on Google Play) that logs UPI transactions automatically from payment notifications — budgets, savings rate, cashflow trends and a shared household view. Works with any UPI app (Google Pay, PhonePe, Paytm); never asks for bank credentials.
+- [Web Development](https://vincisglobal.com/services/web-development/): websites and full-stack platforms for small businesses — what a business website needs, website-vs-platform comparison, process, FAQ.
+- [Data Analytics](https://vincisglobal.com/services/data-analytics/): Power BI and Tableau dashboards for small businesses — what a dashboard answers, Excel-vs-dashboard comparison, process, FAQ.
+- [SEO · AEO · GEO](https://vincisglobal.com/services/seo-aeo-geo/): TheVincis as an engineering-led SEO company in India — definitions of SEO, AEO and GEO, why businesses need all three, typical Indian pricing (₹10,000–₹50,000/month), the monthly service cycle, honest timelines, FAQ.
 
 ## Service areas (web development)
 
-TheVincis serves businesses across India remotely, with on-site visits by arrangement. Dedicated pages: [Chennai](https://thevincis.com/web-development-chennai/), [Bangalore](https://thevincis.com/web-development-bangalore/), [Coimbatore](https://thevincis.com/web-development-coimbatore/), [Madurai](https://thevincis.com/web-development-madurai/), [Mumbai](https://thevincis.com/web-development-mumbai/), [Pune](https://thevincis.com/web-development-pune/). Typical small-business website cost in India: ₹15,000–₹1,00,000+ depending on scope; fixed written quote after a free consultation; clients own domain, code and content completely.
+TheVincis serves businesses across India remotely, with on-site visits by arrangement. Dedicated pages: [Chennai](https://vincisglobal.com/web-development-chennai/), [Bangalore](https://vincisglobal.com/web-development-bangalore/), [Coimbatore](https://vincisglobal.com/web-development-coimbatore/), [Madurai](https://vincisglobal.com/web-development-madurai/), [Mumbai](https://vincisglobal.com/web-development-mumbai/), [Pune](https://vincisglobal.com/web-development-pune/). Typical small-business website cost in India: ₹15,000–₹1,00,000+ depending on scope; fixed written quote after a free consultation; clients own domain, code and content completely.
 
 ## Services
 
@@ -34,6 +40,6 @@ Sathyanarayana D — Founder & Principal Engineer. Cybersecurity & IoT graduate 
 
 ## Contact
 
-- Website: https://thevincis.com/
+- Website: https://vincisglobal.com/
 - Email: vincis.contact@gmail.com
 - Free consultation available; typical reply within one working day.

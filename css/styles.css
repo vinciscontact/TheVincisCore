@@ -433,7 +433,10 @@ h1, h2, h3 { text-wrap: balance; }
   line-height: 1.6;
   color: var(--ink-soft);
 }
-.hero__ctas { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 36px; justify-content: center; }
+.hero__ctas { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 36px; }
+/* The class is reused for CTA rows in left-aligned sections across every page,
+   so only the centred homepage hero centres its buttons. */
+.hero .hero__ctas { justify-content: center; }
 
 /* On black the palette's dark-surface tokens take over inside the hero */
 .hero__title { color: var(--on-dark); }
@@ -549,7 +552,63 @@ h1, h2, h3 { text-wrap: balance; }
   margin-top: 24px;
 }
 .manifesto em { font-style: italic; color: var(--gold); }
-.manifesto .word { display: inline-block; }
+
+/* ============ Portfolio : shipped work ============ */
+.work { padding: clamp(64px, 8vw, 120px) 0; }
+.work__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(20px, 2.4vw, 34px);
+  margin-top: clamp(28px, 3.5vw, 48px);
+}
+.work__card { display: flex; flex-direction: column; }
+.work__shot {
+  display: block;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  box-shadow: var(--lift);
+  background: var(--surface-dim);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+.work__shot img { width: 100%; height: auto; display: block; }
+.work__card:hover .work__shot { transform: translateY(-6px); box-shadow: var(--lift-hover); }
+.work__meta { margin-top: 20px; }
+.work__name {
+  font-family: var(--display);
+  font-size: clamp(1.3rem, 1.9vw, 1.75rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-top: 6px;
+}
+.work__desc { margin-top: 10px; font-size: 15px; line-height: 1.6; color: var(--ink-soft); }
+.work__tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.work__tags li {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  border-radius: 999px;
+  padding: 5px 11px;
+}
+.work__link {
+  margin-top: auto;
+  padding-top: 16px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+}
+.work__link:hover { color: var(--ink); }
+.work__cta { margin-top: clamp(36px, 4vw, 56px); text-align: center; }
+.work__cta .hook { margin-inline: auto; margin-bottom: 20px; }
+
+@media (max-width: 899px) {
+  .work__grid { grid-template-columns: minmax(0, 1fr); }
+}
 
 /* ============ Services ============ */
 .services {
@@ -1097,52 +1156,140 @@ h1, h2, h3 { text-wrap: balance; }
   transform-origin: left center;
 }
 
-/* Desktop: scene composition — art stage left, copy stage right,
-   the hook line leaves the card and becomes BUJJI's spoken bubble */
+/* Desktop: the contact sheet. The hero's filmstrip, stopped and laid flat —
+   six frames on one lightbox, all readable at a glance. Clicking a frame
+   promotes it to the full exhibit (GSAP Flip does the move, see main.js). */
 @media (min-width: 900px) {
   .tour-guide { display: block; }
-  .svc-scene {
+
+  .svc-stage {
     display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(14px, 1.4vw, 22px);
+    align-items: start;
+  }
+
+  .svc-scene {
+    position: relative;
+    display: grid;
+    grid-template-areas: "num" "title" "art";
+    align-content: start;
+    gap: 10px;
+    padding: 22px 22px 24px 30px;
+    background: var(--surface-white);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--lift);
+    cursor: pointer;
+    overflow: hidden;
+    transition: box-shadow 0.35s ease, border-color 0.35s ease;
+  }
+  /* sprocket holes down the edge — the frame remembers which reel it came off */
+  .svc-scene::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 12px;
+    background: repeating-linear-gradient(to bottom, transparent 0 9px, var(--line) 9px 15px);
+    opacity: 0.6;
+    pointer-events: none;
+  }
+  .svc-scene:hover { box-shadow: var(--lift-hover); border-color: rgba(212, 175, 55, 0.55); }
+  .svc-scene:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+  .svc-scene > .svc-card__num,
+  .svc-scene > .label { grid-area: num; }
+  .svc-scene > h3 { grid-area: title; font-size: clamp(1.15rem, 1.5vw, 1.5rem); }
+  .svc-scene__art { grid-area: art; width: 100%; margin: 0; align-self: end; }
+
+  /* Every frame on a contact sheet is the same size, so each thumbnail gets an
+     identical window and the mock is scaled to sit inside it. The phone mock is
+     0.49 aspect against the windows' 1.32 — without this it is twice as tall as
+     its neighbours and the grid stops reading as a sheet. */
+  .svc-scene:not(.is-open) .svc-scene__art {
+    height: 240px;
+    overflow: hidden;
+    border-radius: 10px;
+    /* flex, not grid: grid's justify-items would size these mocks to max-content
+       and the phone shell, which relies on a full-width parent, collapses */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .svc-scene:not(.is-open) .svc-scene__art > * {
+    flex: 0 0 auto;
+    width: 100%;
+    transform: scale(var(--thumb-scale, 0.8));
+    transform-origin: center;
+  }
+  /* The phone is 0.49 aspect: shrunk to fit it becomes a sliver nobody can read.
+     A contact sheet crops its frames, so this one keeps a readable width and is
+     cropped from the top — you see the screen, not a thumbnail of a phone. */
+  .svc-scene:not(.is-open) .svc-scene__art--phone { align-items: flex-start; }
+  .svc-scene:not(.is-open) .svc-scene__art--phone > * {
+    width: 200px;
+    --thumb-scale: 1;
+    transform-origin: top center;
+  }
+
+  /* collapsed frames are a title and a thumbnail — nothing else competes */
+  .svc-scene .svc-card__hook,
+  .svc-scene .svc-card__desc,
+  .svc-scene .svc-card__ctas { display: none; }
+
+  /* Promoted: the frame takes the whole sheet and becomes the exhibit. It also
+     moves to the head of the grid — a full-width cell in the middle of the sheet
+     strands the frames before it alone in a half-empty row. */
+  .svc-scene.is-open {
+    order: -1;
+    grid-column: 1 / -1;
     grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
     grid-template-areas:
       "art num"
       "art title"
-      "art hook"
       "art desc"
       "art ctas";
     column-gap: clamp(40px, 6vw, 96px);
     align-content: center;
+    padding: clamp(28px, 3vw, 48px) clamp(28px, 3vw, 48px) clamp(28px, 3vw, 48px) clamp(40px, 4vw, 60px);
+    cursor: default;
+    border-color: rgba(212, 175, 55, 0.55);
   }
-  .svc-scene > .svc-card__num,
-  .svc-scene > .label { grid-area: num; align-self: end; }
-  .svc-scene > h3 { grid-area: title; }
-  .svc-scene > .svc-card__hook { grid-area: hook; }
-  .svc-scene > .svc-card__desc { grid-area: desc; }
-  .svc-scene > .svc-card__ctas { grid-area: ctas; align-self: start; }
-  .svc-scene__art { grid-area: art; align-self: center; width: min(340px, 30vw); }
-  .svc-scene__art--phone { width: min(220px, 22vw); } /* taller than the windows — keep it inside the stage */
-  .svc-scene__art--win { width: min(360px, 32vw); }
-  .svc-scene:not(.svc-scene--end) .svc-card__hook { display: none; } /* BUJJI speaks it */
+  .svc-scene.is-open > h3 { font-size: clamp(1.6rem, 2.6vw, 2.4rem); }
+  .svc-scene.is-open > .svc-card__desc { display: block; grid-area: desc; }
+  .svc-scene.is-open > .svc-card__ctas { display: flex; grid-area: ctas; align-self: start; }
+  .svc-scene.is-open .svc-scene__art { align-self: center; width: min(340px, 30vw); margin-inline: auto; }
+  .svc-scene.is-open .svc-scene__art--phone { width: min(220px, 22vw); }
+
+  /* the closing frame is a statement, not a thumbnail */
   .svc-scene--end {
+    grid-column: 1 / -1;
     grid-template-columns: minmax(0, 1fr);
     grid-template-areas: "num" "title" "hook" "desc" "ctas";
     max-width: 640px;
     margin-inline: auto;
+    cursor: default;
+    text-align: center;
+    padding: clamp(28px, 3vw, 44px);
   }
+  .svc-scene--end::before { display: none; }
+  .svc-scene--end:hover { box-shadow: var(--lift); border-color: var(--line); }
+  .svc-scene--end .svc-card__hook,
+  .svc-scene--end .svc-card__desc { display: block; }
+  .svc-scene--end .svc-card__ctas { display: flex; justify-content: center; }
+
+  /* the sheet needs no progress counter — every frame is already in view */
+  .svc-progress { display: none; }
 }
 
-/* the film itself: scenes stack on one stage and swap under GSAP's control */
-@media (min-width: 900px) and (prefers-reduced-motion: no-preference) {
-  .svc-stage { height: clamp(460px, 70vh, 620px); }
-  .svc-scene { position: absolute; inset: 0; opacity: 0; visibility: hidden; }
-  .svc-scene:first-of-type { opacity: 1; visibility: visible; }
-}
-
-/* reduced motion: the reel unrolls instead — every scene visible, no narrator */
+/* reduced motion: no Flip, no promotion — every frame opens flat and stays open */
 @media (min-width: 900px) and (prefers-reduced-motion: reduce) {
-  .svc-scene + .svc-scene { margin-top: 84px; }
-  .svc-scene:not(.svc-scene--end) .svc-card__hook { display: block; } /* hooks return to the cards */
-  .tour-guide, .svc-progress { display: none; }
+  .svc-stage { grid-template-columns: minmax(0, 1fr); }
+  .svc-scene { cursor: default; grid-column: 1 / -1; }
+  .svc-scene .svc-card__hook,
+  .svc-scene .svc-card__desc { display: block; }
+  .svc-scene .svc-card__ctas { display: flex; }
+  .tour-guide { display: none; }
 }
 
 /* Mobile: the reel unrolls vertically; the hook becomes BUJJI's chat bubble */

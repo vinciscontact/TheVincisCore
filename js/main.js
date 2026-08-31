@@ -3,7 +3,7 @@
    GSAP 3 + ScrollTrigger + SplitText + Lenis
    ========================================================================== */
 
-gsap.registerPlugin(ScrollTrigger, SplitText);
+gsap.registerPlugin(ScrollTrigger, SplitText, Flip);
 gsap.defaults({ ease: "power3.out", duration: 0.8 });
 
 const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -18,17 +18,38 @@ if (!prefersReduced) {
 }
 
 /* ============ Anchor navigation ============ */
+/* The nav is a floating pill laid over the page, so an anchor has to clear it.
+   Measured from the pill rather than hard-coded, because it shrinks below 1200px.
+   Uses offsetHeight, never the transformed position — the bar hides on scroll. */
+function navClearance() {
+  const bar = document.querySelector(".nav");
+  const pill = document.querySelector(".nav__inner");
+  if (!bar || !pill) return 96;
+  const padTop = parseFloat(getComputedStyle(bar).paddingTop) || 0;
+  return padTop + pill.offsetHeight + 24;
+}
+
 function scrollToTarget(hash) {
+  // #top is the fixed header itself: resolving it yields a viewport-relative box,
+  // so Lenis would scroll a nav-height up from here instead of to the top of the page
+  if (hash === "#top") {
+    if (lenis) lenis.scrollTo(0, { duration: 1.2 });
+    else window.scrollTo(0, 0);
+    return;
+  }
   const target = document.querySelector(hash);
   if (!target) return;
-  if (lenis) lenis.scrollTo(target, { offset: -72, duration: 1.2 });
-  else target.scrollIntoView({ behavior: "auto" });
+  if (lenis) lenis.scrollTo(target, { offset: -navClearance(), duration: 1.2 });
+  else window.scrollTo(0, target.getBoundingClientRect().top + window.scrollY - navClearance());
 }
 document.querySelectorAll('a[href^="#"]').forEach((a) => {
   a.addEventListener("click", (e) => {
     e.preventDefault();
-    scrollToTarget(a.hash);
+    // Close first: an open mobile menu has called lenis.stop(), and a stopped
+    // Lenis silently ignores scrollTo — scrolling before this left every
+    // in-menu link dead on phones.
     closeMobileMenu();
+    scrollToTarget(a.hash);
   });
 });
 
@@ -237,15 +258,6 @@ function buildScrollAnimations() {
         .fromTo(".sketch__heart", { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.7 })
         .from(".manifesto__sketch-note", { autoAlpha: 0, y: 12, duration: 0.8 }, "-=0.2");
 
-      /* --- Manifesto: words light up as you read --- */
-      const manifestoSplit = SplitText.create(".manifesto", { type: "words" });
-      gsap.set(manifestoSplit.words, { opacity: 0.12 });
-      gsap.to(manifestoSplit.words, {
-        opacity: 1,
-        ease: "none",
-        stagger: 0.04,
-        scrollTrigger: { trigger: ".manifesto", start: "top 72%", end: "bottom 45%", scrub: true },
-      });
 
       /* --- Labels, paragraphs and section titles land already visible;
              the set pieces carry the motion --- */
@@ -268,64 +280,125 @@ function buildScrollAnimations() {
         });
 
         if (isDesktop) {
-          let activeIdx = -1;
+          /* The contact sheet. Six frames sit on one lightbox; clicking one
+             promotes it to the full exhibit and Flip carries every other frame
+             to its new place. No pin, no scrub — the hero keeps the page's one
+             signature scroll moment, and nobody has to scroll past five
+             services to reach the one they came for. */
+          const REEL_POSTER = 0.9; // past every reel's opening entrance
+          const frames = scenes.filter((sc) => !sc.classList.contains("svc-scene--end"));
+          const reelOf = new Map(); // filled in once the mock reels are built below
+          svcStage.dataset.sheet = "1";
+
+          let openFrame = null;
+
           const speak = (i) => {
-            if (i === activeIdx || !bubbleText) return;
-            activeIdx = i;
+            if (!bubbleText || hooks[i] == null) return;
             bubbleText.textContent = hooks[i];
             bubble.classList.remove("pop");
-            void bubble.offsetWidth; // restart the pop animation
+            void bubble.offsetWidth; // restart the pop
             bubble.classList.add("pop");
           };
 
-          const cuts = gsap.timeline({
-            scrollTrigger: {
-              trigger: ".svc-cinema",
-              start: "top 15%",
-              end: () => "+=" + Math.round(scenes.length * window.innerHeight * 0.55),
-              scrub: 1,
-              pin: true,
-              anticipatePin: 1,
-              invalidateOnRefresh: true,
-              snap: { snapTo: "labelsDirectional", duration: { min: 0.15, max: 0.5 }, ease: "power1.inOut", delay: 0.1 },
-              onUpdate: (self) => {
-                if (progBar) progBar.style.transform = "scaleX(" + self.progress + ")";
-                // which scene is on screen: the last cut whose entrance has begun
-                let i = 0;
-                sceneStarts.forEach((t, n) => {
-                  if (t <= cuts.time() + 0.001) i = n;
-                });
-                if (progNum) progNum.textContent = String(Math.min(6, i + 1)).padStart(2, "0");
-                speak(i);
+          const collapse = (sc) => {
+            sc.classList.remove("is-open");
+            sc.setAttribute("role", "button");
+            sc.setAttribute("tabindex", "0");
+            sc.setAttribute("aria-expanded", "false");
+          };
+          const expand = (sc) => {
+            sc.classList.add("is-open");
+            sc.setAttribute("aria-expanded", "true");
+            // no longer a button: it now contains its own links
+            sc.removeAttribute("role");
+            sc.removeAttribute("tabindex");
+          };
+          frames.forEach(collapse);
+
+          function toggle(sc) {
+            // Flip lifts its targets out of flow while it animates a grid-span
+            // change. With no in-flow children the stage collapses for the whole
+            // 0.6s and everything below piles onto it. Two guards:
+            //   1. kill and fully revert any flip still running, so a second
+            //      click measures a real layout rather than a mid-flight one;
+            //   2. pin the stage's height across the animation, then release it.
+            Flip.killFlipsOf(frames);
+            gsap.set(frames, { clearProps: "position,top,left,width,height,transform" });
+            svcStage.style.minHeight = "";
+
+            const heightBefore = svcStage.offsetHeight;
+            const state = Flip.getState(frames, { props: "borderRadius,padding" });
+            const opening = openFrame !== sc;
+            if (openFrame) collapse(openFrame);
+            if (opening) expand(sc);
+            openFrame = opening ? sc : null;
+
+            // Only the promoted exhibit animates; six looping reels at once is
+            // waste. Collapsed reels rest on a poster frame rather than time 0,
+            // where several of them have their contents still off-stage.
+            reelOf.forEach((reel, node) => {
+              if (node === openFrame) reel.play();
+              else reel.pause(REEL_POSTER);
+            });
+
+            // Measured while the frames are still in flow, so this is the real
+            // post-toggle height, not a collapsed one.
+            const heightAfter = svcStage.offsetHeight;
+            svcStage.style.minHeight = Math.max(heightBefore, heightAfter) + "px";
+
+            Flip.from(state, {
+              duration: 0.62,
+              ease: "power3.inOut",
+              onComplete: () => {
+                svcStage.style.minHeight = "";
+                ScrollTrigger.refresh();
               },
-            },
+            });
+
+            if (opening) {
+              speak(scenes.indexOf(sc));
+              const detail = sc.querySelectorAll(".svc-card__desc, .svc-card__ctas");
+              gsap.fromTo(detail, { y: 14, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.45, stagger: 0.08, delay: 0.18 });
+            }
+          }
+
+          frames.forEach((sc) => {
+            sc.addEventListener("click", (e) => {
+              if (e.target.closest("a")) return; // let the CTAs do their job
+              toggle(sc);
+            });
+            sc.addEventListener("keydown", (e) => {
+              if (sc.getAttribute("role") !== "button") return;
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                toggle(sc);
+              }
+            });
+            // BUJJI keeps commentating from the corner, now on hover
+            sc.addEventListener("mouseenter", () => {
+              if (!openFrame) speak(scenes.indexOf(sc));
+            });
           });
 
-          const sceneStarts = []; // where each cut's entrance begins on the timeline
-          scenes.forEach((sc, i) => {
-            const copy = sc.querySelectorAll(".svc-card__num, .label, h3, .svc-card__hook, .svc-card__desc, .svc-card__ctas");
-            const strokes = sc.querySelectorAll("[pathLength]");
-            sceneStarts.push(cuts.duration());
-            if (i) cuts.fromTo(sc, { autoAlpha: 0, yPercent: 5 }, { autoAlpha: 1, yPercent: 0, duration: 0.3, ease: "power2.out" });
-            else gsap.set(sc, { autoAlpha: 1 });
-            if (strokes.length) {
-              cuts.fromTo(
-                strokes,
-                { strokeDashoffset: 1 },
-                { strokeDashoffset: 0, duration: 0.45, stagger: 0.04, ease: "none" },
-                i ? "<0.08" : 0
-              );
-            }
-            cuts.fromTo(
-              copy,
-              { y: 30, autoAlpha: 0 },
-              { y: 0, autoAlpha: 1, duration: 0.3, stagger: 0.05, ease: "power2.out" },
-              i ? "<" : 0.05
-            );
-            cuts.addLabel("scene" + i); // the frame is fully lit — snap settles here
-            cuts.to({}, { duration: 0.5 }); // hold: let the scene play
-            if (i < scenes.length - 1) cuts.to(sc, { autoAlpha: 0, yPercent: -5, duration: 0.28, ease: "power2.in" });
+          // Esc closes the promoted frame
+          document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && openFrame) toggle(openFrame);
           });
+
+          // The sheet's frames arrive together rather than one cut at a time.
+          // clearProps matters: Flip reads inline styles when it captures state,
+          // and a half-reversed entrance leaves transform/opacity behind for it
+          // to animate from — which is what made a click look like a glitch.
+          gsap.from(frames, {
+            y: 34,
+            autoAlpha: 0,
+            duration: 0.7,
+            stagger: 0.06,
+            clearProps: "transform,opacity,visibility",
+            scrollTrigger: { trigger: ".svc-cinema", start: "top 78%", toggleActions: "play none none none" },
+          });
+
+          svcStage.__reelOf = reelOf; // the reel builder registers into this
         } else {
           // the reel unrolls: each scene draws and cascades as it arrives
           scenes.forEach((sc) => {
@@ -466,16 +539,29 @@ function buildScrollAnimations() {
         };
 
         const reels = [];
+        const reelOf = svcStage && svcStage.__reelOf; // present only on the contact sheet
         document.querySelectorAll(".svc-scene [data-reel]").forEach((root) => {
           const build = reelBuilders[root.dataset.reel];
-          if (build) reels.push(build(root));
+          if (!build) return;
+          const reel = build(root);
+          reels.push(reel);
+          const scene = root.closest(".svc-scene");
+          if (reelOf && scene) {
+            reelOf.set(scene, reel);
+            reel.pause(0.9); // a legible still, so no thumbnail sits empty
+          }
         });
         if (reels.length) {
           ScrollTrigger.create({
             trigger: ".svc-cinema",
             start: "top bottom",
             end: "bottom top",
-            onToggle: (self) => reels.forEach((r) => r.paused(!self.isActive)),
+            // Contact sheet: only the promoted exhibit runs, so six loops never
+            // animate at once. Mobile reel: everything plays while on screen.
+            onToggle: (self) => {
+              if (reelOf) return;
+              reels.forEach((r) => r.paused(!self.isActive));
+            },
           });
         }
       }
@@ -544,7 +630,7 @@ function buildScrollAnimations() {
           scrollTrigger: { trigger: ".blade__visual", start: "top 85%", toggleActions: "play none none reverse" },
         });
       }
-      gsap.from(".blade__desc, .blade__features li, .blade .btn--gold", {
+      gsap.from(".blade__desc, .blade__features li, .blade .hero__ctas .btn", {
         y: 32,
         autoAlpha: 0,
         stagger: 0.08,
