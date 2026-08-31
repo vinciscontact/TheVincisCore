@@ -17,15 +17,29 @@ if (!prefersReduced) {
   gsap.ticker.lagSmoothing(0);
 }
 
+/* The nav is a floating pill laid over the page, so an anchor has to clear it.
+   Measured from the pill rather than hard-coded, because it shrinks below 1200px.
+   Uses offsetHeight, never the transformed position — the bar hides on scroll. */
+function navClearance() {
+  const bar = document.querySelector(".nav");
+  const pill = document.querySelector(".nav__inner");
+  if (!bar || !pill) return 96;
+  const padTop = parseFloat(getComputedStyle(bar).paddingTop) || 0;
+  return padTop + pill.offsetHeight + 24;
+}
+
 /* ---- On-page anchors (cross-page links pass through) ---- */
 document.querySelectorAll('a[href^="#"]').forEach((a) => {
   a.addEventListener("click", (e) => {
     const target = document.querySelector(a.hash);
     if (!target) return;
     e.preventDefault();
-    if (lenis) lenis.scrollTo(target, { offset: -72, duration: 1.2 });
-    else target.scrollIntoView();
+    // Close first: an open mobile menu has called lenis.stop(), and a stopped
+    // Lenis silently ignores scrollTo — scrolling before this left every
+    // in-menu link dead on phones.
     closeMobileMenu();
+    if (lenis) lenis.scrollTo(target, { offset: -navClearance(), duration: 1.2 });
+    else window.scrollTo(0, target.getBoundingClientRect().top + window.scrollY - navClearance());
   });
 });
 
