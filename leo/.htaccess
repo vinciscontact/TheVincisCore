@@ -1,0 +1,10 @@
+# Leo — keep out of search engines and harden the admin pages (Apache / LiteSpeed on Hostinger)
+<IfModule mod_headers.c>
+  Header set X-Robots-Tag "noindex, nofollow, noarchive"
+  Header set X-Frame-Options "DENY"
+  Header set X-Content-Type-Options "nosniff"
+  Header set Referrer-Policy "no-referrer"
+  Header set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+  Header set Cache-Control "no-store"
+</IfModule>
+Options -Indexes

@@ -197,7 +197,7 @@ function initPage() {
   const load = gsap.timeline();
   const count = { v: 0 };
   load
-    .from(".preloader__logo", { y: 40, autoAlpha: 0, duration: 0.5 })
+    .from(".preloader__bee, .preloader__logo", { y: 40, autoAlpha: 0, duration: 0.5, stagger: 0.08 })
     .to(count, {
       v: 100,
       duration: 0.7,
