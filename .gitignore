@@ -8,3 +8,6 @@ Thumbs.db
 # not the master file. Keeping a ~10MB binary out of history on purpose;
 # regeneration commands live in the header of js/hero-sequence.js.
 Hero section/*.mp4
+
+# Brand masters — the site ships optimised copies from images/brand/.
+Logo/

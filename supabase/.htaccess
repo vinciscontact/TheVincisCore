@@ -1,0 +1,2 @@
+# Database scripts are for Supabase, not for the web — never serve them
+Require all denied

@@ -173,6 +173,12 @@ h1, h2, h3 { text-wrap: balance; }
   place-items: center;
 }
 .preloader__inner { text-align: center; }
+.preloader__bee {
+  display: block;
+  width: clamp(88px, 14vw, 132px);
+  height: auto;
+  margin: 0 auto 18px;
+}
 .preloader__logo {
   font-family: var(--display);
   font-size: clamp(2.4rem, 6vw, 4rem);
@@ -217,18 +223,15 @@ h1, h2, h3 { text-wrap: balance; }
 }
 .nav--hidden { transform: translateY(-100%); }
 
-/* Corner monogram — the favicon's gold V, decorative; the wordmark is the link */
+/* Corner monogram — the gold bee (also the favicon), decorative; the wordmark is the link */
 .nav__mark {
   position: absolute;
   left: var(--margin);
   top: 50%;
   transform: translateY(-50%);
-  font-family: var(--display);
-  font-size: 1.5rem;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  color: var(--gold);
-  line-height: 1;
+  width: auto;
+  height: 38px;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.18));
   pointer-events: none;
 }
 
@@ -1932,6 +1935,11 @@ h1, h2, h3 { text-wrap: balance; }
   color: var(--ink-soft);
 }
 .footer__meta a { color: var(--gold-deep); }
+/* Leo: the quiet door to the back office — a bee that only wakes on hover */
+.footer__legal { display: inline-flex; align-items: center; gap: 10px; }
+.footer__leo { display: inline-flex; opacity: 0.35; filter: grayscale(1); transition: opacity 0.3s ease, filter 0.3s ease, transform 0.3s ease; }
+.footer__leo img { width: 18px; height: auto; }
+.footer__leo:hover, .footer__leo:focus-visible { opacity: 1; filter: none; transform: translateY(-1px) rotate(-8deg); }
 .footer__cities {
   grid-column: 1 / -1;
   margin-top: 18px;
@@ -1968,7 +1976,7 @@ h1, h2, h3 { text-wrap: balance; }
   .phero { padding-top: calc(72px + 20px); }
 
   .nav { padding: 10px var(--margin); }
-  .nav__mark { font-size: 1.25rem; }
+  .nav__mark { height: 30px; }
 
   .blade__layout, .founder__layout, .contact__layout, .manifesto__layout { grid-template-columns: 1fr; }
   /* mobile: story cards become a fixed list — no sticky stacking */
