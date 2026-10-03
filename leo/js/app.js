@@ -135,14 +135,28 @@ function armIdle() {
 }
 
 // ---------- App shell ----------
+// SF Symbols–style line icons (24px grid, inherit currentColor)
+const ICON_PATHS = {
+  home: '<path d="M3.5 10.2 12 3.5l8.5 6.7V19a1.5 1.5 0 0 1-1.5 1.5h-4.5v-6h-5v6H5A1.5 1.5 0 0 1 3.5 19z"/>',
+  clients: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><circle cx="17" cy="9" r="2.5"/><path d="M16.5 14.1c2.9.3 5 2.4 5 5.4"/>',
+  projects: '<path d="M3 7.5A2 2 0 0 1 5 5.5h4l2 2h8a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
+  quotes: '<path d="M6.5 3h7.5l4.5 4.5V20a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v4.5h4.5M8.5 12.5h7M8.5 16.5h7"/>',
+  invoices: '<path d="M5.5 3h13v18l-2.6-1.8-2.6 1.8-2.3-1.8-2.3 1.8-2.6-1.8L5.5 21z"/><path d="M9 8h6M9 12h6M9 16h3"/>',
+  services: '<rect x="4" y="4" width="7" height="7" rx="1.8"/><rect x="13" y="4" width="7" height="7" rx="1.8"/><rect x="4" y="13" width="7" height="7" rx="1.8"/><rect x="13" y="13" width="7" height="7" rx="1.8"/>',
+  settings: '<path d="M4 6.5h9M17 6.5h3M4 12h3M11 12h9M4 17.5h11M19 17.5h1"/><circle cx="15" cy="6.5" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="17.5" r="2"/>',
+  signout: '<path d="M14.5 4H18a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3.5M10 8l-4 4 4 4M6 12h10"/>',
+};
+const icon = (name) =>
+  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON_PATHS[name]}</svg>`;
+
 const NAV = [
-  ["#/", "Dashboard"],
-  ["#/clients", "Clients"],
-  ["#/projects", "Projects"],
-  ["#/quotes", "Quotations"],
-  ["#/invoices", "Invoices"],
-  ["#/services", "Services"],
-  ["#/settings", "Settings"],
+  ["#/", "Dashboard", "home", "Home"],
+  ["#/clients", "Clients", "clients", "Clients"],
+  ["#/projects", "Projects", "projects", "Projects"],
+  ["#/quotes", "Quotations", "quotes", "Quotes"],
+  ["#/invoices", "Invoices", "invoices", "Invoices"],
+  ["#/services", "Services", "services"],
+  ["#/settings", "Settings", "settings"],
 ];
 
 let started = false;
@@ -166,13 +180,16 @@ async function startApp() {
   app.innerHTML = `
     <aside class="side">
       <a class="side__brand" href="#/"><img src="${BEE}" alt="" width="128" height="118"><span>Leo</span></a>
-      <button class="side__toggle icon-btn" aria-label="Menu" aria-expanded="false">☰</button>
+      <button class="side__toggle icon-btn" aria-label="Menu" aria-expanded="false">•••</button>
       <nav class="side__nav">
-        ${NAV.map(([h, l]) => `<a href="${h}">${l}</a>`).join("")}
-        <button class="side__out" id="signout">Sign out</button>
+        ${NAV.map(([h, l, ic]) => `<a href="${h}">${icon(ic)}<span>${l}</span></a>`).join("")}
+        <button class="side__out" id="signout">${icon("signout")}<span>Sign out</span></button>
       </nav>
     </aside>
-    <main class="main" id="view" tabindex="-1"></main>`;
+    <main class="main" id="view" tabindex="-1"></main>
+    <nav class="tabbar" aria-label="Sections">
+      ${NAV.filter((n) => n[3]).map(([h, , ic, short]) => `<a href="${h}">${icon(ic)}<span>${short}</span></a>`).join("")}
+    </nav>`;
   $("#signout").addEventListener("click", () => sb.auth.signOut());
   const toggle = $(".side__toggle");
   toggle.addEventListener("click", () => {
@@ -214,7 +231,7 @@ async function route() {
     if (match) { viewFn = get(); break; }
   }
   const section = "#/" + (hash.split("/")[1] || "");
-  $$(".side__nav a").forEach((a) => {
+  $$(".side__nav a, .tabbar a").forEach((a) => {
     const target = a.getAttribute("href");
     const docSection = hash.startsWith("#/doc") && ((params.kind || match?.[1]) === "invoice" ? "#/invoices" : "#/quotes");
     a.classList.toggle("is-active", target === section || target === docSection);

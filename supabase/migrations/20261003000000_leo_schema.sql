@@ -174,12 +174,12 @@ security definer
 set search_path = ''
 as $$
 declare
-  today  date := (now() at time zone 'Asia/Kolkata')::date;
-  fy     int  := case when extract(month from today) >= 4
-                      then extract(year from today)::int
-                      else extract(year from today)::int - 1 end;
-  n      int;
-  prefix text;
+  v_today  date := (now() at time zone 'Asia/Kolkata')::date;
+  v_fy     int  := case when extract(month from v_today) >= 4
+                        then extract(year from v_today)::int
+                        else extract(year from v_today)::int - 1 end;
+  v_n      int;
+  v_prefix text;
 begin
   if not public.is_admin() then
     raise exception 'not authorised';
@@ -188,14 +188,14 @@ begin
     raise exception 'bad kind %', p_kind;
   end if;
 
-  insert into public.counters (kind, fy, last) values (p_kind, fy, 1)
-  on conflict (kind, fy) do update set last = public.counters.last + 1
-  returning last into n;
+  insert into public.counters as c (kind, fy, last) values (p_kind, v_fy, 1)
+  on conflict (kind, fy) do update set last = c.last + 1
+  returning c.last into v_n;
 
-  select case when p_kind = 'quote' then quote_prefix else invoice_prefix end
-    into prefix from public.settings where id = 1;
+  select case when p_kind = 'quote' then s.quote_prefix else s.invoice_prefix end
+    into v_prefix from public.settings s where s.id = 1;
 
-  return coalesce(prefix, upper(p_kind)) || '-' || fy || '-' || lpad(n::text, 3, '0');
+  return coalesce(v_prefix, upper(p_kind)) || '-' || v_fy || '-' || lpad(v_n::text, 3, '0');
 end;
 $$;
 revoke all on function public.next_doc_number(text) from public, anon;

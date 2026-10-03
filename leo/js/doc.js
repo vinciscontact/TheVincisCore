@@ -51,7 +51,7 @@ export async function docEditor(el, params, ctx) {
 
   const isQuote = doc.kind === "quote";
   const listHash = isQuote ? "#/quotes" : "#/invoices";
-  $$(".side__nav a").forEach((a) => a.classList.toggle("is-active", a.getAttribute("href") === listHash));
+  $$(".side__nav a, .tabbar a").forEach((a) => a.classList.toggle("is-active", a.getAttribute("href") === listHash));
 
   let dirty = false;
   const markDirty = () => { dirty = true; $("#savestate", el).textContent = "Unsaved changes"; };

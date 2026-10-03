@@ -96,8 +96,8 @@ export const docList = (kind) => async (el, params, { sb }) => {
       <div><p class="eyebrow">${docs.length} total</p><h1>${label}</h1></div>
       <div class="actions"><a class="btn btn--gold" href="#/doc/new/${kind}">New ${kind === "quote" ? "quotation" : "invoice"}</a></div>
     </header>
-    <div class="chips" role="tablist">
-      ${["all", ...statuses].map((s) => `<button class="chip" data-s="${s}">${s === "all" ? "All" : STATUS_LABEL[s]}</button>`).join("")}
+    <div class="chips">
+      <div class="segmented" role="group" aria-label="Filter by status">${["all", ...statuses].map((s) => `<button class="chip" data-s="${s}">${s === "all" ? "All" : STATUS_LABEL[s]}</button>`).join("")}</div>
       <input class="search" type="search" placeholder="Search number or client" aria-label="Search">
     </div>
     <section class="card" id="list"></section>`;
@@ -303,7 +303,7 @@ export async function projects(el, params, ctx) {
       <div><p class="eyebrow">${list.length} project${list.length === 1 ? "" : "s"}</p><h1>Projects</h1></div>
       <div class="actions"><button class="btn btn--gold" id="add">Add project</button></div>
     </header>
-    <div class="chips">${["all", ...PROJECT_STATUSES].map((s) => `<button class="chip" data-s="${s}">${s === "all" ? "All" : STATUS_LABEL[s]}</button>`).join("")}</div>
+    <div class="chips"><div class="segmented" role="group" aria-label="Filter by status">${["all", ...PROJECT_STATUSES].map((s) => `<button class="chip" data-s="${s}">${s === "all" ? "All" : STATUS_LABEL[s]}</button>`).join("")}</div></div>
     <section class="card" id="list"></section>`;
 
   const reload = () => projects(el, { status: filter }, ctx);
