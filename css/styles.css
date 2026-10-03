@@ -230,8 +230,8 @@ h1, h2, h3 { text-wrap: balance; }
   top: 50%;
   transform: translateY(-50%);
   width: auto;
-  height: 38px;
-  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.18));
+  height: 26px;
+  filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.18));
   pointer-events: none;
 }
 
@@ -1936,9 +1936,9 @@ h1, h2, h3 { text-wrap: balance; }
 }
 .footer__meta a { color: var(--gold-deep); }
 /* Leo: the quiet door to the back office — a bee that only wakes on hover */
-.footer__legal { display: inline-flex; align-items: center; gap: 10px; }
+.footer__legal { display: inline-flex; align-items: center; gap: 6px; }
 .footer__leo { display: inline-flex; opacity: 0.35; filter: grayscale(1); transition: opacity 0.3s ease, filter 0.3s ease, transform 0.3s ease; }
-.footer__leo img { width: 18px; height: auto; }
+.footer__leo img { width: 12px; height: auto; }
 .footer__leo:hover, .footer__leo:focus-visible { opacity: 1; filter: none; transform: translateY(-1px) rotate(-8deg); }
 .footer__cities {
   grid-column: 1 / -1;
@@ -1976,7 +1976,7 @@ h1, h2, h3 { text-wrap: balance; }
   .phero { padding-top: calc(72px + 20px); }
 
   .nav { padding: 10px var(--margin); }
-  .nav__mark { height: 30px; }
+  .nav__mark { height: 22px; }
 
   .blade__layout, .founder__layout, .contact__layout, .manifesto__layout { grid-template-columns: 1fr; }
   /* mobile: story cards become a fixed list — no sticky stacking */
