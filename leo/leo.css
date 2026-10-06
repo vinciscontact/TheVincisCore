@@ -213,7 +213,15 @@ body { background-image: var(--hex-pattern); background-size: 41.58px 72px; back
 .lg--due { background: var(--red); }
 
 /* ---------- Honey-glass panel (a sibling of .hive: perspective there would trap position:fixed) ---------- */
-.hive-wrap { position: relative; }
+.hive-wrap { position: relative; overflow: hidden; border-radius: 22px; }   /* clips the parked panel so the page never scrolls sideways */
+
+/* Full screen: native :fullscreen, or .is-full where the browser won't allow it (iPhone) */
+.hive-wrap:fullscreen, .hive-wrap.is-full { background: var(--bg); border-radius: 0; }
+.hive-wrap.is-full { position: fixed; inset: 0; z-index: 60; }
+.hive-wrap:fullscreen .hive, .hive-wrap.is-full .hive { height: 100vh; height: 100dvh; border-radius: 0; margin: 0; box-shadow: none; }
+.hive-wrap:fullscreen .hive__tools, .hive-wrap.is-full .hive__tools { top: max(12px, env(safe-area-inset-top)); }
+body.hive-full { overflow: hidden; }
+[data-full][aria-pressed="true"] { background: var(--tint-fill) !important; color: var(--on-tint) !important; }
 .hive__panel {
   position: absolute; top: 12px; right: 12px; bottom: 12px; width: 360px; z-index: 7;
   padding: 22px 18px 18px; overflow-y: auto; cursor: default; touch-action: pan-y; user-select: text; -webkit-user-select: text;
@@ -257,6 +265,7 @@ body { background-image: var(--hex-pattern); background-size: 41.58px 72px; back
   }
   .hive__panel::before { content: ""; position: absolute; left: 50%; top: 7px; width: 36px; height: 5px; border-radius: 3px; background: var(--fill-2); transform: translateX(-50%); }
   .has-panel .hive__legend { display: none; }
+  .hive-wrap:fullscreen .hive__panel, .hive-wrap.is-full .hive__panel { bottom: 0; padding-bottom: calc(18px + env(safe-area-inset-bottom)); }
   .hive__legend { font-size: 11px; gap: 4px 10px; }
 }
 @media (prefers-reduced-motion: reduce) {

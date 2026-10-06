@@ -4,7 +4,7 @@
 // Layout runs on axial hex coordinates (q, r). Cells are HTML buttons placed in
 // a preserve-3d stage, so the comb can tilt, cells can lift toward the viewer,
 // and everything stays keyboard- and screen-reader-friendly.
-import { $, $$, esc, money, fmtDate, todayISO, toast, STATUS_LABEL, effectiveStatus } from "./ui.js";
+import { $, $$, esc, money, fmtDate, todayISO, toast, confirmDialog, STATUS_LABEL, effectiveStatus } from "./ui.js";
 import { openClientModal, openProjectModal } from "./views.js";
 import { downloadPdf } from "./pdf.js";
 
@@ -219,6 +219,7 @@ export async function hive(el, params, ctx) {
         <button class="icon-btn" data-zoom="1" aria-label="Zoom in">＋</button>
         <button class="icon-btn" data-zoom="-1" aria-label="Zoom out">－</button>
         <button class="icon-btn" data-fit aria-label="Fit the whole hive">⤢</button>
+        <button class="icon-btn" data-full aria-label="Full screen" aria-pressed="false"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
       </div>
       <ul class="hive__legend" aria-hidden="true">
         <li><i class="lg lg--honey"></i>Honey: paid</li>
@@ -360,6 +361,39 @@ export async function hive(el, params, ctx) {
   }));
   hiveEl.classList.toggle("is-flat", !view.mode3d);
 
+  // ---------- Full screen ----------
+  // Real Fullscreen API where the browser allows it; iPhone Safari only allows
+  // video, so there the wrap simply covers the window instead.
+  const wrap = $(".hive-wrap", el), fullBtn = $("[data-full]", el);
+  const isFull = () => document.fullscreenElement === wrap || wrap.classList.contains("is-full");
+  async function toggleFull() {
+    if (isFull()) {
+      if (document.fullscreenElement) await document.exitFullscreen().catch(() => {});
+      wrap.classList.remove("is-full");
+    } else {
+      let native = false;
+      if (wrap.requestFullscreen) {
+        try { await wrap.requestFullscreen({ navigationUI: "hide" }); native = true; } catch { /* fall back below */ }
+      }
+      if (!native) wrap.classList.add("is-full");
+    }
+    syncFull();
+  }
+  function syncFull() {
+    const on = isFull();
+    document.body.classList.toggle("hive-full", on);
+    fullBtn.setAttribute("aria-pressed", String(on));
+    fullBtn.setAttribute("aria-label", on ? "Exit full screen" : "Full screen");
+    // Toasts must live inside the full-screen element to be seen.
+    const toasts = $("#toasts");
+    if (on && toasts.parentElement !== wrap) wrap.appendChild(toasts);
+    if (!on && toasts.parentElement !== document.body) document.body.appendChild(toasts);
+    setTimeout(() => (selected ? focusOn(selected) : fit(true)), 80);
+  }
+  fullBtn.addEventListener("click", toggleFull);
+  const onFsChange = () => { if (!document.fullscreenElement) wrap.classList.remove("is-full"); syncFull(); };
+  document.addEventListener("fullscreenchange", onFsChange);
+
   // ---------- Leo the bee ----------
   let leoTimer = null;
   function flyTo(cellEl, then) {
@@ -435,7 +469,9 @@ export async function hive(el, params, ctx) {
   }
   document.addEventListener("keydown", function esc_(e) {
     if (!document.body.contains(hiveEl)) return document.removeEventListener("keydown", esc_);
-    if (e.key === "Escape" && selected) closePanel();
+    if (e.key !== "Escape") return;
+    if (selected) closePanel();
+    else if (wrap.classList.contains("is-full")) toggleFull();
   });
 
   function panelHTML(c) {
@@ -475,6 +511,7 @@ export async function hive(el, params, ctx) {
             <a class="btn btn--ghost" href="#/doc/new/invoice?${q({ client: k.id })}">New invoice</a>
             <button class="btn btn--ghost" data-act="edit-client">Edit details</button>
             <a class="btn btn--plain" href="#/clients/${k.id}">Open family page ›</a>
+            <button class="btn btn--danger-ghost" data-act="delete-client">Delete family</button>
           </div>`;
       }
       case "project": {
@@ -495,6 +532,7 @@ export async function hive(el, params, ctx) {
             <a class="btn btn--gold" href="#/doc/new/invoice?${q({ client: c.client.id, project: p.id })}">New invoice</a>
             <a class="btn btn--ghost" href="#/doc/new/quote?${q({ client: c.client.id, project: p.id })}">New quotation</a>
             <button class="btn btn--ghost" data-act="edit-project">Edit project</button>
+            <button class="btn btn--danger-ghost" data-act="delete-project">Delete project</button>
           </div>`;
       }
       case "quote":
@@ -510,8 +548,9 @@ export async function hive(el, params, ctx) {
           <div class="hp__actions">
             ${isInv && d.status === "unpaid" ? `<button class="btn btn--gold" data-act="paid">Mark paid</button>` : ""}
             ${isInv && d.status === "paid" ? `<button class="btn btn--ghost" data-act="unpaid">Mark unpaid</button>` : ""}
-            <a class="btn ${isInv && d.status === "unpaid" ? "btn--ghost" : "btn--gold"}" href="#/doc/${d.id}">Open ${isInv ? "invoice" : "quotation"}</a>
+            <a class="btn ${isInv && d.status === "unpaid" ? "btn--ghost" : "btn--gold"}" href="#/doc/${d.id}">Open and edit</a>
             <button class="btn btn--ghost" data-act="pdf">Download PDF</button>
+            <button class="btn btn--danger-ghost" data-act="delete-doc">Delete ${isInv ? "invoice" : "quotation"}</button>
           </div>`;
       }
       case "family": {
@@ -541,6 +580,35 @@ export async function hive(el, params, ctx) {
     act("edit-client", () => openClientModal(sb, c.client, () => refresh(c.id)));
     act("new-project", () => openProjectModal(sb, null, () => refresh(c.client.id), c.client.id));
     act("edit-project", () => openProjectModal(sb, c.project, () => refresh(c.id)));
+    act("delete-client", async () => {
+      const k = c.client;
+      if (data.docs.some((d) => d.client_id === k.id)) {
+        return toast(`${k.name} has quotations or invoices, so the family can't be deleted. Delete those first.`, "warn");
+      }
+      if (!(await confirmDialog(`Delete the ${k.name} family and its projects? This can't be undone.`))) return;
+      const { error } = await sb.from("clients").delete().eq("id", k.id);
+      if (error) return toast(error.message, "err");
+      toast(`${k.name} has left the hive`);
+      await refresh(null);
+    });
+    act("delete-project", async () => {
+      if (!(await confirmDialog(`Delete project “${c.project.title}”? Its quotations and invoices stay, just unlinked.`))) return;
+      const { error } = await sb.from("projects").delete().eq("id", c.id);
+      if (error) return toast(error.message, "err");
+      toast("Project deleted");
+      await refresh(c.client.id);
+    });
+    act("delete-doc", async () => {
+      const d = c.doc, isInv = c.type === "invoice";
+      const warn = isInv
+        ? `Delete invoice ${d.number}? Invoice numbers should stay continuous for your records, so prefer editing or marking it paid. Delete anyway?`
+        : `Delete quotation ${d.number}? This can't be undone.`;
+      if (!(await confirmDialog(warn))) return;
+      const { error } = await sb.from("documents").delete().eq("id", d.id);
+      if (error) return toast(error.message, "err");
+      toast(`${isInv ? "Invoice" : "Quotation"} deleted`);
+      await refresh(c.client.id);
+    });
     act("paid", () => setPaid(c, true));
     act("unpaid", () => setPaid(c, false));
     act("pdf", async (e) => {
@@ -609,6 +677,11 @@ export async function hive(el, params, ctx) {
     window.removeEventListener("pointerup", onUp);
     window.removeEventListener("pointercancel", onUp);
     window.removeEventListener("hashchange", cleanup);
+    document.removeEventListener("fullscreenchange", onFsChange);
+    if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+    document.body.classList.remove("hive-full");
+    const toasts = $("#toasts");
+    if (toasts && toasts.parentElement !== document.body) document.body.appendChild(toasts);
   });
 }
 
