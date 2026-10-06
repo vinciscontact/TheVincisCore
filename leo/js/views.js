@@ -1,4 +1,4 @@
-// Leo views: dashboard, clients, projects, document lists, services, settings.
+// Leo views: clients, projects, document lists, services, settings (the hive lives in hive.js).
 import {
   $, $$, esc, money, fmtDate, todayISO, toast, modal, confirmDialog,
   field, input, textarea, select, stateList, pill, effectiveStatus, STATUS_LABEL,
@@ -15,48 +15,11 @@ function fail(error) {
   return true;
 }
 const clientLabel = (c) => (c ? (c.company && c.company !== c.name ? `${c.name} · ${c.company}` : c.name) : "—");
-
-// ======================================================================
-// Dashboard
-// ======================================================================
-export async function dashboard(el, _p, { sb }) {
-  const [{ data: docs, error }, { data: projects }] = await Promise.all([
-    sb.from("documents").select("id,kind,number,status,total,issue_date,due_date,paid_on,bill_to").order("created_at", { ascending: false }),
-    sb.from("projects").select("id,status"),
-  ]);
-  if (fail(error)) return;
-
-  const month = todayISO().slice(0, 7);
-  const invoices = docs.filter((d) => d.kind === "invoice");
-  const unpaid = invoices.filter((d) => d.status === "unpaid");
-  const overdue = unpaid.filter((d) => effectiveStatus(d) === "overdue");
-  const paidMonth = invoices.filter((d) => d.status === "paid" && (d.paid_on || "").startsWith(month));
-  const openQuotes = docs.filter((d) => d.kind === "quote" && ["draft", "sent"].includes(d.status));
-  const active = (projects || []).filter((p) => p.status === "active").length;
-  const sum = (arr) => arr.reduce((s, d) => s + Number(d.total), 0);
-
-  el.innerHTML = `
-    <header class="page-head">
-      <div><p class="eyebrow">Leo</p><h1>Good to see you.</h1></div>
-      <div class="actions">
-        <a class="btn btn--ghost" href="#/doc/new/quote">New quotation</a>
-        <a class="btn btn--gold" href="#/doc/new/invoice">New invoice</a>
-      </div>
-    </header>
-    <section class="stats">
-      <a class="stat" href="#/invoices?status=unpaid"><span>Outstanding</span><b>${money(sum(unpaid))}</b><small>${unpaid.length} unpaid invoice${unpaid.length === 1 ? "" : "s"}</small></a>
-      <a class="stat ${overdue.length ? "stat--alert" : ""}" href="#/invoices?status=overdue"><span>Overdue</span><b>${money(sum(overdue))}</b><small>${overdue.length} past due date</small></a>
-      <a class="stat" href="#/invoices?status=paid"><span>Paid this month</span><b>${money(sum(paidMonth))}</b><small>${paidMonth.length} invoice${paidMonth.length === 1 ? "" : "s"}</small></a>
-      <a class="stat" href="#/quotes"><span>Open quotations</span><b>${money(sum(openQuotes))}</b><small>${openQuotes.length} awaiting reply · ${active} active project${active === 1 ? "" : "s"}</small></a>
-    </section>
-    <section class="card">
-      <header class="card__head"><h2>Recent documents</h2></header>
-      ${docTable(docs.slice(0, 10), true)}
-    </section>`;
-}
+export const hexatar = (name) =>
+  `<span class="hexatar" aria-hidden="true">${esc(String(name || "?").split(/\s+/).map((w) => w[0]).join("").slice(0, 2).toUpperCase())}</span>`;
 
 function docTable(docs, showKind) {
-  if (!docs.length) return `<div class="empty"><p class="muted">Nothing here yet.</p></div>`;
+  if (!docs.length) return `<div class="empty"><p class="muted">No cells in this part of the hive yet.</p></div>`;
   return `
     <div class="table-wrap"><table class="table">
       <thead><tr><th>Number</th>${showKind ? "<th>Type</th>" : ""}<th>Client</th><th>Date</th><th class="num">Total</th><th>Status</th></tr></thead>
@@ -178,12 +141,12 @@ export async function clients(el, _p, { sb }) {
         <thead><tr><th>Client</th><th>Phone</th><th>City</th><th class="num">Outstanding</th></tr></thead>
         <tbody>${rows.map((c) => `
           <tr data-href="#/clients/${c.id}">
-            <td><a href="#/clients/${c.id}"><b>${esc(c.name)}</b></a>${c.company && c.company !== c.name ? `<small class="sub">${esc(c.company)}</small>` : ""}</td>
+            <td><span class="who">${hexatar(c.name)}<span><a href="#/clients/${c.id}"><b>${esc(c.name)}</b></a>${c.company && c.company !== c.name ? `<small class="sub">${esc(c.company)}</small>` : ""}</span></span></td>
             <td>${esc(c.phone || "—")}</td>
             <td>${esc([c.city, c.state].filter(Boolean).join(", ") || "—")}</td>
             <td class="num">${owed[c.id] ? money(owed[c.id]) : "—"}</td>
           </tr>`).join("")}</tbody>
-      </table></div>` : `<div class="empty"><p class="muted">No clients match.</p></div>`;
+      </table></div>` : `<div class="empty"><p class="muted">No family by that name in the hive.</p></div>`;
     rowLinks(el);
   };
   $(".search", el).addEventListener("input", draw);
@@ -252,7 +215,7 @@ export async function clientDetail(el, { id }, ctx) {
 // ======================================================================
 // Projects
 // ======================================================================
-async function openProjectModal(sb, project, onSaved, presetClient) {
+export async function openProjectModal(sb, project, onSaved, presetClient) {
   const { data: cl } = await sb.from("clients").select("id,name,company").order("name");
   if (!cl?.length) return toast("Add a client first.", "warn");
   const p = project || { client_id: presetClient, status: "lead", type: "Website", value: 0 };
@@ -322,7 +285,7 @@ export async function projects(el, params, ctx) {
             <td class="num">${money(p.value)}</td>
             <td>${pill(p.status)}</td>
           </tr>`).join("")}</tbody>
-      </table></div>` : `<div class="empty"><p class="muted">No projects here.</p></div>`;
+      </table></div>` : `<div class="empty"><p class="muted">No projects in this part of the comb.</p></div>`;
     $$("tr[data-id]", el).forEach((tr) => tr.addEventListener("click", (e) => {
       if (e.target.closest("a")) return;
       openProjectModal(sb, list.find((p) => p.id === tr.dataset.id), reload);
@@ -482,5 +445,5 @@ export async function settings(el, _p, ctx) {
 }
 
 export function notFound(el) {
-  el.innerHTML = `<div class="empty"><h2>Not found</h2><p class="muted">That page doesn't exist.</p><a class="btn btn--ghost" href="#/">Back to dashboard</a></div>`;
+  el.innerHTML = `<div class="empty"><h2>Not found</h2><p class="muted">That page doesn't exist.</p><a class="btn btn--ghost" href="#/">Back to the hive</a></div>`;
 }

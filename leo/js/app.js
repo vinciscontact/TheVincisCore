@@ -3,6 +3,7 @@ import { SUPABASE_URL, SUPABASE_KEY, IDLE_MINUTES } from "./config.js";
 import { $, $$, esc, toast } from "./ui.js";
 import * as views from "./views.js";
 import { docEditor } from "./doc.js";
+import { hive } from "./hive.js";
 
 const app = $("#app");
 const BEE = "../images/brand/bee-128.webp";
@@ -137,7 +138,7 @@ function armIdle() {
 // ---------- App shell ----------
 // SF Symbols–style line icons (24px grid, inherit currentColor)
 const ICON_PATHS = {
-  home: '<path d="M3.5 10.2 12 3.5l8.5 6.7V19a1.5 1.5 0 0 1-1.5 1.5h-4.5v-6h-5v6H5A1.5 1.5 0 0 1 3.5 19z"/>',
+  hive: '<path d="M12 2.8 19.8 7.3v9.4L12 21.2 4.2 16.7V7.3z"/><path d="M12 8.6 15 10.3v3.4L12 15.4 9 13.7v-3.4z"/>',
   clients: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><circle cx="17" cy="9" r="2.5"/><path d="M16.5 14.1c2.9.3 5 2.4 5 5.4"/>',
   projects: '<path d="M3 7.5A2 2 0 0 1 5 5.5h4l2 2h8a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
   quotes: '<path d="M6.5 3h7.5l4.5 4.5V20a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v4.5h4.5M8.5 12.5h7M8.5 16.5h7"/>',
@@ -150,7 +151,7 @@ const icon = (name) =>
   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON_PATHS[name]}</svg>`;
 
 const NAV = [
-  ["#/", "Dashboard", "home", "Home"],
+  ["#/", "Hive", "hive", "Hive"],
   ["#/clients", "Clients", "clients", "Clients"],
   ["#/projects", "Projects", "projects", "Projects"],
   ["#/quotes", "Quotations", "quotes", "Quotes"],
@@ -208,7 +209,7 @@ async function startApp() {
 
 // ---------- Router ----------
 const ROUTES = [
-  [/^#\/?$/, () => views.dashboard],
+  [/^#\/?$/, () => hive],
   [/^#\/clients$/, () => views.clients],
   [/^#\/clients\/([\w-]+)$/, () => views.clientDetail],
   [/^#\/projects$/, () => views.projects],

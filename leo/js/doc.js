@@ -39,6 +39,13 @@ export async function docEditor(el, params, ctx) {
       terms: newKind === "quote" ? settings.quote_terms : settings.invoice_terms,
       paid_on: null,
     };
+    // Opened from a project cell in the hive: start with that project as the first line.
+    const presetProject = projects.find((p) => p.id === params.project && p.client_id === doc.client_id);
+    if (presetProject) {
+      doc.items.push({ name: presetProject.title, description: presetProject.type, sac: "998314", unit: "project", qty: 1, rate: Number(presetProject.value) });
+    } else {
+      doc.project_id = "";
+    }
   } else {
     const { data, error } = await sb.from("documents").select("*").eq("id", params.id).maybeSingle();
     if (error) throw error;
