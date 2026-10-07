@@ -58,7 +58,9 @@ export async function docEditor(el, params, ctx) {
 
   const isQuote = doc.kind === "quote";
   const listHash = isQuote ? "#/quotes" : "#/invoices";
-  $$(".side__nav a, .tabbar a").forEach((a) => a.classList.toggle("is-active", a.getAttribute("href") === listHash));
+  const crumb = $("#crumb");
+  if (crumb) crumb.textContent = doc.number || `New ${isQuote ? "quotation" : "invoice"}`;
+  document.body.dataset.page = isQuote ? "quotes" : "invoices";
 
   let dirty = false;
   const markDirty = () => { dirty = true; $("#savestate", el).textContent = "Unsaved changes"; };

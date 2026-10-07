@@ -7,6 +7,7 @@
 import { $, $$, esc, money, fmtDate, todayISO, toast, confirmDialog, STATUS_LABEL, effectiveStatus } from "./ui.js";
 import { openClientModal, openProjectModal } from "./views.js";
 import { downloadPdf } from "./pdf.js";
+import { openBloom } from "./nav.js";
 
 const SQ3 = Math.sqrt(3);
 const SIZE = 60;                       // layout radius of one cell (px, world units)
@@ -127,7 +128,7 @@ function cellHTML(c, i) {
   switch (c.type) {
     case "queen":
       title = "TheVincis"; tag = "Queen";
-      label = "TheVincis, the queen cell. Open hive summary";
+      label = "TheVincis, the queen. Open the menu";
       break;
     case "client":
       tag = "Family"; title = c.client.name;
@@ -197,20 +198,6 @@ export async function hive(el, params, ctx) {
   let model, selected = null, dragged = false;
 
   el.innerHTML = `
-    <header class="page-head hive-head">
-      <div>
-        <p class="eyebrow">The hive</p>
-        <h1>${greeting()}</h1>
-        <p class="muted" id="leo-line"></p>
-      </div>
-      <div class="actions">
-        <div class="segmented" role="group" aria-label="View">
-          <button class="chip ${view.mode3d ? "is-on" : ""}" data-mode="3d">3D</button>
-          <button class="chip ${view.mode3d ? "" : "is-on"}" data-mode="flat">Flat</button>
-        </div>
-      </div>
-    </header>
-    <section class="honey-stats" id="stats"></section>
     <div class="hive-wrap">
     <div class="hive" id="hive" tabindex="-1">
       <div class="hive__stage" id="stage"></div>
@@ -227,6 +214,17 @@ export async function hive(el, params, ctx) {
         <li><i class="lg lg--wax"></i>Sealed: delivered</li>
         <li><i class="lg lg--due"></i>Past due</li>
       </ul>
+    </div>
+    <div class="hive__hud">
+      <div class="hud__hello">
+        <h1>${greeting()}</h1>
+        <p id="leo-line"></p>
+        <div class="hud__stats" id="stats"></div>
+      </div>
+      <div class="segmented hud__mode" role="group" aria-label="View">
+        <button class="chip ${view.mode3d ? "is-on" : ""}" data-mode="3d">3D</button>
+        <button class="chip ${view.mode3d ? "" : "is-on"}" data-mode="flat">Flat</button>
+      </div>
     </div>
     <aside class="hive__panel" id="panel" aria-live="polite"></aside>
     </div>`;
@@ -277,10 +275,11 @@ export async function hive(el, params, ctx) {
     const minX = Math.min(...xs) - SIZE * 1.2, maxX = Math.max(...xs) + SIZE * 1.2;
     const minY = Math.min(...ys) - SIZE * 1.4, maxY = Math.max(...ys) + SIZE * 1.4;
     const w = hiveEl.clientWidth, h = hiveEl.clientHeight;
+    const hud = $(".hive__hud", el).getBoundingClientRect().bottom - hiveEl.getBoundingClientRect().top + 8;
     // Phones keep cells readable and let you drag to explore; wide screens show the whole comb.
-    view.z = clamp(Math.min(w / (maxX - minX), (h * 1.1) / (maxY - minY)), w < 600 ? 0.66 : 0.35, 1.15);
+    view.z = clamp(Math.min(w / (maxX - minX), ((h - hud) * 1.1) / (maxY - minY)), w < 600 ? 0.66 : 0.35, 1.15);
     view.px = -(minX + maxX) / 2;
-    view.py = -(minY + maxY) / 2;
+    view.py = -(minY + maxY) / 2 + hud / 2 / view.z;
     apply(glide);
   }
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -439,7 +438,9 @@ export async function hive(el, params, ctx) {
   stage.addEventListener("click", (e) => {
     const btn = e.target.closest(".cell");
     if (!btn || (dragged && e.detail !== 0)) return;   // detail 0 = keyboard
-    open(model.cells[btn.dataset.i], btn);
+    const cell = model.cells[btn.dataset.i];
+    if (cell.type === "queen") return openBloom(ctx, btn);
+    open(cell, btn);
   });
 
   function focusOn(c) {
@@ -480,20 +481,6 @@ export async function hive(el, params, ctx) {
     const meter = (h) => `<div class="hp__meter" style="--h:${h}"><span></span></div><p class="hp__pct">${Math.round(h * 100)}% honey</p>`;
     const q = (p) => new URLSearchParams(p).toString();
     switch (c.type) {
-      case "queen": {
-        const inv = data.docs.filter((d) => d.kind === "invoice");
-        return head("Queen cell", "TheVincis") + `
-          <dl class="hp__list">
-            ${row("Families", data.clients.length)}
-            ${row("Projects", data.projects.length)}
-            ${row("Honey collected", money(sum(inv.filter((d) => d.status === "paid"))))}
-            ${row("Still filling", money(sum(inv.filter((d) => d.status === "unpaid"))))}
-          </dl>
-          <div class="hp__actions">
-            <a class="btn btn--gold" href="#/doc/new/quote">New quotation</a>
-            <a class="btn btn--ghost" href="#/settings">Settings</a>
-          </div>`;
-      }
       case "client": {
         const k = c.client;
         return head("Family", k.name, k.company && k.company !== k.name ? `<p class="muted">${esc(k.company)}</p>` : "") + `

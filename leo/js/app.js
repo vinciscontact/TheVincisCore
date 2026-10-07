@@ -4,6 +4,7 @@ import { $, $$, esc, toast } from "./ui.js";
 import * as views from "./views.js";
 import { docEditor } from "./doc.js";
 import { hive } from "./hive.js";
+import { icon, openBloom, openSearch, sectionOf } from "./nav.js";
 
 const app = $("#app");
 const BEE = "../images/brand/bee-128.webp";
@@ -136,29 +137,12 @@ function armIdle() {
 }
 
 // ---------- App shell ----------
-// SF Symbols–style line icons (24px grid, inherit currentColor)
-const ICON_PATHS = {
-  hive: '<path d="M12 2.8 19.8 7.3v9.4L12 21.2 4.2 16.7V7.3z"/><path d="M12 8.6 15 10.3v3.4L12 15.4 9 13.7v-3.4z"/>',
-  clients: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><circle cx="17" cy="9" r="2.5"/><path d="M16.5 14.1c2.9.3 5 2.4 5 5.4"/>',
-  projects: '<path d="M3 7.5A2 2 0 0 1 5 5.5h4l2 2h8a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
-  quotes: '<path d="M6.5 3h7.5l4.5 4.5V20a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v4.5h4.5M8.5 12.5h7M8.5 16.5h7"/>',
-  invoices: '<path d="M5.5 3h13v18l-2.6-1.8-2.6 1.8-2.3-1.8-2.3 1.8-2.6-1.8L5.5 21z"/><path d="M9 8h6M9 12h6M9 16h3"/>',
-  services: '<rect x="4" y="4" width="7" height="7" rx="1.8"/><rect x="13" y="4" width="7" height="7" rx="1.8"/><rect x="4" y="13" width="7" height="7" rx="1.8"/><rect x="13" y="13" width="7" height="7" rx="1.8"/>',
-  settings: '<path d="M4 6.5h9M17 6.5h3M4 12h3M11 12h9M4 17.5h11M19 17.5h1"/><circle cx="15" cy="6.5" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="17.5" r="2"/>',
-  signout: '<path d="M14.5 4H18a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3.5M10 8l-4 4 4 4M6 12h10"/>',
+// No sidebar: the queen is the menu. A floating queen-bee button (top-left on
+// every page) opens the bloom; other pages also get a slim "‹ Hive" bar.
+const TITLES = {
+  "#/clients": "Clients", "#/projects": "Projects", "#/quotes": "Quotations",
+  "#/invoices": "Invoices", "#/services": "Services", "#/settings": "Settings",
 };
-const icon = (name) =>
-  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON_PATHS[name]}</svg>`;
-
-const NAV = [
-  ["#/", "Hive", "hive", "Hive"],
-  ["#/clients", "Clients", "clients", "Clients"],
-  ["#/projects", "Projects", "projects", "Projects"],
-  ["#/quotes", "Quotations", "quotes", "Quotes"],
-  ["#/invoices", "Invoices", "invoices", "Invoices"],
-  ["#/services", "Services", "services"],
-  ["#/settings", "Settings", "settings"],
-];
 
 let started = false;
 async function startApp() {
@@ -179,28 +163,26 @@ async function startApp() {
 
   app.className = "shell";
   app.innerHTML = `
-    <aside class="side">
-      <a class="side__brand" href="#/"><img src="${BEE}" alt="" width="128" height="118"><span>Leo</span></a>
-      <button class="side__toggle icon-btn" aria-label="Menu" aria-expanded="false">•••</button>
-      <nav class="side__nav">
-        ${NAV.map(([h, l, ic]) => `<a href="${h}">${icon(ic)}<span>${l}</span></a>`).join("")}
-        <button class="side__out" id="signout">${icon("signout")}<span>Sign out</span></button>
-      </nav>
-    </aside>
-    <main class="main" id="view" tabindex="-1"></main>
-    <nav class="tabbar" aria-label="Sections">
-      ${NAV.filter((n) => n[3]).map(([h, , ic, short]) => `<a href="${h}">${icon(ic)}<span>${short}</span></a>`).join("")}
-    </nav>`;
-  $("#signout").addEventListener("click", () => sb.auth.signOut());
-  const toggle = $(".side__toggle");
-  toggle.addEventListener("click", () => {
-    const open = app.classList.toggle("nav-open");
-    toggle.setAttribute("aria-expanded", String(open));
-  });
+    <header class="topbar">
+      <button class="queen-btn" id="queen" type="button" aria-label="Open menu" aria-haspopup="dialog"><span class="bq__rim"><span class="bq__core"><img src="${BEE}" alt="" width="128" height="118"></span></span></button>
+      <span class="topbar__brand">Leo</span>
+      <a class="topbar__back" href="#/">‹ Hive</a>
+      <span class="topbar__title" id="crumb"></span>
+      <button class="topbar__find icon-btn" id="find" type="button" aria-label="Find (Ctrl K)">${icon("search")}</button>
+    </header>
+    <main class="main" id="view" tabindex="-1"></main>`;
+  $("#queen").addEventListener("click", (e) => openBloom(ctx, e.currentTarget));
+  $("#find").addEventListener("click", () => openSearch(ctx));
 
   if (!started) {
     started = true;
     window.addEventListener("hashchange", route);
+    window.addEventListener("keydown", (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k" && app.classList.contains("shell")) {
+        e.preventDefault();
+        if (!document.querySelector("dialog[open]")) openSearch(ctx);
+      }
+    });
     ["pointerdown", "keydown", "scroll"].forEach((ev) => window.addEventListener(ev, armIdle, { passive: true }));
   }
   armIdle();
@@ -231,13 +213,12 @@ async function route() {
     match = hash.match(re);
     if (match) { viewFn = get(); break; }
   }
-  const section = "#/" + (hash.split("/")[1] || "");
-  $$(".side__nav a, .tabbar a").forEach((a) => {
-    const target = a.getAttribute("href");
-    const docSection = hash.startsWith("#/doc") && ((params.kind || match?.[1]) === "invoice" ? "#/invoices" : "#/quotes");
-    a.classList.toggle("is-active", target === section || target === docSection);
-  });
-  app.classList.remove("nav-open");
+  const section = sectionOf(hash);
+  document.body.dataset.page = section === "#/" ? "hive" : section.slice(2);
+  // Documents name themselves once loaded (doc.js); new ones are known from the hash.
+  $("#crumb").textContent = hash.startsWith("#/doc/new/")
+    ? (hash.endsWith("invoice") ? "New invoice" : "New quotation")
+    : hash.startsWith("#/doc") ? "" : TITLES[section] || "";
   view.innerHTML = `<div class="loading"><img src="${BEE}" alt=""></div>`;
   try {
     await viewFn(view, { ...params, id: match?.[1] }, ctx);
