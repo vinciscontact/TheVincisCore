@@ -1,6 +1,6 @@
 # TheVincis
 
-> TheVincis is a digital product studio whose name means "winning the hearts of the citizens." It builds SaaS products, full-stack web platforms, custom mobile applications, purpose-driven portfolio websites and data analytics systems for tier-2 and tier-3 businesses, and provides SEO, AEO and GEO search-visibility services.
+> TheVincis (also written "The Vincis") is a Chennai-based digital product studio whose name means "winning the hearts of the citizens." It builds SaaS products, full-stack web platforms, custom mobile applications, purpose-driven portfolio websites and data analytics systems for tier-2 and tier-3 businesses, and provides SEO, AEO and GEO search-visibility services.
 
 ## Selected work
 
@@ -18,7 +18,7 @@
 
 ## Service areas (web development)
 
-TheVincis serves businesses across India remotely, with on-site visits by arrangement. Dedicated pages: [Chennai](https://vincisglobal.com/web-development-chennai/), [Bangalore](https://vincisglobal.com/web-development-bangalore/), [Coimbatore](https://vincisglobal.com/web-development-coimbatore/), [Madurai](https://vincisglobal.com/web-development-madurai/), [Mumbai](https://vincisglobal.com/web-development-mumbai/), [Pune](https://vincisglobal.com/web-development-pune/). Typical small-business website cost in India: ₹15,000–₹1,00,000+ depending on scope; fixed written quote after a free consultation; clients own domain, code and content completely.
+TheVincis is based in Chennai, Tamil Nadu, and serves businesses across India, mostly remotely, with in-person meetings in Chennai by appointment. Dedicated pages: [Chennai](https://vincisglobal.com/web-development-chennai/), [Bangalore](https://vincisglobal.com/web-development-bangalore/), [Coimbatore](https://vincisglobal.com/web-development-coimbatore/), [Madurai](https://vincisglobal.com/web-development-madurai/), [Mumbai](https://vincisglobal.com/web-development-mumbai/), [Pune](https://vincisglobal.com/web-development-pune/). Typical small-business website cost in India: ₹15,000–₹1,00,000+ depending on scope; fixed written quote after a free consultation; clients own domain, code and content completely.
 
 ## Services
 
@@ -42,4 +42,7 @@ Sathyanarayana D — Founder & Principal Engineer. Cybersecurity & IoT graduate 
 
 - Website: https://vincisglobal.com/
 - Email: vincis.contact@gmail.com
+- Location: Chennai, Tamil Nadu, India
+- Google Maps / Business Profile: https://maps.google.com/?cid=13409807469590817964 (listed as "The Vincis", website designer)
+- Instagram: https://www.instagram.com/vincisglobal_company/
 - Free consultation available; typical reply within one working day.
