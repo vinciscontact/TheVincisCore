@@ -577,8 +577,9 @@ function buildScrollAnimations() {
       }
 
       /* --- Collective duet: the two machines animate themselves
-             (js/collective-machines.js) — only the panels cascade in here --- */
-      gsap.from(".duet__panel", {
+             (js/collective-machines.js) — only the panels cascade in here.
+             The Collective now lives on /about/; skip when it isn't on the page. --- */
+      if (document.querySelector(".duet")) gsap.from(".duet__panel", {
         y: 48,
         autoAlpha: 0,
         stagger: 0.15,
@@ -652,7 +653,8 @@ function buildScrollAnimations() {
         });
       });
 
-      /* --- Founder: frame clip reveal + inner image parallax --- */
+      /* --- Founder: frame clip reveal + inner image parallax (only where the founder section exists) --- */
+      if (document.querySelector(".founder")) {
       gsap.from(".founder__frame", {
         clipPath: "inset(0% 0% 100% 0%)",
         duration: 1.2,
@@ -683,6 +685,7 @@ function buildScrollAnimations() {
         duration: 0.8,
         scrollTrigger: { trigger: ".founder__bio", start: "top 82%", toggleActions: "play none none reverse" },
       });
+      }
 
       /* --- FAQ items --- */
       gsap.set(".faq__item", { autoAlpha: 0, y: 40 });

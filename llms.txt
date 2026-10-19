@@ -4,9 +4,11 @@
 
 ## Selected work
 
-- [Toss Sports](https://tossports.vercel.app/): direct-to-customer e-commerce store for handmade tennis-ball cricket bats, Chennai — product configurator, WhatsApp ordering, gamified rewards. Designed and built by TheVincis.
-- [RUSIYAA](https://rusiyaa.com/): brand site for RUSIYAA spices and masalas (a brand of Arul's Foods) — product range, FSSAI quality story and a batch-code checker that lets any customer trace a pack back to its source. Designed and built by TheVincis.
-- [CreativzEdge](https://creativedge.vercel.app/): studio site for the graphic design and branding studio with studios in Chennai and Mumbai. Designed and built by TheVincis.
+- [Atherstam Properties](https://atherstam.vercel.app/): real estate site for a Mylapore, Chennai property firm — villas, apartments and gated plots, an evening-to-night hero, drag-to-explore listings and a neighbourhood guide. Designed and built by TheVincis.
+- [Toss Sports](https://tossports.com/): e-commerce store for a Chennai workshop that hand-shapes tennis-ball cricket bats — "Find My Bat" quiz, WhatsApp ordering, a cricket game that unlocks discounts. Designed and built by TheVincis.
+- [Hotel Pandia's](https://pandias.vercel.app/): bilingual Tamil–English site for a North Madras biryani house with four kitchens across Chennai, with table QR ordering powered by TableServe. Designed and built by TheVincis.
+- [CreativzEdge](https://creativedge.vercel.app/): case-study-led studio site for the graphic design and branding studio with studios in Chennai and Mumbai. Designed and built by TheVincis.
+- [About TheVincis](https://vincisglobal.com/about/): the founder and the allied studios (CreativzEdge, Blackfyre).
 
 ## Core pages
 
