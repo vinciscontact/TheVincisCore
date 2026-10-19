@@ -109,7 +109,7 @@ if (!prefersReduced) {
     stack.innerHTML =
       '<div class="stack__deck"></div>' +
       '<div class="stack__meta"><span class="stack__count">1 / ' + items.length + '</span>' +
-      '<span class="stack__hint">tap or flick the card →</span></div>';
+      '<span class="stack__hint">tap or flick the card</span></div>';
     const deck = stack.querySelector(".stack__deck");
     items.forEach((li, i) => {
       const card = document.createElement("article");

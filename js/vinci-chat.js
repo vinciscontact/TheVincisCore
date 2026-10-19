@@ -135,7 +135,7 @@
         { label: "What would it cost?", next: "pricing" },
         { label: "See TableServe details", href: "/qr-ordering-system/" },
         { label: "Talk to a human about this", next: "cap_name" },
-        { label: "← Other services", next: "q_new" },
+        { label: "Other services", next: "q_new" },
       ],
     },
     mobile: {
@@ -148,7 +148,7 @@
         { label: "What would it cost?", next: "pricing" },
         { label: "Show me Iyra", next: "iyra" },
         { label: "Talk to a human about this", next: "cap_name" },
-        { label: "← Other services", next: "q_new" },
+        { label: "Other services", next: "q_new" },
       ],
     },
     website: {
@@ -160,7 +160,7 @@
       options: [
         { label: "What would it cost?", next: "pricing" },
         { label: "Talk to a human about this", next: "cap_name" },
-        { label: "← Other services", next: "q_new" },
+        { label: "Other services", next: "q_new" },
       ],
     },
     saas: {
@@ -172,7 +172,7 @@
       options: [
         { label: "What would it cost?", next: "pricing" },
         { label: "Talk to a human about this", next: "cap_name" },
-        { label: "← Other services", next: "q_new" },
+        { label: "Other services", next: "q_new" },
       ],
     },
     data: {
@@ -184,7 +184,7 @@
       options: [
         { label: "What would it cost?", next: "pricing" },
         { label: "Talk to a human about this", next: "cap_name" },
-        { label: "← Other services", next: "q_new" },
+        { label: "Other services", next: "q_new" },
       ],
     },
     seo: {
@@ -196,7 +196,7 @@
       options: [
         { label: "What would it cost?", next: "pricing" },
         { label: "Talk to a human about this", next: "cap_name" },
-        { label: "← Other services", next: "q_new" },
+        { label: "Other services", next: "q_new" },
       ],
     },
 
@@ -264,7 +264,7 @@
       options: [
         { label: "See the Iyra page", href: "/iyra-money-tracker/" },
         { label: "I want an app like this", next: "cap_name" },
-        { label: "← Back", next: "explore" },
+        { label: "Back", next: "explore" },
       ],
     },
     collective: {
@@ -275,7 +275,7 @@
       ],
       options: [
         { label: "How do I use all three?", next: "pricing" },
-        { label: "← Back", next: "explore" },
+        { label: "Back", next: "explore" },
       ],
     },
     meta: {
@@ -286,7 +286,7 @@
       ],
       options: [
         { label: "Yes — what's involved?", next: "pricing" },
-        { label: "← Back", next: "explore" },
+        { label: "Back", next: "explore" },
       ],
     },
     founder: {
@@ -296,7 +296,7 @@
       ],
       options: [
         { label: "Talk to Sathya", next: "cap_name" },
-        { label: "← Back", next: "explore" },
+        { label: "Back", next: "explore" },
       ],
     },
 

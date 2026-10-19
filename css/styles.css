@@ -330,7 +330,9 @@ h1, h2, h3 { text-wrap: balance; }
 .nav--over-hero .nav__cta { background: var(--on-dark); color: #111; }
 .nav--over-hero .nav__cta .nav__label span:last-child { color: var(--gold-deep); }
 .nav--over-hero .nav__cta:hover { background: var(--gold-fine); color: #111; }
-.nav__arrow { transition: transform 0.3s ease; }
+/* Drawn arrow (never the text glyph, which some systems render as an emoji) */
+.ico-arrow { display: inline-block; flex: none; width: 0.85em; height: 0.85em; vertical-align: -0.08em; }
+.nav__arrow { display: inline-flex; transition: transform 0.3s ease; }
 .nav__cta:hover .nav__arrow { transform: translate(3px, -3px); }
 
 .nav__toggle {
@@ -695,11 +697,11 @@ h1, h2, h3 { text-wrap: balance; }
 .svc-row__more { gap: 0; }
 .svc-row__desc { display: block; min-height: 0; font-size: 15px; line-height: 1.618; color: var(--ink-soft); max-width: 52ch; }
 .svc-row__cta {
-  display: inline-block; min-height: 0;
+  display: inline-flex; align-items: center; gap: 6px; min-height: 0;
   font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold-deep);
 }
 .svc-row__arrow {
-  justify-self: end; padding-top: 0.35em;
+  display: inline-flex; justify-self: end; padding-top: 0.35em;
   font-size: 22px; color: var(--line);
   transition: color 0.4s, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
