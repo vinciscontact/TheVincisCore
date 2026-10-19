@@ -1814,8 +1814,10 @@ h1, h2, h3 { text-wrap: balance; }
   --mx: -999px; --my: 50%; --r: 0px;
   position: relative;
   display: grid;
-  margin-top: clamp(34px, 5vw, 55px);
+  margin-bottom: clamp(34px, 5vw, 55px);
   padding-top: 0.22em;           /* headroom for letters that rise */
+  padding-bottom: 0.04em;        /* keeps the baseline strokes from clipping */
+  border-bottom: 1px solid var(--line);
   font-family: var(--display);
   font-weight: 800;
   font-size: 18vw;               /* refined by JS to fill the width exactly */
