@@ -1807,6 +1807,45 @@ h1, h2, h3 { text-wrap: balance; }
 .footer__cities a { color: var(--gold-deep); }
 .footer__cities a:hover { color: var(--gold); }
 
+/* ============ Footer wordmark : interactive "TheVincis" (js/footer-word.js) ============
+   Two stacked layers: an outlined base, and the real logo colours on top,
+   visible only inside a soft spotlight that follows the pointer. */
+.wordmark {
+  --mx: -999px; --my: 50%; --r: 0px;
+  position: relative;
+  display: grid;
+  margin-top: clamp(34px, 5vw, 55px);
+  padding-top: 0.22em;           /* headroom for letters that rise */
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 18vw;               /* refined by JS to fill the width exactly */
+  line-height: 0.82;
+  letter-spacing: -0.045em;
+  text-align: center;
+  white-space: nowrap;
+  user-select: none; -webkit-user-select: none;
+  touch-action: pan-y;
+  cursor: crosshair;
+  overflow: hidden;
+}
+.wordmark__layer { grid-area: 1 / 1; display: block; }
+.wordmark__ch { display: inline-block; transform-origin: 50% 100%; will-change: transform; }
+.wordmark__base .wordmark__ch { color: transparent; -webkit-text-stroke: 1.5px rgba(26, 26, 26, 0.16); }
+.wordmark__base .wordmark__ch.is-v { -webkit-text-stroke-color: rgba(197, 160, 40, 0.42); }
+.wordmark__top {
+  color: var(--ink);
+  -webkit-mask-image: radial-gradient(circle var(--r) at var(--mx) var(--my), #000 0%, #000 38%, transparent 72%);
+          mask-image: radial-gradient(circle var(--r) at var(--mx) var(--my), #000 0%, #000 38%, transparent 72%);
+}
+.wordmark__top .wordmark__ch.is-v {
+  color: transparent;
+  background: linear-gradient(180deg, #f2d27a 0%, var(--gold-fine) 45%, var(--gold-deep) 100%);
+  -webkit-background-clip: text; background-clip: text;
+}
+@media (prefers-reduced-motion: reduce) {
+  .wordmark__ch { will-change: auto; }
+}
+
 /* ============ Responsive ============ */
 /* Below this the five links no longer fit inside the pill beside the wordmark,
    so they fold into the overlay menu and the pill keeps the reference's
