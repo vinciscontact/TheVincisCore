@@ -2,8 +2,7 @@
    TheVincis — About page (dark cinematic)
    · the opening statement rises in line by line;
    · the portrait unveils from the bottom, shown exactly as taken;
-   · each belief brightens from dim to full as it crosses the middle of
-     the screen, then dims again as it leaves;
+   · "What we believe" pins and plays its beliefs one at a time;
    · a gold rail draws down beside the process steps as you read them.
    Reduced motion: everything is shown at full strength, nothing moves.
    ========================================================================== */
@@ -73,17 +72,49 @@
     });
   }
 
-  /* ---- Beliefs: brightest at the centre of the screen ---- */
-  gsap.utils.toArray(".belief").forEach((b) => {
-    const line = b.querySelector(".belief__line");
-    const sub = b.querySelector(".belief__sub");
-    gsap.timeline({
-      scrollTrigger: { trigger: b, start: "top 85%", end: "bottom 15%", scrub: 0.6 },
-    })
-      .fromTo(line, { opacity: 0.16, x: -21 }, { opacity: 1, x: 0, ease: "none", duration: 1 })
-      .fromTo(sub, { opacity: 0 }, { opacity: 1, ease: "none", duration: 0.6 }, "<0.3")
-      .to([line, sub], { opacity: 0.16, ease: "none", duration: 1 }, "+=0.6");
-  });
+  /* ---- Beliefs: a pinned stage, one belief at a time ----
+     The section pins for (n − 1) screens; each step lifts the current belief
+     away and raises the next, the counter ticks and the gold bar fills. */
+  const beliefSec = document.querySelector(".ab-beliefs");
+  const beliefs = gsap.utils.toArray(".belief");
+  if (beliefSec && beliefs.length > 1) {
+    beliefSec.classList.add("is-pinned");
+    const count = beliefSec.querySelector(".beliefs__count b");
+    const bar = beliefSec.querySelector(".beliefs__bar i");
+    const n = beliefs.length;
+    const parts = (el) => [el.querySelector(".belief__num"), el.querySelector(".belief__line"), el.querySelector(".belief__sub")];
+
+    gsap.set(beliefs.slice(1), { autoAlpha: 1 });
+    beliefs.slice(1).forEach((el) => gsap.set(parts(el), { autoAlpha: 0, y: 55 }));
+
+    const tl = gsap.timeline({
+      defaults: { ease: "power2.inOut" },
+      scrollTrigger: {
+        trigger: beliefSec,
+        pin: ".beliefs-pin",
+        start: "top top",
+        end: () => "+=" + window.innerHeight * (n - 1) * 0.9,
+        scrub: 0.8,
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          const i = Math.min(n - 1, Math.round(self.progress * (n - 1)));
+          const label = String(i + 1).padStart(2, "0");
+          if (count && count.textContent !== label) count.textContent = label;
+        },
+      },
+    });
+    for (let i = 0; i < n - 1; i++) {
+      const [numA, lineA, subA] = parts(beliefs[i]);
+      const [numB, lineB, subB] = parts(beliefs[i + 1]);
+      tl.to(numA, { autoAlpha: 0, y: -55, scale: 0.92, duration: 0.5 }, i)
+        .to([lineA, subA], { autoAlpha: 0, y: -34, duration: 0.45, stagger: 0.05 }, i)
+        .to(numB, { autoAlpha: 1, y: 0, scale: 1, duration: 0.55 }, i + 0.35)
+        .to(lineB, { autoAlpha: 1, y: 0, duration: 0.55 }, i + 0.42)
+        .to(subB, { autoAlpha: 1, y: 0, duration: 0.5 }, i + 0.5);
+    }
+    if (bar) tl.fromTo(bar, { scaleX: 1 / n }, { scaleX: 1, ease: "none", duration: n - 1 + 0.05 }, 0);
+  }
 
   /* ---- Process: the rail draws as the steps scroll by ---- */
   const rail = document.querySelector(".steps__rail i");

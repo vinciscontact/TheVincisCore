@@ -1943,16 +1943,64 @@ h1, h2, h3 { text-wrap: balance; }
 }
 .ab-creds b { display: block; margin-bottom: 4px; font-family: var(--display); font-size: 1.15rem; color: var(--on-dark); letter-spacing: -0.01em; }
 
-/* 3 · Beliefs: each statement brightens as it crosses the screen (js/about.js) */
-.ab-beliefs { padding: var(--g7) 0; border-top: 1px solid rgba(255, 255, 255, 0.08); }
+/* 3 · Beliefs: a pinned stage, one belief at a time (js/about.js).
+   Without JS or with reduced motion it is a plain stacked list. */
+.ab-beliefs { border-top: 1px solid rgba(255, 255, 255, 0.08); }
+.beliefs-pin { padding: var(--g7) 0; }
+.beliefs__top { display: flex; align-items: baseline; justify-content: space-between; gap: var(--g3); }
+.beliefs__count { font-size: 13px; font-weight: 700; letter-spacing: 0.18em; color: var(--on-dark-dim); font-variant-numeric: tabular-nums; }
+.beliefs__count b { color: var(--gold-fine); font-weight: 700; }
 .beliefs { list-style: none; margin-top: var(--g5); }
-.belief { padding: var(--g5) 0; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+.belief {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.618fr);   /* number 38.2% · words 61.8% */
+  gap: clamp(var(--g4), 5vw, var(--g6));
+  align-items: center;
+  padding: var(--g5) 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.belief__num {
+  font-family: var(--display);
+  font-size: clamp(7rem, 17vw, 14.5rem);   /* ≈ 233px: 144 × φ */
+  font-weight: 800; line-height: 0.8; letter-spacing: -0.06em;
+  color: transparent; -webkit-text-stroke: 1.5px var(--gold-fine);
+  justify-self: start;
+}
 .belief__line {
   font-family: var(--display);
-  font-size: clamp(2.2rem, 6vw, 5.5rem);    /* ≈ 89px */
+  font-size: clamp(2.4rem, 5.6vw, 5.5rem);  /* ≈ 89px */
   font-weight: 700; line-height: 0.98; letter-spacing: -0.045em;
 }
-.belief__sub { margin-top: var(--g3); margin-left: 38.2%; max-width: 44ch; font-size: 16px; line-height: 1.618; color: var(--on-dark-dim); }
+.belief__sub { margin-top: var(--g4); max-width: 44ch; font-size: clamp(1rem, 1.3vw, 1.15rem); line-height: 1.618; color: var(--on-dark-dim); }
+.beliefs__bar { display: none; }
+
+/* Pinned mode: the four beliefs share one stage and take turns */
+.ab-beliefs.is-pinned .beliefs-pin {
+  height: 100vh; height: 100svh;
+  padding: 0;
+  display: flex; align-items: center;
+  background: radial-gradient(60% 70% at 18% 55%, rgba(212, 175, 55, 0.1), transparent 70%);
+}
+.ab-beliefs.is-pinned .beliefs-stage { width: 100%; }
+.ab-beliefs.is-pinned .beliefs { display: grid; margin-top: var(--g5); }
+.ab-beliefs.is-pinned .belief { grid-area: 1 / 1; padding: 0; border: 0; }
+.ab-beliefs.is-pinned .belief:not(:first-child) { visibility: hidden; opacity: 0; }
+.ab-beliefs.is-pinned .beliefs__bar {
+  display: block; position: relative;
+  height: 2px; margin-top: var(--g6);
+  background: rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+.ab-beliefs.is-pinned .beliefs__bar i {
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, var(--gold), var(--gold-fine));
+  transform: scaleX(0.25); transform-origin: 0 50%;
+}
+
+@media (max-width: 899px) {
+  .belief { grid-template-columns: minmax(0, 1fr); gap: var(--g2); }
+  .belief__num { font-size: clamp(5rem, 24vw, 8rem); }
+}
 
 /* 4 · Process: a gold rail draws down beside the steps */
 .ab-process { padding: var(--g7) 0; border-top: 1px solid rgba(255, 255, 255, 0.08); }
@@ -1994,7 +2042,6 @@ h1, h2, h3 { text-wrap: balance; }
   .ab-hero__lede { max-width: none; }
   .ab-story__grid, .ab-process__grid { grid-template-columns: minmax(0, 1fr); }
   .ab-creds { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .belief__sub { margin-left: 0; }
   .ab-process__head { position: static; }
   .step { grid-template-columns: var(--g5) minmax(0, 1fr); }
 }
